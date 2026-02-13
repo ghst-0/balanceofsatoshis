@@ -1498,67 +1498,6 @@ prog
     });
   })
 
-  // Remove a peer
-  .command('remove-peer', 'Close out with a channel-connected peer')
-  .help('--filter command uses same filters as peers command')
-  .help('--address can have multiple addresses specified')
-  .argument('[public_key]', 'Choose a specific peer to close with')
-  .option('--active', 'Make sure the peer is online')
-  .option('--address <address>', 'Address to close out funds to', REPEATABLE)
-  .option('--dryrun', 'Avoid actually closing channels with peer')
-  .option('--fee-rate <rate>', 'Fee rate per vbyte to close out with', FLOAT)
-  .option('--filter <formula>', 'Filter formula to apply', REPEATABLE)
-  .option('--force', 'Force close channels if they cannot be coop closed')
-  .option('--idle-days <days>', 'No receives or routes for n days', INT)
-  .option('--no-color', 'Mute all colors')
-  .option('--node <node_name>', 'Node to remove peer on')
-  .option('--offline', 'Make sure the peer is offline')
-  .option('--omit <key>', 'Avoid closing peer with public key', REPEATABLE)
-  .option('--outpoint', 'Only remove specific channel with funding txid:vout')
-  .option('--private', 'Peer is privately connected')
-  .option('--public', 'Peer is publicly connected')
-  .option('--select-channels', 'Select channels to remove interactively')
-  .action((args, options, logger) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const {lnd} = await lndForNode(logger, options.node);
-
-        const bools = ['active', 'dryrun', 'force', 'offline', 'private'];
-
-        if (!!bools.find(n => typeof options[n] !== 'boolean')) {
-          throw new Error('UnexpectedNonBooleanValueForBooleanFlag');
-        }
-
-        return network.removePeer({
-          lnd,
-          logger,
-          addresses: flatten([options.address].filter(n => !!n)),
-          ask: await commands.interrogate({}),
-          chain_fee_rate: options.feeRate || undefined,
-          filters: flatten([options.filter].filter(n => !!n)),
-          fs: {getFile: readFile},
-          idle_days: options.idleDays,
-          inbound_liquidity_below: options.inboundBelow,
-          is_active: !!options.active,
-          is_dry_run: !!options.dryrun,
-          is_forced: !!options.force,
-          is_offline: !!options.offline,
-          is_private: !!options.private,
-          is_public: !!options.public,
-          is_selecting_channels: options.selectChannels || undefined,
-          omit: flatten([options.omit].filter(n => !!n)),
-          outbound_liquidity_below: options.outboundBelow,
-          outpoints: flatten([options.outpoint].filter(n => !!n)),
-          public_key: args.publicKey,
-          request: commands.simpleRequest,
-        },
-        responses.returnObject({logger, reject, resolve}));
-      } catch (err) {
-        return logger.error({err}) && reject();
-      }
-    });
-  })
-
   // See a general report about the node
   .command('report', 'Report about the node')
   .option('--node <node_name>', 'Node to get report for')
