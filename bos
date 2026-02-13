@@ -28,7 +28,6 @@ const lnd = importLazy('./lnd');
 const network = importLazy('./network');
 const nodes = importLazy('./nodes');
 const {peerSortOptions} = commandConstants;
-const peers = importLazy('./peers');
 const {rateProviders} = commandConstants;
 const responses = importLazy('./responses');
 const routing = importLazy('./routing');
@@ -331,27 +330,6 @@ prog
           limit: options.limit,
           lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
           request: commands.simpleRequest,
-        },
-        responses.returnObject({logger, reject, resolve}));
-      } catch (err) {
-        return logger.error({err}) && reject();
-      }
-    });
-  })
-
-  // Connect to a node
-  .command('connect', 'Connect to a node')
-  .argument('<id>', 'Public key id of node to connect to')
-  .option('--node <node_name>', 'Saved node to connect with')
-  .option('--retries <count>', 'Times to retry the connection', INT)
-  .action((args, options, logger) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        return peers.connectToPeer({
-          logger,
-          id: args.id,
-          lnd: (await lndForNode(logger, options.node)).lnd,
-          retries: options.retries,
         },
         responses.returnObject({logger, reject, resolve}));
       } catch (err) {
