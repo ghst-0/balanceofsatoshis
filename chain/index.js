@@ -1,17 +1,13 @@
 const getChainFees = require('./get_chain_fees');
 const getChannelCloses = require('./get_channel_closes');
-const getRawTransaction = require('./get_raw_transaction');
 const getUtxos = require('./get_utxos');
 const outputScriptForAddress = require('./output_script_for_address');
-const recoverP2pk = require('./recover_p2pk');
 const splitUtxos = require('./split_utxos');
 
 module.exports = {
   getChainFees,
   getChannelCloses,
-  getRawTransaction,
   getUtxos,
   outputScriptForAddress,
-  recoverP2pk,
   splitUtxos,
 };
