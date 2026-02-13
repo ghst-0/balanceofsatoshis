@@ -1155,63 +1155,6 @@ prog
     });
   })
 
-  // Rebalance between peers
-  .command('rebalance', 'Rebalance funds between peers')
-  .help('Change the liquidity profile of two peers')
-  .help('Specifying target liquidity you can use CAPACITY/2, other formulas')
-  .help('You can specify tags for --avoid, --in, --out (see help tags)')
-  .help('--amount can take m/k variables: 5*m for 5 million, 250*k = 0.0025')
-  .help('--avoid can take a channel id or a public key to avoid')
-  .help('--avoid can take a public_key/public_key to avoid a directed pair')
-  .help('--avoid can take a FORMULA/public_key to avoid inbound peers')
-  .help('--avoid can take a public_key/FORMULA to avoid outbound peers')
-  .help('--avoid FORMULA variables: FEE_RATE, BASE_FEE, HEIGHT, AGE')
-  .help('--in decreases the inbound liquidity with a specific peer/tag')
-  .help('--in-filter/--out-filter vars: CAPACITY/HEIGHTS/INBOUND_LIQUIDITY')
-  .help('--in-filter/--out-filter vars: OUTBOUND_LIQUIDITY/PENDING_PAYMENTS')
-  .help('--in-filter/--out-filter vars: INBOUND_BASE_FEE/INBOUND_FEE_RATE')
-  .help('--out increases the inbound liquidity with a specific peer/tag')
-  .option('--amount <amount>', 'Maximum amount to rebalance')
-  .option('--avoid <pubkey_or_chanid>', 'Avoid forwarding through', REPEATABLE)
-  .option('--avoid-high-fee-routes', 'Avoid trying routes above max-fee-rate')
-  .option('--in <pubkey_or_alias>', 'Route in through a specific peer')
-  .option('--in-filter <in_filter>', 'Filter inbound tag nodes', REPEATABLE)
-  .option('--in-target-outbound <amt>', 'Balance up to outbound amount')
-  .option('--max-fee <max_fee>', 'Maximum fee to pay')
-  .option('--max-fee-rate <max_fee_rate>', 'Max fee rate to pay')
-  .option('--minutes <minutes>', 'Time-out route search after N minutes', INT)
-  .option('--no-color', 'Mute all colors')
-  .option('--node <node_name>', 'Saved node to use for rebalance')
-  .option('--out <pubkey_or_alias>', 'Route out through a specific peer')
-  .option('--out-filter <out_filter>', 'Filter outbound tag nodes', REPEATABLE)
-  .option('--out-target-inbound <amount>', 'Balance up to inbound amount')
-  .action((args, options, logger) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        return swaps.manageRebalance({
-          logger,
-          avoid: flatten([options.avoid].filter(n => !!n)),
-          fs: {getFile: readFile},
-          in_filters: flatten([options.inFilter].filter(n => !!n)),
-          in_outbound: options.inTargetOutbound || undefined,
-          in_through: options.in || undefined,
-          is_strict_max_fee_rate: options.avoidHighFeeRoutes || undefined,
-          lnd: (await lndForNode(logger, options.node)).lnd,
-          max_fee: options.maxFee,
-          max_fee_rate: options.maxFeeRate,
-          max_rebalance: options.amount,
-          out_filters: flatten([options.outFilter].filter(n => !!n)),
-          out_inbound: options.outTargetInbound,
-          out_through: options.out || undefined,
-          timeout_minutes: options.minutes || undefined,
-        },
-        responses.returnObject({exit, logger, reject, resolve}));
-      } catch (err) {
-        return logger.error({err}) && reject();
-      }
-    });
-  })
-
   // Attempt reconnecting to disconnected channel partners
   .command('reconnect', 'Reconnect to disconnected channel partners')
   .help('Inactive channels are also treated as disconnected channels')
