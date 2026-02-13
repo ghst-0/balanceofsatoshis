@@ -26,8 +26,6 @@ const commands = importLazy('./commands');
 const display = importLazy('./display');
 const encryption = importLazy('./encryption');
 const lnd = importLazy('./lnd');
-const lnurl = importLazy('./lnurl');
-const {lnurlFunctions} = commandConstants;
 const network = importLazy('./network');
 const nodes = importLazy('./nodes');
 const offchain = importLazy('./offchain');
@@ -748,43 +746,6 @@ prog
     });
   })
 
-  // Lnurl functions
-  .command('lnurl', 'Collection of lnurl features')
-  .argument('<function>', 'lnurl function', keys(lnurlFunctions))
-  .help(`Functions: ${keys(lnurlFunctions).join(', ')}`)
-  .help('lnurl auth will request authorization')
-  .help('lnurl channel will request an incoming payment channel')
-  .help('lnurl pay will request a payment request from a service')
-  .help('lnurl withdraw will create an invoice and send it to a service')
-  .option('--avoid <avoid>', 'Avoid forwarding via node/chan/tag', REPEATABLE)
-  .option('--max-fee <max_fee>', 'Maximum fee to pay', INT, 1337)
-  .option('--max-paths <max_paths>', 'Maximum paths to use', INT, 1)
-  .option('--node <node_name>', 'Node to run a lnurl function')
-  .option('--out <public_key>', 'Make first hop through peer', REPEATABLE)
-  .option('--url <url>', 'URL to pay', STRING)
-  .action((args, options, logger) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        return lnurl.manageLnurl({
-          logger,
-          ask: await commands.interrogate({}),
-          avoid: flatten([options.avoid].filter(n => !!n)),
-          fs: {getFile: readFile},
-          function: args.function,
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
-          lnurl: options.url,
-          max_fee: options.maxFee,
-          max_paths: options.maxPaths,
-          out: flatten([options.out].filter(n => !!n)),
-          request: commands.simpleRequest,
-        },
-        responses.returnObject({logger, reject, resolve}));
-      } catch (err) {
-        return logger.error({err}) && reject();
-      }
-    });
-  })
-
   // Saved nodes
   .command('nodes', 'List and edit saved nodes')
   .help('Locking and unlocking requires existing installation of GPG')
@@ -838,45 +799,6 @@ prog
           with: options.with,
         },
         responses.returnNumber({logger, reject, resolve, number: 'balance'}));
-      } catch (err) {
-        return logger.error({err}) && reject();
-      }
-    });
-  })
-
-  // Pay a payment request, probing first
-  .command('pay', 'Pay a payment request, probing first')
-  .argument('<request>', 'Payment Request')
-  .option('--avoid <avoid>', 'Avoid forwarding via node/chan/tag', REPEATABLE)
-  .option('--avoid-high-fee-routes', 'Avoid evaluating too-high fee routes')
-  .option('--in <public_key>', 'Route through specific peer of destination')
-  .option('--max-fee <max_fee>', 'Maximum fee to pay', INT, 1337)
-  .option('--max-paths <paths>', 'Maximum paths to use', INT, 1)
-  .option('--message <message>', 'Attach text message to payment')
-  .option('--no-color', 'Mute all colors')
-  .option('--node <node_name>', 'Node to use to pay payment request')
-  .option('--out <public_key>', 'Make first hop through peer', REPEATABLE)
-  .action((args, options, logger) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const {lnd} = await lndForNode(logger, options.node);
-
-        const inThrough = await lnSync.findKey({lnd, query: options.in});
-
-        return network.pay({
-          lnd,
-          logger,
-          avoid: flatten([options.avoid].filter(n => !!n)),
-          fs: {getFile: readFile},
-          in_through: inThrough.public_key,
-          is_strict_max_fee: !!options.avoidHighFeeRoutes,
-          max_fee: options.maxFee,
-          max_paths: options.maxPaths,
-          message: options.message,
-          out: flatten([options.out].filter(n => !!n)),
-          request: args.request,
-        },
-        responses.returnObject({logger, reject, resolve}));
       } catch (err) {
         return logger.error({err}) && reject();
       }
@@ -1041,53 +963,6 @@ prog
         style: !!options.styled ? 'styled' : undefined,
       },
       responses.returnOutput({logger, reject, resolve}));
-    });
-  })
-
-  // Send funds to a destination
-  .command('send', 'Send funds to a node off-chain')
-  .help('Formulas supported in amount, and N*USD or N*EUR')
-  .help('Also supported in formulas: LIQUIDITY, INBOUND, OUTBOUND (with peer)')
-  .help('OUT_INBOUND, OUT_OUTBOUND (when specifying outbound peer)')
-  .argument('<to>', 'Send to public key, zero pay request, lnurl, ln.address')
-  .option('--amount <amount>', 'Amount to send to destination', STRING, '1')
-  .option('--avoid <avoid>', 'Avoid forwarding via node/chan/tag', REPEATABLE)
-  .option('--avoid-high-fee-routes', 'Avoid evaluating too-high fee routes')
-  .option('--dryrun', 'Avoid actually sending funds')
-  .option('--in <pubkey_or_alias>', 'Route in through a specific node')
-  .option('--max-fee <fee>', 'Maximum fee tokens', INT, 1337)
-  .option('--max-fee-rate <max_fee_rate>', 'Max fee rate in PPM to pay', INT)
-  .option('--message <message>', 'Message to include with payment')
-  .option('--message-omit-from-key', 'Leave out the from key on messages')
-  .option('--no-color', 'Mute all colors')
-  .option('--node <name>', 'Node to send funds from')
-  .option('--out <pubkey_or_alias>', 'Route out through a specific peer')
-  .option('--quiz <answer>', 'Quiz answers, first answer correct', REPEATABLE)
-  .action((args, options, logger) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        return network.pushPayment({
-          logger,
-          amount: options.amount,
-          avoid: flatten([options.avoid].filter(n => !!n)),
-          destination: args.to,
-          fs: {getFile: readFile},
-          in_through: options.in,
-          is_dry_run: options.dryrun,
-          is_omitting_message_from: options.messageOmitFromKey,
-          is_strict_max_fee: !!options.avoidHighFeeRoutes,
-          lnd: (await lndForNode(logger, options.node)).lnd,
-          max_fee: options.maxFee,
-          max_fee_rate: options.maxFeeRate,
-          message: options.message,
-          quiz_answers: flatten([options.quiz].filter(n => !!n)),
-          out_through: options.out,
-          request: commands.simpleRequest,
-        },
-        responses.returnObject({logger, reject, resolve}));
-      } catch (err) {
-        return logger.error({err}) && reject();
-      }
     });
   })
 

@@ -35,9 +35,6 @@ importers:
       asyncjs-util:
         specifier: 1.2.12
         version: 1.2.12
-      bech32:
-        specifier: 2.0.0
-        version: 2.0.0
       bip66:
         specifier: 2.0.0
         version: 2.0.0

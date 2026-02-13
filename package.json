@@ -19,7 +19,6 @@
     "asciichart": "1.5.25",
     "async": "3.2.6",
     "asyncjs-util": "1.2.12",
-    "bech32": "2.0.0",
     "bip66": "2.0.0",
     "bitcoinjs-lib": "6.1.7",
     "bolt01": "2.0.0",

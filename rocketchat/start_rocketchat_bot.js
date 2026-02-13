@@ -354,37 +354,6 @@ module.exports = (args, cbk) => {
           }
         });
 
-        // Handle command to pay a payment request
-        args.bot.command('pay', async ctx => {
-          const budget = paymentsLimit;
-
-          if (!budget) {
-            ctx.reply(interaction.pay_budget_depleted);
-
-            return;
-          }
-
-          // Stop budget while payment is in flight
-          paymentsLimit = 0;
-
-          try {
-            const {tokens} = await handlePayCommand({
-              budget,
-              from: ctx.message.from.id,
-              id: connectedId,
-              nodes: (await getLnds(args.logger, names, args.nodes)).nodes,
-              reply: message => ctx.reply(message, markdown),
-              request: args.request,
-              text: ctx.message.text,
-            });
-
-            // Set the payments limit to the amount unspent by the pay command
-            paymentsLimit = budget - tokens;
-          } catch (err) {
-            args.logger.error({payment_error: err});
-          }
-        });
-
         // Handle command to view pending transactions
         args.bot.command('pending', async ctx => {
           try {
@@ -558,7 +527,6 @@ module.exports = (args, cbk) => {
           {command: 'invoice', description: 'Create an invoice [amt] [memo]'},
           {command: 'liquidity', description: 'Get liquidity [with-peer]'},
           {command: 'mempool', description: 'Get info about the mempool'},
-          {command: 'pay', description: 'Pay a payment request'},
           {command: 'pending', description: 'Get pending forwards, channels'},
           {command: 'stop', description: 'Stop the bot'},
           {command: 'version', description: 'View current bot version'},
