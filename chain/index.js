@@ -1,4 +1,3 @@
-const getAddressUtxo = require('./get_address_utxo');
 const getChainFees = require('./get_chain_fees');
 const getChannelCloses = require('./get_channel_closes');
 const getMempoolSize = require('./get_mempool_size');
@@ -9,7 +8,6 @@ const recoverP2pk = require('./recover_p2pk');
 const splitUtxos = require('./split_utxos');
 
 module.exports = {
-  getAddressUtxo,
   getChainFees,
   getChannelCloses,
   getMempoolSize,
