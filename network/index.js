@@ -12,7 +12,6 @@ const probe = require('./probe');
 const probeDestination = require('./probe_destination');
 const pushPayment = require('./push_payment');
 const sendGift = require('./send_gift');
-const transferFunds = require('./transfer_funds');
 
 module.exports = {
   currencyForNetwork,
@@ -28,6 +27,5 @@ module.exports = {
   probe,
   probeDestination,
   pushPayment,
-  sendGift,
-  transferFunds,
+  sendGift
 };
