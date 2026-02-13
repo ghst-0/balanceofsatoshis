@@ -3,7 +3,6 @@
 Commands for working with LND balances.
 
 [![npm version](https://badge.fury.io/js/balanceofsatoshis.svg)](https://badge.fury.io/js/balanceofsatoshis)
-[![docker pulls](https://img.shields.io/docker/pulls/alexbosworth/balanceofsatoshis?style=flat-round)](https://hub.docker.com/repository/docker/alexbosworth/balanceofsatoshis)
 
 Supported LND versions:
 
@@ -24,7 +23,6 @@ npm install -g balanceofsatoshis
 
 Or use a platform-specific guide:
 
-- [Docker/BTCPayServer install notes](#docker)
 - [RaspiBlitz install guide][raspiblitz-install-guide]
 - [RaspiBolt/Debian guide][raspibolt-install-guide]
 - [Umbrel install guide][umbrel-install-guide]
@@ -420,19 +418,13 @@ Examples of shell scripts that could be executed by crontab:
 ### Persist Long-Running Commands
 
 If you are running a long-running command and want it to persist, you will need 
-something like Docker or nohup or tmux to assist you in that and then kill the 
+something like nohup or tmux to assist you in that and then kill the 
 process and restart it when updating.
 
 Nohup example:
 
 ```shell
 nohup /home/bos/.npm-global/bin/bos telegram --connect CONNECT_CODE > /dev/null &
-```
-
-Docker example:
-
-```
-docker run -d --restart always -v $HOME/.bos:/home/node/.bos alexbosworth/balanceofsatoshis telegram --connect CONNECT_CODE
 ```
 
 You can also create a shell-script.sh to run a command repeatedly, with a delay
@@ -442,125 +434,6 @@ while true;
 do bos rebalance;
 sleep 2000;
 done
-```
-
-## Docker
-
-This presumes you have Docker installed.
-
-- [Instructions for installing Docker on Ubuntu][docker-install-guide]
-
-Install the Docker image:
-
-```shell
-docker pull alexbosworth/balanceofsatoshis
-```
-
-### Docker Load
-
-You can also build the image yourself: `npm run build-docker`, this will make
-`balanceofsatoshis.tar.gz` that you can rsync or scp somewhere else and then
-do `docker load < balanceofsatoshis.tar.gz`.
-
-Once the image is installed, you can "docker run" commands for all the commands:
-
-```shell
-# Make sure you have a home directory created to give Docker access to
-mkdir $HOME/.bos
-
-docker run -it --rm -v $HOME/.bos:/home/node/.bos alexbosworth/balanceofsatoshis --version
-# Should output the version
-```
-
-This maps your home directory to the docker home directory to enable
-persistence of credentials.
-
-If you want it to automatically detect your local node, also pass the LND home
-dir as an additional -v argument to docker run:
-
-If you are on MacOS:
-
-```shell
---network="host" -v $HOME/Library/Application\ Support/Lnd/:/home/node/.lnd:ro
-```
-
-Or on Linux:
-
-```shell
---network="host" -v $HOME/.lnd:/home/node/.lnd:ro
-```
-
-On BTCPayServer:
-
-Create the credential.json file as explained in the saved nodes section, and for socket put:
-`"socket": "lnd_bitcoin:10009"`
-
-For Docker network use the Docker bridged network:
-
-```
-docker run -it --rm --network="generated_default" -v $HOME/.bos:/home/node/.bos alexbosworth/balanceofsatoshis balance --node SAVEDNODENAME
-```
-
-On Umbrel this would be:
-
-```
-# add Umbrel specific details:
-## --network="host"
-## --add-host=umbrel.local:192.168.1.23
-## -v $HOME/umbrel/app-data/lightning/data/lnd:/home/node/.lnd:ro
-docker run -it --rm --network=umbrel_main_network --add-host=localhost:10.21.21.9 -v $HOME/.bos:/home/node/.bos -v $HOME/umbrel/app-data/lightning/data/lnd:/home/node/.lnd:ro alexbosworth/balanceofsatoshis report
-```
-
-Note: For [umbrel-os](https://github.com/getumbrel/umbrel-os) users, when
-running the above docker run command, ensure the "192.168.1.23" portion of the 
-command is updated to reflect the IP of the lnd container. You can find the IP 
-by looking for the `LND_IP` value inside the `$HOME/umbrel/.env` file.
-
-Otherwise you can just pass the local node credentials as shown above using the
-saved nodes.
-
-If you are running a long-running command like `telegram`, use  `-d --restart 
-always` instead of `-it --rm` to run in daemon mode and auto-restart.
-
-Note: if you are used to using ctrl+c to terminate the process, that doesn't
-work on Docker. Instead, you can use ctrl+p and then ctrl+q to background the 
-interactive mode, then do `docker ps` and `docker rm` to kill the instance.
-
-### Build Your Own
-
-If you don't want to use the Dockerfile, you can build a docker file for
-yourself
-
-```dockerfile
-FROM node:latest
-RUN npm install balanceofsatoshis
-ENTRYPOINT [ "/node_modules/balanceofsatoshis/bos" ]
-```
-
-### Run Shell Script
-
-If you don't want to type out "docker run", and don't have an alias for it, you
-can create a simple shell script to fill that part in:
-
-```shell
-#! /usr/bin/env bash
-docker run -it --rm -v=$HOME/.bos:/root/.bos bos:latest ${@:1}
-```
-
-You can also define an alias for placing in `~/.profile` or `~/.bash_profile`:
-
-```shell
-alias bos="docker run -it --rm -v $HOME/.bos:/home/node/.bos alexbosworth/balanceofsatoshis"
-```
-
-Adjust this alias to however you run the full Docker command. Remember to
-execute the ~/.profile to install the alias into your current session: `. 
-~/.profile`
-
-You can also create an alias to run a command in the background
-
-```shell
-alias bosd="docker run -d --rm -v $HOME/.bos:/home/node/.bos alexbosworth/balanceofsatoshis"
 ```
 
 ## Formulas
@@ -717,7 +590,6 @@ bos inbound-channel-rules --rule "capacity < 2*m"
 bos inbound-channel rules --rule "if(private,capacity >= 9*m,capacity >= 5*m)"
 ```
 
-[docker-install-guide]: https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04
 [nodejs-install-guide]: https://gist.github.com/alexbosworth/8fad3d51f9e1ff67995713edf2d20126
 [raspiblitz-install-guide]: https://gist.github.com/openoms/823f99d1ab6e1d53285e489f7ba38602
 [raspibolt-install-guide]: https://raspibolt.org/guide/bonus/lightning/balance-of-satoshis.html

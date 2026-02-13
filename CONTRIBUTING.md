@@ -90,6 +90,5 @@ If you want to help with style, here are some rough guidelines on style ideas:
 ### Testing
 
 - Ideally there is a tap unit test that has 100% coverage, using mock-lnd
-- Also good is a ln-docker-daemons integration test for common scenarios
 - Design methods so that they can easily tested with self-contained unit tests
 - Avoid breaking existing tests, changes should also change relevant tests

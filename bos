@@ -1417,7 +1417,7 @@ prog
   .help('Connect to a RocketChat bot. Create bot in RocketChat')
   .help('Supported updates: forwards, received payments, etc')
   .help('Multiple nodes are supported by repeating the `--node` flag')
-  .help('See README for info on persisting the bot through Docker/nohup')
+  .help('See README for info on persisting the bot through nohup')
   .help('--use-proxy requires path to JSON file for host/password/port/userId')
   .option('--budget <amount>', 'Spending amount to allow', INT, Number())
   .option('--connect <connect_code>', 'Connection code from /connect')
