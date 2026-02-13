@@ -10,9 +10,5 @@
   "currencySymbols": {
     "btc": "BTC",
     "btctestnet": "tBTC"
-  },
-  "swappable": {
-    "btc": true,
-    "btctestnet": true
   }
 }

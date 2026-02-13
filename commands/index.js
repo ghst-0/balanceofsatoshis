@@ -6,7 +6,6 @@ const {marketPairs} = require('./constants');
 const {peerSortOptions} = require('./constants');
 const {rateProviders} = require('./constants');
 const simpleRequest = require('./simple_request');
-const {swapTypes} = require('./constants');
 
 module.exports = {
   accountingCategories,
@@ -16,6 +15,5 @@ module.exports = {
   marketPairs,
   peerSortOptions,
   rateProviders,
-  simpleRequest,
-  swapTypes,
+  simpleRequest
 };

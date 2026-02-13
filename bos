@@ -11,7 +11,6 @@ const {writeFile} = require('fs');
 
 const importLazy = require('import-lazy')(require);
 
-const accounting = importLazy('ln-accounting');
 const fetch = importLazy('@alexbosworth/node-fetch');
 const fiat = importLazy('@alexbosworth/fiat');
 const lnService = importLazy('ln-service');
@@ -38,8 +37,6 @@ const {priceProviders} = commandConstants;
 const {rateProviders} = commandConstants;
 const responses = importLazy('./responses');
 const routing = importLazy('./routing');
-const {swapTypes} = commandConstants;
-const swaps = importLazy('./swaps');
 const rocketchat = importLazy('./rocketchat');
 const triggers = importLazy('./triggers');
 const wallets = importLazy('./wallets');
@@ -49,9 +46,6 @@ const {BOOL} = prog;
 const collect = arr => [].concat(...[arr]).filter(n => !!n);
 const {exit} = process;
 const flatten = arr => [].concat(...arr);
-const {FLOAT} = prog;
-const {floor} = Math;
-const hexMatch = /^[0-9a-f]+$/i;
 const {INT} = prog;
 const {keys} = Object;
 const lndForNode = (logger, node) => lnd.authenticatedLnd({logger, node});
@@ -719,66 +713,6 @@ prog
     });
   })
 
-  // Increase inbound liquidity
-  .command('increase-inbound-liquidity', 'Increase node inbound liquidity')
-  .help('Spend down a channel to get inbound. Fee is an estimate, may be more')
-  .help('If you want to control chain fee increases, use show-raw-recoveries')
-  .help('Formulas supported for --amount like 5*m or 0.05*BTC for 5 million')
-  .option('--address <out_address>', 'Out chain address to send funds out to')
-  .option('--api-key <api_key>', 'Pre-paid API key to use')
-  .option('--amount <amount>', 'Amount to increase inbound', STRING, '500*k')
-  .option('--avoid <pubkey/chan/tag>', 'Avoid forwarding through', REPEATABLE)
-  .option('--confs <confs>', 'Confs to consider reorg safe', INT, 1)
-  .option('--dryrun', 'Only show cost estimate for increase')
-  .option('--fast', 'Request swap server avoid batching delay')
-  .option('--max-deposit <max_deposit>', 'Maximum deposit amount', INT, 5e4)
-  .option('--max-fee <max_fee>', 'Maximum estimated fee tokens', INT, 3e4)
-  .option('--max-hours <max_hours>', 'Maximum hours to wait', INT, 65)
-  .option('--max-paths <max_paths>', 'Maximum paths to attempt', INT, 1)
-  .option('--no-color', 'Mute all colors')
-  .option('--node <node_name>', 'Increase inbound liquidity on saved node')
-  .option('--recovery <recovery>', 'Recover in-progress swap')
-  .option('--service-socket', 'Specify a custom swap service address')
-  .option('--spend-address', 'Send an exact amount to a specific address')
-  .option('--spend-amount', 'Exact amount to send to a specific address')
-  .option('--show-raw-recovery', 'Show raw recovery transactions')
-  .option('--with <peer>', 'Public key of peer to increase liquidity from')
-  .action((args, options, logger) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        return swaps.swapOut({
-          fetch,
-          logger,
-          api_key: options.apiKey || undefined,
-          avoid: flatten([options.avoid].filter(n => !!n)),
-          confs: options.confs,
-          fs: {getFile: readFile},
-          is_fast: options.fast || false,
-          is_raw_recovery_shown: options.showRawRecovery || undefined,
-          is_dry_run: options.dryrun || false,
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
-          max_deposit: options.maxDeposit,
-          max_fee: options.maxFee,
-          max_paths: options.maxPaths || undefined,
-          max_wait_blocks: Math.ceil((options.maxHours) * 60 / 10),
-          node: options.node || undefined,
-          out_address: options.address || undefined,
-          peer: options.with || undefined,
-          recovery: options.recovery,
-          request: commands.fetchRequest({fetch}),
-          socket: options.serviceSocket || undefined,
-          spend_address: options.spendAddress || undefined,
-          spend_tokens: options.spendAmount || undefined,
-          timeout: 1000 * 60 * 60 * 10,
-          tokens: accounting.parseAmount({amount: options.amount}).tokens,
-        },
-        responses.returnObject({exit, logger, reject, resolve}));
-      } catch (err) {
-        return logger.error({err}) && reject();
-      }
-    });
-  })
-
   // Create an invoice
   .command('invoice', 'Create an invoice and get a BOLT 11 payment request')
   .help('Amount can take m/k variables: 5*m for 5 million, 250*k = 0.0025')
@@ -852,46 +786,6 @@ prog
           only_disallow: flatten([options.deny].filter(n => !!n)),
           stop_channels: flatten([options.stop].filter(n => !!n)),
         });
-      } catch (err) {
-        return logger.error({err}) && reject();
-      }
-    });
-  })
-
-  // Get the price for liquidity
-  .command('liquidity-cost', 'Get the price of liquidity')
-  .visible(false)
-  .argument('<type>', 'Liquidity direction', swapTypes)
-  .argument('<amount>', 'Amount of liquidity to get quote for', INT)
-  .argument('<api-key>', 'Swap API key to use', hexMatch)
-  .option('--above <tokens>', 'Return amount above watermark', INT)
-  .option('--fast', 'Avoid any server batching wait time')
-  .option('--node <node_name>', 'Node to get liquidity cost')
-  .option('--service-socket', 'Specify a custom swap service address')
-  .action((args, options, logger) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const {lnd} = await lndForNode(logger, options.node);
-
-        const {metadata, service} = await swaps.getPaidService({
-          fetch,
-          lnd,
-          logger,
-          socket: options.serviceSocket,
-          token: args.apiKey,
-        });
-
-        return swaps.getSwapCost({
-          lnd,
-          logger,
-          metadata,
-          service,
-          above: options.above,
-          is_fast: options.fast || undefined,
-          tokens: args.amount,
-          type: args.type,
-        },
-        responses.returnNumber({logger, reject, resolve, number: 'cost'}));
       } catch (err) {
         return logger.error({err}) && reject();
       }
@@ -1255,74 +1149,6 @@ prog
           request: commands.simpleRequest,
         },
         responses.returnObject({logger, reject, resolve}));
-      } catch (err) {
-        return logger.error({err}) && reject();
-      }
-    });
-  })
-
-  // Get a swap API key or inspect an existing one
-  .command('swap-api-key', 'Purchase a swap API key or inspect a swap API key')
-  .visible(false)
-  .option('--api-key <api_key>', 'Hex encoded full swap API key')
-  .option('--purchase', 'Purchase a new swap API key')
-  .option('--macaroon <macaroon>', 'Hex encoded macaroon of swap API key')
-  .option('--node <node_name>', 'Node to use to pay for API key')
-  .option('--preimage <preimage>', 'Hex encoded preimage of swap API key')
-  .option('--service-socket <swap_service_socket>', 'host:port for service')
-  .action((args, options, logger) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        return swaps.swapApiKey({
-          fetch,
-          logger,
-          api_key: options.apiKey,
-          is_purchase: options.purchase,
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
-          macaroon: options.macaroon,
-          node: options.node,
-          preimage: options.preimage,
-          socket: options.serviceSocket,
-        },
-        responses.returnObject({logger, reject, resolve}));
-      } catch (err) {
-        return logger.error({err}) && reject();
-      }
-    });
-  })
-
-  // Create submarine swap to convert on-chain funds to off-chain
-  .command('swap-in', 'Trade on-chain coins for off-chain via submarine swap')
-  .argument('[amount]', 'Amount to receive', INT, 1e6)
-  .option('--api-key <api_key>', 'Pre-paid API key to use', hexMatch)
-  .option('--in <peer>', 'Request receiving through a specific peer')
-  .option('--max-fee <max_fee>', 'Max fee in tokens to pay', INT, 4000)
-  .option('--no-color', 'Mute all colors')
-  .option('--node <node_name>', 'Node to receive funds on')
-  .option('--recovery <refund_recovery>', 'Attempt refund of swap', hexMatch)
-  .option('--refund-address <refund_address>', 'Refund address for swap')
-  .option('--service-socket <swap_service_socket>', 'host:port for service')
-  .option('--test-refund', 'Reduce refund timeout height to test refund')
-  .action((args, options, logger) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        return swaps.swapIn({
-          fetch,
-          logger,
-          api_key: options.apiKey || undefined,
-          fs: {getFile: readFile},
-          in_through: options.in || undefined,
-          is_refund_test: options.testRefund,
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
-          max_fee: options.maxFee,
-          node: options.node,
-          recovery: options.recovery,
-          refund_address: options.refundAddress,
-          request: commands.simpleRequest,
-          socket: options.serviceSocket || undefined,
-          tokens: args.amount,
-        },
-        responses.returnObject({exit, logger, reject, resolve}));
       } catch (err) {
         return logger.error({err}) && reject();
       }
