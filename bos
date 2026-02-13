@@ -569,30 +569,6 @@ prog
     });
   })
 
-  // Give a peer some tokens
-  .command('gift', 'Give a direct peer some free funds off-chain')
-  .visible(false)
-  .help('Send some funds to a connected peer')
-  .argument('<target>', 'Peer to give funds to')
-  .argument('<amount>', 'Tokens to give', INT)
-  .option('--node <node_name>', 'Source node to use to pay gift')
-  .action((args, options, logger) => {
-    return new Promise(async (resolve, reject) => {
-      const number = 'gave_tokens';
-
-      try {
-        return network.sendGift({
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
-          to: args.target,
-          tokens: args.amount,
-        },
-        responses.returnNumber({logger, number, reject, resolve}));
-      } catch (err) {
-        return logger.error({err}) && reject();
-      }
-    });
-  })
-
   // Get the edges of a given node
   .command('graph', 'List out the connections a node has with other nodes')
   .argument('<alias_or_public_key>', 'Node in the graph to look up')

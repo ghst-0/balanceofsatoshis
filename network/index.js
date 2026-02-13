@@ -11,7 +11,6 @@ const {peerSortOptions} = require('./constants');
 const probe = require('./probe');
 const probeDestination = require('./probe_destination');
 const pushPayment = require('./push_payment');
-const sendGift = require('./send_gift');
 
 module.exports = {
   currencyForNetwork,
@@ -26,6 +25,5 @@ module.exports = {
   peerSortOptions,
   probe,
   probeDestination,
-  pushPayment,
-  sendGift
+  pushPayment
 };
