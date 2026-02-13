@@ -593,49 +593,6 @@ prog
     });
   })
 
-  // Intercept inbound channel requests and set requirements for inbound opens
-  .command('inbound-channel-rules', 'Enforce rules for inbound channels')
-  .help('Rules should be written evaluating to TRUE to accept a channel')
-  .help('Example rule: --rule "CAPACITY > 100000"')
-  .help('You can use multiple --rule flags to enforce multiple rules')
-  .help('Multiple --coop-close-address supported, will cycle through them')
-  .help('Avoid requiring Blockchain confirmations using --trust-funding-from')
-  .help('For formulas: CAPACITIES are the sizes of the peer public channels')
-  .help('For formulas: CAPACITY is the size of the requested channel open')
-  .help('For formulas: CHANNEL_AGES are the block ages of public channels')
-  .help('For formulas: CLEARNET is when peer advertises a clearnet address')
-  .help('For formulas: FEE_RATES are the outbound fee rates for the peer')
-  .help('For formulas: JOINT_PUBLIC_CAPACITY is graph capacity with the peer')
-  .help('For formulas: LOCAL_BALANCE is the gifted amount from the peer')
-  .help('For formulas: M is 1,000,000 - use like CAPACITY > 10*M')
-  .help('For formulas: OBSOLETE is chan type, like NOT(OBSOLETE)')
-  .help('For formulas: PUBLIC_KEY is the public key of the requesting peer')
-  .help('For formulas: PRIVATE is when request is for private channel')
-  .help('For formulas: TOR is when peer advertises a Tor address')
-  .help('For formulas: Use IF(X, Y, Z) to make branching condition rules')
-  .help('Try formulas on the sandbox: https://formulajs.info/functions/')
-  .option('--coop-close-address', 'Use a coop close address', REPEATABLE)
-  .option('--node <node_name>', 'Saved node to reject inbound channels on')
-  .option('--reason <message>', 'Message to return when rejecting a request')
-  .option('--rule <formula>', 'Freeform rule for inbound channel', REPEATABLE)
-  .option('--trust-funding-from <key>', 'Trust channel funds from', REPEATABLE)
-  .action((args, options, logger) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        return await peers.interceptInboundChannels({
-          logger,
-          addresses: collect(options.coopCloseAddress),
-          lnd: (await lndForNode(logger, options.node)).lnd,
-          reason: options.reason,
-          rules: flatten([options.rule].filter(n => !!n)),
-          trust: collect(options.trustFundingFrom),
-        });
-      } catch (err) {
-        return logger.error({err}) && reject();
-      }
-    });
-  })
-
   // Get inbound liquidity information: available inbound off-chain tokens
   .command('inbound-liquidity', 'Get inbound liquidity size')
   .option('--above <tokens>', 'Return amount above watermark', INT)
