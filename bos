@@ -934,38 +934,6 @@ prog
     });
   })
 
-  // Increase outbound liquidity
-  .command('increase-outbound-liquidity', 'Move on-chain funds off-chain')
-  .help('Open a new channel to add more off-chain liquidity')
-  .option('--amount <amount>', 'Amount to assign to new channel capacity', INT)
-  .option('--dryrun', 'Avoid actually opening a channel')
-  .option('--fee-rate <fee_rate>', 'Use specific fee rate (per vbyte)', FLOAT)
-  .option('--node <node_name>', 'Increase outbound liquidity on saved node')
-  .option('--private', 'Mark new channel as private')
-  .option('--set-fee-rate <ppm>', 'Fee in parts per million or use a formula')
-  .option('--with <peer_public_key>', 'Select a specific peer to open with')
-  .action((args, options, logger) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        return network.openChannel({
-          logger,
-          chain_fee_rate: options.feeRate || undefined,
-          fs: {getFile: readFile},
-          is_dry_run: options.dryrun,
-          is_private: options.private,
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
-          peer: options.with || undefined,
-          request: commands.simpleRequest,
-          set_fee_rate: options.setFeeRate || undefined,
-          tokens: options.amount,
-        },
-        responses.returnObject({logger, reject, resolve}));
-      } catch (err) {
-        return logger.error({err}) && reject();
-      }
-    });
-  })
-
   // Create an invoice
   .command('invoice', 'Create an invoice and get a BOLT 11 payment request')
   .help('Amount can take m/k variables: 5*m for 5 million, 250*k = 0.0025')
@@ -1218,33 +1186,6 @@ prog
         node: args.node || undefined,
       },
       responses.returnObject({logger, reject, resolve}));
-    });
-  })
-
-  // Open a balanced channel with a peer
-  .command('open-balanced-channel', 'Open channel with equal start balances')
-  .help('Remote node must be prepared to receive this type of channel')
-  .help('The remote node should also run this same command after you propose')
-  .help('Channel details are negotiated with keysend so that is also required')
-  .help('Do not use a chain fee that will not confirm within two weeks')
-  .option('--coop-close-address <addr>', 'Close address (for proposing open)')
-  .option('--node <node_name>', 'Use saved node details instead of local node')
-  .option('--recover <addr>', 'Recover if funds sent to an address by mistake')
-  .action((args, options, logger) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        return services.openBalancedChannel({
-          logger,
-          address: options.coopCloseAddress || undefined,
-          after: new Date(Date.now() - (1000 * 60 * 60 * 6)).toISOString(),
-          ask: await commands.interrogate({}),
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
-          recover: options.recover,
-        },
-        responses.returnObject({exit, logger, reject, resolve}));
-      } catch (err) {
-        return logger.error({err}) && reject();
-      }
     });
   })
 
