@@ -35,9 +35,6 @@ importers:
       asyncjs-util:
         specifier: 1.2.12
         version: 1.2.12
-      bip66:
-        specifier: 2.0.0
-        version: 2.0.0
       bitcoinjs-lib:
         specifier: 6.1.7
         version: 6.1.7
@@ -107,9 +104,6 @@ importers:
       probing:
         specifier: 5.0.4
         version: 5.0.4
-      qrcode-terminal:
-        specifier: 0.12.0
-        version: 0.12.0
       sanitize-filename:
         specifier: 1.6.3
         version: 1.6.3
@@ -1317,10 +1311,6 @@ packages:
 
   pushdata-bitcoin@1.0.1:
     resolution: {integrity: sha512-hw7rcYTJRAl4olM8Owe8x0fBuJJ+WGbMhQuLWOXEMN3PxPCKQHRkhfL+XG0+iXUmSHjkMmb3Ba55Mt21cZc9kQ==}
-
-  qrcode-terminal@0.12.0:
-    resolution: {integrity: sha512-EXtzRZmC+YGmGlDFbXKxQiMZNwCLEO6BANKXG4iCtSIM0yqc/pappSx3RIKr4r0uh5JsBckOXeKrB3Iz7mdQpQ==}
-    hasBin: true
 
   qs@6.14.2:
     resolution: {integrity: sha512-V/yCWTTF7VJ9hIh18Ugr2zhJMP01MY7c5kh4J870L7imm6/DIzBsNLTXzMwUA3yZ5b/KBqLx8Kp3uRvd7xSe3Q==}
@@ -2958,8 +2948,6 @@ snapshots:
   pushdata-bitcoin@1.0.1:
     dependencies:
       bitcoin-ops: 1.4.1
-
-  qrcode-terminal@0.12.0: {}
 
   qs@6.14.2:
     dependencies:

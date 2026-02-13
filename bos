@@ -28,7 +28,6 @@ const encryption = importLazy('./encryption');
 const lnd = importLazy('./lnd');
 const network = importLazy('./network');
 const nodes = importLazy('./nodes');
-const offchain = importLazy('./offchain');
 const {peerSortOptions} = commandConstants;
 const peers = importLazy('./peers');
 const {priceProviders} = commandConstants;
@@ -661,51 +660,6 @@ prog
           with: options.with,
         },
         responses.returnNumber({logger, reject, resolve, number: 'balance'}));
-      } catch (err) {
-        return logger.error({err}) && reject();
-      }
-    });
-  })
-
-  // Create an invoice
-  .command('invoice', 'Create an invoice and get a BOLT 11 payment request')
-  .help('Amount can take m/k variables: 5*m for 5 million, 250*k = 0.0025')
-  .help('Fiat conversion is supported in amount, N*USD or N*EUR')
-  .help(`Fiat rate providers: ${priceProviders.join(', ')}`)
-  .help('--virtual invoices cannot be used with payers who probe before pay')
-  .help('Only one --virtual invoice can be active at a time')
-  .help('--reject-on-amount-increase can only be used with --virtual invoices')
-  .argument('[amount]', 'Amount for invoice', STRING, '0')
-  .option('--for <description>', 'What is the invoice requesting payment for')
-  .option('--hours <expires_in>', 'Hours invoice is valid for', INT)
-  .option('--include-hints', 'Include the default set of hop hint channels')
-  .option('--node <node_name>', 'Use saved node to create invoice')
-  .option('--qr', 'Encode payment request into a terminal output QR code')
-  .option('--rate-provider <rate_provider>', 'Rate provider', priceProviders)
-  .option('--reject-on-amount-increase', 'Reject if required amount increases')
-  .option('--select-hints', 'Select hop hints to be added to the request')
-  .option('--virtual', 'Request payment over a virtual channel')
-  .option('--virtual-fee-rate <pm>', 'Fee rate to use on virtual channel', INT)
-  .action((args, options, logger) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        return await offchain.createInvoice({
-          logger,
-          amount: args.amount,
-          ask: await commands.interrogate({}),
-          description: options.for,
-          expires_in: options.hours,
-          is_hinting: options.includeHints || undefined,
-          is_including_qr: !!options.qr || undefined,
-          is_rejecting_option: !!options.rejectOnAmountIncrease || undefined,
-          is_selecting_hops: options.selectHints || undefined,
-          is_virtual: options.virtual || undefined,
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
-          rate_provider: options.rateProvider || undefined,
-          request: commands.simpleRequest,
-          virtual_fee_rate: options.virtualFeeRate,
-        },
-        responses.returnObject({exit, logger, reject, resolve}));
       } catch (err) {
         return logger.error({err}) && reject();
       }
