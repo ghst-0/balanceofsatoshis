@@ -208,53 +208,6 @@ prog
     });
   })
 
-  // Broadcast a chain transaction
-  .command('broadcast', 'Submit a signed transaction to the mempool')
-  .argument('<tx>', 'Signed raw transaction')
-  .option('--description <description>', 'Describe the transaction being sent')
-  .option('--node <node_name>', 'Node to submit transaction on')
-  .action((args, options, logger) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        return lnSync.broadcastTransaction({
-          logger,
-          description: options.description,
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
-          transaction: args.tx,
-        },
-        responses.returnObject({logger, reject, resolve}));
-      } catch (err) {
-        return logger.error({err}) && reject();
-      }
-    });
-  })
-
-  // Call API directly
-  .command('call', 'Make a raw API call and to get a raw API response')
-  .help('If you do not specify a method it will list the supported methods')
-  .argument('[method]', 'Method to call')
-  .option('--json', 'Output raw JSON as the output')
-  .option('--node <node_name>', 'Saved node to use for call')
-  .option('--param <param>', 'query encoded name=value', REPEATABLE)
-  .action((args, options, logger) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const r = options.json ? responses.returnJson : responses.returnObject;
-
-        return commands.callRawApi({
-          logger,
-          ask: await commands.interrogate({}),
-          lnd: (await lndForNode(logger, options.node)).lnd,
-          method: args.method,
-          params: flatten([options.param].filter(n => !!n)),
-        },
-        r({logger, reject, resolve}));
-      } catch (err) {
-        return logger.error({err}) && reject();
-      }
-    });
-  })
-
   // Get the number of days until the RPC cert expires
   .command('cert-validity-days', 'Number of days until the cert is invalid')
   .option('--below <number_of_days>', 'Return number of days below mark', INT)
