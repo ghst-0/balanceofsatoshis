@@ -140,36 +140,6 @@ prog
     });
   })
 
-  // Direct autopilot to mirror one or more nodes on the network
-  .command('autopilot', 'Enable autopilot')
-  .visible(false)
-  .argument('<status>', 'Status of autopilot', ['off', 'on'])
-  .help('Autopilot status is either on or off')
-  .help('Mirroring and urls require lnd --autopilot.heuristic=externalscore:1')
-  .option('--dryrun', 'Show scoring without changing autopilot settings')
-  .option('--mirror <pubkey>', 'Mirror channels of node', REPEATABLE)
-  .option('--no-color', 'Mute all colors')
-  .option('--node <node_name>', 'Set autopilot on saved node')
-  .option('--url <url>', 'Follow nodes from a scoring URL', REPEATABLE)
-  .action((args, options, logger) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        return network.setAutopilot({
-          is_dry_run: !!options.dryrun,
-          is_enabled: args.status === 'on',
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
-          mirrors: flatten([options.mirror].filter(n => !!n)),
-          node: options.node,
-          request: commands.simpleRequest,
-          urls: flatten([options.url].filter(n => !!n)),
-        },
-        responses.returnObject({logger, reject, resolve}));
-      } catch (err) {
-        return logger.error({err}) && reject();
-      }
-    });
-  })
-
   // Get local balance information
   .command('balance', 'Get total tokens')
   .help('Sums balances on-chain, in channels, and pending, plus commit fees')

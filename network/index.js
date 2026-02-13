@@ -15,7 +15,6 @@ const pushPayment = require('./push_payment');
 const reconnect = require('./reconnect');
 const removePeer = require('./remove_peer');
 const sendGift = require('./send_gift');
-const setAutopilot = require('./set_autopilot');
 const transferFunds = require('./transfer_funds');
 
 module.exports = {
@@ -36,6 +35,5 @@ module.exports = {
   reconnect,
   removePeer,
   sendGift,
-  setAutopilot,
   transferFunds,
 };
