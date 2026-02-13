@@ -751,41 +751,6 @@ prog
     });
   })
 
-  // Fund and sign a chain transaction
-  .command('fund', 'Make a signed transaction spending on-chain funds')
-  .help('Use LND UTXOs to craft a signed raw transaction sending to addresses')
-  .help('Specify <address> <amount> <address> <amount> for addresses, amounts')
-  .help('Amounts support formulas, use MAX to reference selected UTXOs total')
-  .help('--utxo can be specified multiple times to spend multiple UTXOs')
-  .argument('<address_amount...>', 'Address and amount to send')
-  .option('--broadcast', 'Broadcast the signed transaction')
-  .option('--dryrun', 'Avoid locking up UTXOs')
-  .option('--fee-rate <fee>', 'Per vbyte fee rate for on-chain tx fee')
-  .option('--node <node_name>', 'Node to spend coins')
-  .option('--select-utxos', 'Specify UTXOs to spend interactively from a list')
-  .option('--utxo <outpoint>', 'Spend a specific tx_id:vout', REPEATABLE)
-  .action((args, options, logger) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        return chain.fundTransaction({
-          logger,
-          addresses: args.addressAmount.filter((n, i) => !(i % 2)),
-          amounts: args.addressAmount.filter((n, i) => i % 2),
-          ask: await commands.interrogate({}),
-          fee_tokens_per_vbyte: options.feeRate,
-          is_broadcast: options.broadcast,
-          is_dry_run: !!options.dryrun,
-          is_selecting_utxos: options.selectUtxos,
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
-          utxos: flatten([options.utxo].filter(n => !!n)),
-        },
-        responses.returnObject({logger, reject, resolve}));
-      } catch (err) {
-        return logger.error({err}) && reject();
-      }
-    });
-  })
-
   // Buy an inbound channel
   .command('get-inbound-channel', 'Buy an inbound channel')
   .help('Obtain an inbound channel from a node on the network')
