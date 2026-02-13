@@ -6,8 +6,8 @@ const {postNodesOffline} = require('ln-telegram');
 const {returnResult} = require('asyncjs-util');
 
 const {getLnds} = require('./../lnd');
-const getTelegramBot = require('./get_telegram_bot');
-const runTelegramBot = require('./run_telegram_bot');
+const getRocketChatBot = require('./get_rocketchat_bot');
+const runRocketChatBot = require('./run_rocketchat_bot');
 
 const defaultPaymentsBudget = 0;
 const isNumber = n => !isNaN(n);
@@ -15,7 +15,7 @@ const restartDelayMs = 1000 * 60 * 3;
 const roundedUnitsType = 'rounded';
 const smallUnitsType = 'full';
 
-/** Connect nodes to Telegram
+/** Connect nodes to RocketChat
 
   {
     ask: <Ask Function>
@@ -100,7 +100,7 @@ module.exports = (args, cbk) => {
 
       // Get the telegram bot
       getBot: ['validate', ({}, cbk) => {
-        return getTelegramBot({fs: args.fs, proxy: args.proxy}, cbk);
+        return getRocketChatBot({fs: args.fs, proxy: args.proxy}, cbk);
       }],
 
       // Set the units formatting
@@ -124,7 +124,7 @@ module.exports = (args, cbk) => {
         let online = getNodes.map(n => n.id);
 
         return asyncForever(cbk => {
-          return runTelegramBot({
+          return runRocketChatBot({
             ask: args.ask,
             bot: getBot.bot,
             fs: args.fs,

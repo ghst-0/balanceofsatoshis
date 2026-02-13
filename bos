@@ -43,7 +43,7 @@ const routing = importLazy('./routing');
 const services = importLazy('./services');
 const {swapTypes} = commandConstants;
 const swaps = importLazy('./swaps');
-const telegram = importLazy('./telegram');
+const rocketchat = importLazy('./rocketchat');
 const triggers = importLazy('./triggers');
 const wallets = importLazy('./wallets');
 const {version} = importLazy('./package');
@@ -2098,10 +2098,9 @@ prog
     });
   })
 
-  // Link up Telegram bot
-  .command('telegram', 'Post updates to a Telegram bot')
-  .help('Connect to a Telegram bot. Create bot: tg://resolve?domain=botfather')
-  .help('After creating the bot start chatting with the bot for connect code')
+  // Link up RocketChat bot
+  .command('rocketchat', 'Post updates to a RocketChat bot')
+  .help('Connect to a RocketChat bot. Create bot in RocketChat')
   .help('Supported updates: forwards, received payments, etc')
   .help('Multiple nodes are supported by repeating the `--node` flag')
   .help('See README for info on persisting the bot through Docker/nohup')
@@ -2110,15 +2109,15 @@ prog
   .option('--connect <connect_code>', 'Connection code from /connect')
   .option('--ignore-forwards-below <amount>', 'Ignore forwards of value', INT)
   .option('--ignore-rebalances-below <amt>', 'Ignore rebalances of value', INT)
-  .option('--node <node_name>', 'Node to connect to Telegram', REPEATABLE)
-  .option('--reset-api-key', 'Reset the Telegram API key')
-  .option('--use-proxy <path>', 'Proxy agent to connect to Telegram')
+  .option('--node <node_name>', 'Node to connect to RocketChat', REPEATABLE)
+  .option('--reset-api-key', 'Reset the RocketChat API key')
+  .option('--use-proxy <path>', 'Proxy agent to connect to RocketChat')
   .option('--use-rounded-units', 'No leading zeros or fractions on amounts')
   .option('--use-small-units', 'Avoid showing leading zeros on amounts')
   .action((args, options, logger) => {
     return new Promise(async (resolve, reject) => {
       try {
-        return await telegram.connectToTelegram({
+        return await rocketchat.connectToRocketChat({
           logger,
           ask: await commands.interrogate({}),
           fs: {

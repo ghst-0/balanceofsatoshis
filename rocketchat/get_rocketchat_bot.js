@@ -36,7 +36,7 @@ module.exports = ({fs, proxy}, cbk) => {
       // Check arguments
       validate: cbk => {
         if (!fs) {
-          return cbk([400, 'ExpectedFileSystemMethodsToGetTelegramBot']);
+          return cbk([400, 'ExpectedFileSystemMethodsToGetRocketChatBot']);
         }
 
         return cbk();

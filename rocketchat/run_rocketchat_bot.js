@@ -5,7 +5,7 @@ const {getIdentity} = require('ln-service');
 const {returnResult} = require('asyncjs-util');
 
 const {getLnds} = require('./../lnd');
-const startTelegramBot = require('./start_telegram_bot');
+const startTelegramBot = require('./start_rocketchat_bot');
 
 const defaultError = [503, 'TelegramBotStopped'];
 const {isArray} = Array;

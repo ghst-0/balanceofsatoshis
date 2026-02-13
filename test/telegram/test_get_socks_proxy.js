@@ -2,7 +2,7 @@ const {equal} = require('node:assert').strict;
 const {rejects} = require('node:assert').strict;
 const test = require('node:test');
 
-const method = require('./../../telegram/get_socks_proxy');
+const method = require('../../rocketchat/get_socks_proxy');
 
 const makeArgs = overrides => {
   const agent = {host: 'host'};
