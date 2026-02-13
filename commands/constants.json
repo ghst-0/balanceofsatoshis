@@ -23,7 +23,6 @@
     "outbound_liquidity",
     "public_key"
   ],
-  "priceProviders": ["coinbase", "coindesk", "coingecko"],
   "process": "bos",
   "rateProviders": ["coindesk", "coingecko"]
 }

@@ -12,7 +12,6 @@
   "dependencies": {
     "@alexbosworth/blockchain": "2.0.0",
     "@alexbosworth/caporal": "2.0.0",
-    "@alexbosworth/fiat": "2.0.0",
     "@alexbosworth/html2unicode": "1.1.5",
     "@alexbosworth/node-fetch": "2.6.2",
     "abort-controller": "3.0.0",

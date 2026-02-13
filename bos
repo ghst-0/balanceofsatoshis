@@ -12,7 +12,6 @@ const {writeFile} = require('fs');
 const importLazy = require('import-lazy')(require);
 
 const fetch = importLazy('@alexbosworth/node-fetch');
-const fiat = importLazy('@alexbosworth/fiat');
 const lnService = importLazy('ln-service');
 const lnSync = importLazy('ln-sync');
 const prog = require('@alexbosworth/caporal');
@@ -30,7 +29,6 @@ const network = importLazy('./network');
 const nodes = importLazy('./nodes');
 const {peerSortOptions} = commandConstants;
 const peers = importLazy('./peers');
-const {priceProviders} = commandConstants;
 const {rateProviders} = commandConstants;
 const responses = importLazy('./responses');
 const routing = importLazy('./routing');
@@ -810,31 +808,6 @@ prog
       } catch (err) {
         return logger.error({err}) && reject();
       }
-    });
-  })
-
-  // Get the current fiat exchange price
-  .command('price', 'Get the price')
-  .help('Price is denominated in cents or equivalent')
-  .help('Rate provider options: coinbase, coindesk, or coingecko')
-  .argument('[symbols...]', 'Desired fiat tickers')
-  .option('--file <path>', 'Write the output to a JSON file at desired path')
-  .option('--from <provider>', 'Rate provider', priceProviders, 'coindesk')
-  .option('--no-color', 'Mute all colors')
-  .action((args, options, logger) => {
-    return new Promise((resolve, reject) => {
-      return fiat.getPrices({
-        from: options.from,
-        request: commands.simpleRequest,
-        symbols: args.symbols.map(n => n.toUpperCase()),
-      },
-      responses.returnObject({
-        logger,
-        reject,
-        resolve,
-        file: options.file,
-        write: writeFile,
-      }));
     });
   })
 

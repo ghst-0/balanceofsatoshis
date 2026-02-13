@@ -14,9 +14,6 @@ importers:
       '@alexbosworth/caporal':
         specifier: 2.0.0
         version: 2.0.0
-      '@alexbosworth/fiat':
-        specifier: 2.0.0
-        version: 2.0.0
       '@alexbosworth/html2unicode':
         specifier: 1.1.5
         version: 1.1.5
