@@ -1857,22 +1857,6 @@ prog
     });
   })
 
-  // Unlock wallet
-  .command('unlock', 'Unlock wallet if locked')
-  .help('Check if the wallet is locked, if so use a password file to unlock')
-  .argument('<path_to_password_file>', 'Path to password file')
-  .option('--no-color', 'Mute all colors')
-  .option('--node <node_name>', 'Node to unlock')
-  .action((args, options, logger) => {
-    return new Promise((resolve, reject) => {
-      return wallets.unlockWallet({
-        node: options.node,
-        path_to_password_file: args.pathToPasswordFile,
-      },
-      responses.returnObject({logger, reject, resolve}));
-    });
-  })
-
   // Use a paid service
   .command('use', 'Use a paid KeySend service from a services provider')
   .visible(false)
