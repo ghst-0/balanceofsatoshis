@@ -54,7 +54,8 @@
   "description": "Lightning balance CLI",
   "devDependencies": {
     "invoices": "4.0.0",
-    "ln-docker-daemons": "6.0.28"
+    "ln-docker-daemons": "6.0.28",
+    "oxlint": "^1.47.0"
   },
   "engines": {
     "node": ">=20"
