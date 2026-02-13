@@ -1,9 +1,7 @@
 const asyncAuto = require('async/auto');
 const asyncMap = require('async/map');
-const asyncWhilst = require('async/whilst');
 const {findKey} = require('ln-sync');
 const {formatTokens} = require('ln-sync');
-const {getChannel} = require('ln-service');
 const {getChannels} = require('ln-service');
 const {getIdentity} = require('ln-service');
 const {getNode} = require('ln-service');
@@ -22,13 +20,10 @@ const {getTags} = require('./../tags');
 const probeDestination = require('./probe_destination');
 
 const defaultFinalCltvDelta = 144;
-const defaultMaxPaths = 5;
 const effectiveFeeRate = (n, m) => Number(BigInt(1e6) * BigInt(n) / BigInt(m));
-const flatten = arr => [].concat(...arr);
 const {isArray} = Array;
 const pathTimeoutMs = 1000 * 60 * 90;
 const singlePath = 1;
-const uniq = arr => Array.from(new Set(arr));
 const unsupported = 501;
 
 /** Probe a destination, looking for multiple non-overlapping paths
