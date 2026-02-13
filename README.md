@@ -71,9 +71,6 @@ bos balance
 # Get the number of days the node cert remains valid
 bos cert-validity-days
 
-# Receive on-chain funds via a regular address
-bos chain-deposit
-
 # See the current fee estimates confirmation targets
 bos chainfees
 
@@ -88,9 +85,6 @@ bos chart-fees-paid
 
 # Show a chart of payments received
 bos chart-payments-received
-
-# Remove old failed payment data for probes and other failed payments
-bos clean-failed-payments
 
 # See details on how closed channels resolved on-chain
 bos closed
@@ -107,14 +101,8 @@ bos find "query"
 # Output a summarized version of peers forwarded towards
 bos forwards
 
-# Create a signed raw transaction for an on-chain transfer
-bos fund "address" "amount"
-
 # See help about a command
 bos help "command"
-
-# Run gateway service for https://ln-operator.github.io/ UI
-bos gateway
 
 # Look up the channels and fee rates of a node by its public key
 bos graph "pubkey"
@@ -125,20 +113,8 @@ bos inbound-liquidity
 # Enforce rules on inbound channels
 bos inbound-channel-rules
 
-# Increase inbound liquidity to the node
-bos increase-inbound-liquidity
-
-# Increase the outbound liquidity of the node
-bos increase-outbound-liquidity
-
 # View and adjust list of saved nodes
 bos nodes
-
-# Open channels to public keys in a batch transaction
-bos open "public_keys..."
-
-# Open a balanced channel with a peer
-bos open-balanced-channel
 
 # Outputs the sum total of local channel liquidity
 bos outbound-liquidity
@@ -155,12 +131,6 @@ bos price
 # Test if funds can be sent to a destination
 bos probe "payment_request/public_key"
 
-# Rebalance funds between peers
-bos rebalance
-
-# Remove all channels with a peer
-bos remove-peer
-
 # Get a general report of the node activity
 bos report
 
@@ -170,9 +140,6 @@ bos send
 # Connect up to a Telegram bot
 bos telegram
 
-# Unlock the wallet if it is locked
-bos unlock "path_to_password_file"
-
 # Show unspent coin outputs
 bos utxos
 ```
@@ -181,13 +148,8 @@ bos utxos
 
 - The `accounting` [command howto](https://yalls.org/articles/97d67df1-d721-417d-a6c0-11d793739be9:0965AC5E-56CD-4870-9041-E69616660E6F/bc71e6bf-f2aa-4bae-a3e8-b12e7be2284c)
 - The `open` [command howto](https://satbase.org/bos-open/)
-- The `rebalance` [command howto](https://yalls.org/articles/97d67df1-d721-417d-a6c0-11d793739be9:0965AC5E-56CD-4870-9041-E69616660E6F/327ed9f6-3a73-41c2-a9c7-8c4e274bdd54)
-- Another `rebalance` [command howto](https://yalls.org/articles/97d67df1-d721-417d-a6c0-11d793739be9:0965AC5E-56CD-4870-9041-E69616660E6F/30a7c519-0ec0-4644-b3aa-341c41bac296)
-- Running `rebalance` [video (In German)](https://www.youtube.com/watch?v=EimVHnv-SUk)
-- Secrets of `rebalance` [command revealed](https://yalls.org/articles/97d67df1-d721-417d-a6c0-11d793739be9:0965AC5E-56CD-4870-9041-E69616660E6F/3c0709b7-5f6a-4a3c-944e-48b80e0556df)
 - Running `telegram` [via nohup/tmux howto](https://web.archive.org/web/20240711203839/https://plebnet.wiki/wiki/Umbrel_-_Installing_BoS#Installing_Telegram_Bot)
 - Running `telegram` [via systemd](https://github.com/ziggie1984/miscellanous/blob/97c4905747fe23a824b6e53dc674c4a571ac0f5c/automation_telegram_bot.md)
-- Another `rebalance` + `tags` & `telegram` [commands howto](https://raspibolt.org/guide/bonus/lightning/balance-of-satoshis.html#optional-connect-your-node-to-a-telegram-bot)
 - Documentation for bos commands [commands howto](https://github.com/niteshbalusu11/BOS-Commands-Document#balance-of-satoshis-commands)
 
 Want to stack some sats? Write your own LN paywalled guide!
