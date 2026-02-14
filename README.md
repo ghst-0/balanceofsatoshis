@@ -50,15 +50,6 @@ bos help
 bos help commandName
 ```
 
-## Community
-
-Use `bos trade-secret` and buy the secret
-`626f73ff0001010425002302210288be11d147e1525f7f234f304b094d6627d2c70f3313d7ba3696887b261c4447`
-to gain access to the private Telegram group.
-
-Or if you can't use bos yet you can ask about it on the
-[public group](https://t.me/balanceofsatoshis)
-
 ### Example Commands
 
 ```shell
