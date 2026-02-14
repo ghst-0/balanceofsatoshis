@@ -34,7 +34,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, async () => {
-    if (!!error) {
+    if (error) {
       await rejects(tableRowsFromCsv(args), error, 'Got expected error');
     } else {
       const {rows} = await tableRowsFromCsv(args);

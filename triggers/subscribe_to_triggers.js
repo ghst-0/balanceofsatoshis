@@ -48,7 +48,7 @@ module.exports = ({lnds}) => {
 
   // Stop subscription when listeners are removed
   emitter.on('removeListener', () => {
-    if (!!emitter.listenerCount('channel_opened')) {
+    if (emitter.listenerCount('channel_opened')) {
       return;
     }
 
@@ -107,7 +107,7 @@ module.exports = ({lnds}) => {
     subs.push(peersSub);
 
     getHeight({lnd}, (err, res) => {
-      if (!!err) {
+      if (err) {
         return errored(err);
       }
 
@@ -209,7 +209,7 @@ module.exports = ({lnds}) => {
           limit: !token ? defaultInvoicesLimit : undefined,
         },
         (err, res) => {
-          if (!!err) {
+          if (err) {
             return cbk(err);
           }
 
@@ -220,7 +220,7 @@ module.exports = ({lnds}) => {
           return cbk();
         });
       },
-      err => !!err ? errored(err) : null,
+      err => err ? errored(err) : null,
     );
   });
 

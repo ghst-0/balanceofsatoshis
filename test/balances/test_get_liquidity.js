@@ -48,7 +48,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, async () => {
-    if (!!error) {
+    if (error) {
       await rejects(getLiquidity(args), error, 'Got expected error');
     } else {
       const balances = await getLiquidity(args);

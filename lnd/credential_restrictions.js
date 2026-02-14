@@ -29,11 +29,11 @@ module.exports = args => {
 
   const permissions = [];
 
-  if (!!args.is_readonly) {
+  if (args.is_readonly) {
     readPerms.forEach(n => permissions.push(n));
   }
 
-  if (!!args.is_nospend) {
+  if (args.is_nospend) {
     noSpendPerms.forEach(n => permissions.push(n));
   }
 

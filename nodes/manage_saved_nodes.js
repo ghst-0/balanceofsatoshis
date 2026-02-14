@@ -126,7 +126,7 @@ module.exports = (args, cbk) => {
           node: args.node,
         },
         (err, res) => {
-          if (!!err) {
+          if (err) {
             return cbk(err);
           }
 
@@ -203,7 +203,7 @@ module.exports = (args, cbk) => {
       nodes: ['getSaved', ({getSaved}, cbk) => {
         const nodes = getSaved.nodes.map(node => ({
           is_online: node.is_online,
-          lnd: !!args.is_including_lnd_api ? node.lnd : undefined,
+          lnd: args.is_including_lnd_api ? node.lnd : undefined,
           node_name: node.node_name,
           public_key: node.public_key,
         }));

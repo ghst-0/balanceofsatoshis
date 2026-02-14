@@ -100,7 +100,7 @@ module.exports = (args, cbk) => {
           return cbk([400, 'ExpectedOmitArrayToGetPeers']);
         }
 
-        if (!!isArray(args.sort_by)) {
+        if (isArray(args.sort_by)) {
           return cbk([400, 'SortingByMultipleFieldsNotSupported']);
         }
 
@@ -167,7 +167,7 @@ module.exports = (args, cbk) => {
               lnd: args.lnd,
             },
             (err, res) => {
-              if (!!err) {
+              if (err) {
                 return cbk(err);
               }
 
@@ -184,7 +184,7 @@ module.exports = (args, cbk) => {
             });
           },
           err => {
-            if (!!err) {
+            if (err) {
               return cbk(err);
             }
 
@@ -231,7 +231,7 @@ module.exports = (args, cbk) => {
           });
         });
 
-        if (!!unknown.length) {
+        if (unknown.length) {
           return cbk([400, 'UnknownTagSpecified', {unknown}]);
         }
 
@@ -248,7 +248,7 @@ module.exports = (args, cbk) => {
           lnd: args.lnd,
         },
         (err, res) => {
-          if (!!err) {
+          if (err) {
             return cbk(err);
           }
 
@@ -286,7 +286,7 @@ module.exports = (args, cbk) => {
               return cbk();
             }
 
-            if (!!err) {
+            if (err) {
               return cbk(err);
             }
 
@@ -328,8 +328,8 @@ module.exports = (args, cbk) => {
           return {
             created_at: forward.created_at,
             fee_mtokens: forward.fee_mtokens,
-            inbound: !!inKey ? inKey.key : null,
-            outbound: !!outKey ? outKey.key : null,
+            inbound: inKey ? inKey.key : null,
+            outbound: outKey ? outKey.key : null,
           };
         });
 
@@ -513,7 +513,7 @@ module.exports = (args, cbk) => {
           });
 
           // Exit early when there is a filter error
-          if (!!matching.failure) {
+          if (matching.failure) {
             throw new Error(matching.failure.error);
           }
 
@@ -573,7 +573,7 @@ module.exports = (args, cbk) => {
                 return chan.partner_public_key === n.public_key;
               });
 
-              if (!!hasPendingChan) {
+              if (hasPendingChan) {
                 return false;
               }
 
@@ -648,12 +648,12 @@ module.exports = (args, cbk) => {
           rows: []
             .concat([notNull([
               'Alias',
-              !!isShowingDisk ? 'Disk Mb' : null,
+              isShowingDisk ? 'Disk Mb' : null,
               'Inbound',
               'In Fee',
               'Outbound',
-              !!args.earnings_days ? 'Earned' : null,
-              !!isWideSize ? 'Public Key' : null,
+              args.earnings_days ? 'Earned' : null,
+              isWideSize ? 'Public Key' : null,
             ]).map(n => !args.is_monochrome ? bold(n) : n)])
             .concat(peers.peers.map(peer => {
               const earnings = formatTokens({
@@ -677,7 +677,7 @@ module.exports = (args, cbk) => {
               const alias = chartAliasForPeer({
                 alias: peer.alias,
                 downtime_percentage: peer.downtime_percentage,
-                icons: !!nodeIcons ? nodeIcons.icons : undefined,
+                icons: nodeIcons ? nodeIcons.icons : undefined,
                 is_forwarding: peer.is_forwarding,
                 is_inactive: peer.is_offline,
                 is_inbound_disabled: peer.is_inbound_disabled,
@@ -690,12 +690,12 @@ module.exports = (args, cbk) => {
 
               return notNull([
                 alias.display,
-                !!isShowingDisk ? peer.est_disk_usage_mb || ' ' : null,
+                isShowingDisk ? peer.est_disk_usage_mb || ' ' : null,
                 inbound.display || ' ',
                 peer.inbound_fee_rate || ' ',
                 outbound.display || ' ',
-                !!args.earnings_days ? earnings.display : null,
-                !!isWideSize ? peer.public_key : null,
+                args.earnings_days ? earnings.display : null,
+                isWideSize ? peer.public_key : null,
               ]);
             })),
         });

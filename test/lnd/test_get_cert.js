@@ -45,7 +45,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, async () => {
-    if (!!error) {
+    if (error) {
       await rejects(getCert(args), error, 'Got expected error');
     } else {
       const {cert} = await getCert(args);

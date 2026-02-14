@@ -51,7 +51,7 @@ module.exports = ({blocks, lnd}, cbk) => {
             confirmation_target: start + i,
           },
           (err, res) => {
-            if (!!err) {
+            if (err) {
               return cbk(err);
             }
 

@@ -25,7 +25,7 @@ module.exports = ({csv}, cbk) => {
         }
 
         return parse(csv, (err, entries) => {
-          if (!!err) {
+          if (err) {
             return cbk([400, 'FailedToParseCsv', {err}]);
           }
 

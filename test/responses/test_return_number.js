@@ -17,7 +17,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, (t, end) => {
-    if (!!error) {
+    if (error) {
       let err;
 
       return returnNumber({

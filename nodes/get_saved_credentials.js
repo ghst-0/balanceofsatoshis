@@ -43,7 +43,7 @@ module.exports = ({fs, node}, cbk) => {
           return cbk([400, 'ExpectedNodeNameToGetSavedCredentials']);
         }
 
-        if (!!isArray(node)) {
+        if (isArray(node)) {
           return cbk([400, 'ExpectedSingleSavedNodeNameToGetCredentialsFor']);
         }
 
@@ -62,7 +62,7 @@ module.exports = ({fs, node}, cbk) => {
 
           try {
             parse(res.toString());
-          } catch (err) {
+          } catch {
             return cbk([400, 'SavedNodeHasInvalidCredentials']);
           }
 
@@ -79,7 +79,7 @@ module.exports = ({fs, node}, cbk) => {
         }
 
         return fs.getFile(getFile.cert_path, (err, res) => {
-          if (!!err) {
+          if (err) {
             return cbk([400, 'SavedNodeCertFileNotFoundAtCertPath', {err}]);
           }
 
@@ -94,7 +94,7 @@ module.exports = ({fs, node}, cbk) => {
         }
 
         return fs.getFile(getFile.macaroon_path, (err, res) => {
-          if (!!err) {
+          if (err) {
             return cbk([400, 'SavedNodeMacaroonNotFoundAtPath', {err}]);
           }
 

@@ -59,7 +59,7 @@ module.exports = ({id, interval, network, request, retries}, cbk) => {
             url: `${endpoints[network]}tx/${id}/hex`,
           },
           (err, r, transaction) => {
-            if (!!err) {
+            if (err) {
               return cbk([503, 'FailedToGetRawTransaction', {err}]);
             }
 

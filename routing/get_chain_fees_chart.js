@@ -58,7 +58,7 @@ module.exports = (args, cbk) => {
           return cbk();
         }
 
-        if (!!args.days) {
+        if (args.days) {
           return cbk([400, 'ExpectedEitherDaysOrDatesToGetChainFeesChart']);
         }
 
@@ -113,7 +113,7 @@ module.exports = (args, cbk) => {
 
       // Calculate the start date
       start: ['validate', ({}, cbk) => {
-        if (!!args.start_date) {
+        if (args.start_date) {
           return cbk(null, moment(args.start_date));
         }
 
@@ -145,7 +145,7 @@ module.exports = (args, cbk) => {
       getTransactions: ['start', ({start}, cbk) => {
         return asyncMap(args.lnds, (lnd, cbk) => {
           return getNetwork({lnd}, (err, res) => {
-            if (!!err) {
+            if (err) {
               return cbk(err);
             }
 
@@ -159,7 +159,7 @@ module.exports = (args, cbk) => {
           });
         },
         (err, res) => {
-          if (!!err) {
+          if (err) {
             return cbk(err);
           }
 
@@ -233,7 +233,7 @@ module.exports = (args, cbk) => {
         return cbk(null, feesForSegment({
           measure,
           segments,
-          end: !!end ? end.toISOString() : undefined,
+          end: end ? end.toISOString() : undefined,
           forwards: transactions,
         }));
       }],
@@ -249,7 +249,7 @@ module.exports = (args, cbk) => {
       {
         const duration = `Chain fees paid in ${sum.fees.length} ${measure}s`;
         const since = `from ${start.calendar().toLowerCase()}`;
-        const to = !!end ? ` to ${end.calendar().toLowerCase()}` : '';
+        const to = end ? ` to ${end.calendar().toLowerCase()}` : '';
 
         const {display} = formatTokens({
           is_monochrome: args.is_monochrome,

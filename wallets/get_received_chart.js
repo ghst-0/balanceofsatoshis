@@ -1,5 +1,4 @@
 const asyncAuto = require('async/auto');
-const asyncDetect = require('async/detect');
 const asyncFilterLimit = require('async/filterLimit');
 const asyncMap = require('async/map');
 const {formatTokens} = require('ln-sync');
@@ -57,7 +56,7 @@ module.exports = (args, cbk) => {
           return cbk();
         }
 
-        if (!!args.days) {
+        if (args.days) {
           return cbk([400, 'ExpectedEitherDaysOrDatesToGetFeesChart']);
         }
 
@@ -121,14 +120,14 @@ module.exports = (args, cbk) => {
 
         return cbk(null, segmentMeasure({
           days,
-          end: !!end ? end.toISOString() : undefined,
+          end: end ? end.toISOString() : undefined,
           start: args.start_date,
         }));
       }],
 
       // Start date for received payments
       start: ['validate', ({}, cbk) => {
-        if (!!args.start_date) {
+        if (args.start_date) {
           return cbk(null, moment(args.start_date));
         }
 
@@ -146,7 +145,7 @@ module.exports = (args, cbk) => {
           cbk);
         },
         (err, res) => {
-          if (!!err) {
+          if (err) {
             return cbk(err);
           }
 
@@ -176,7 +175,7 @@ module.exports = (args, cbk) => {
                 return cbk(null, false);
               }
 
-              if (!!err) {
+              if (err) {
                 return cbk(err);
               }
 
@@ -184,7 +183,7 @@ module.exports = (args, cbk) => {
             });
           },
           (err, payments) => {
-            if (!!err) {
+            if (err) {
               return cbk(err);
             }
 
@@ -207,7 +206,7 @@ module.exports = (args, cbk) => {
       // Earnings aggregated
       sum: ['end', 'getReceived', 'segment', ({end, getReceived, segment}, cbk) => {
         return cbk(null, sumsForSegment({
-          end: !!end ? end.toISOString() : undefined,
+          end: end ? end.toISOString() : undefined,
           measure: segment.measure,
           records: getReceived.map(invoice => {
             return {date: invoice.confirmed_at, tokens: invoice.received};
@@ -229,9 +228,9 @@ module.exports = (args, cbk) => {
         const action = 'Received in';
         const {measure} = segment;
         const since = `from ${start.calendar().toLowerCase()}`;
-        const to = !!end ? ` to ${end.calendar().toLowerCase()}` : '';
+        const to = end ? ` to ${end.calendar().toLowerCase()}` : '';
 
-        if (!!args.is_count) {
+        if (args.is_count) {
           const duration = `${action} ${sum.count.length} ${measure}s`;
           const total = `Total: ${getReceived.length} received payments`;
 
@@ -247,9 +246,9 @@ module.exports = (args, cbk) => {
       // Total activity
       data: ['description', 'sum', ({description, sum}, cbk) => {
         const title = [
-          !!args.is_count ? 'Received' : 'Payments',
-          !!args.query ? `for “${args.query}”` : '',
-          !!args.is_count ? 'count' : 'received',
+          args.is_count ? 'Received' : 'Payments',
+          args.query ? `for “${args.query}”` : '',
+          args.is_count ? 'count' : 'received',
         ];
 
         return cbk(null, {

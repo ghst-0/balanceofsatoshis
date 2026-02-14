@@ -320,7 +320,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, async () => {
-    if (!!error) {
+    if (error) {
       await rejects(registerNode(args), error, 'Got expected error');
     } else {
       await registerNode(args);

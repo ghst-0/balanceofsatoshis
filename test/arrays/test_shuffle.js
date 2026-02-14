@@ -24,7 +24,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, (t, end) => {
-    if (!!error) {
+    if (error) {
       throws(() => shuffle(args), new Error(error), 'Got expected error');
     } else if (!expected.shuffled) {
       equal(shuffle(args).shuffled.join(''), '', 'Empty array is returned');

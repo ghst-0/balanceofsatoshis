@@ -80,7 +80,7 @@ module.exports = (args, cbk) => {
           return cbk([400, 'ExpectedArrayOfOutPeersToStartProbe']);
         }
 
-        if (!!args.request) {
+        if (args.request) {
           try {
             parsePaymentRequest({request: args.request});
           } catch (err) {
@@ -162,7 +162,7 @@ module.exports = (args, cbk) => {
             return cbk(null, true);
           }
 
-          if (!!err) {
+          if (err) {
             return cbk(err);
           }
 
@@ -280,7 +280,7 @@ module.exports = (args, cbk) => {
           public_key: publicKey,
         },
         (err, res) => {
-          if (!!err) {
+          if (err) {
             return cbk(null, publicKey);
           }
 
@@ -310,12 +310,12 @@ module.exports = (args, cbk) => {
           return cbk();
         }
 
-        if (!!args.is_strict_max_fee) {
+        if (args.is_strict_max_fee) {
           return cbk([501, 'StrictMaxFeeNotSupportedWithMultiPathProbes']);
         }
 
         // Exit with error when the backing LND is below 0.10.0
-        if (!!isLegacy) {
+        if (isLegacy) {
           return cbk([501, 'BackingLndDoesNotSupportMultiPathPayments']);
         }
 
@@ -366,7 +366,7 @@ module.exports = (args, cbk) => {
           const {description} = await describeRoute({
             route,
             lnd: args.lnd,
-            tagged: !!getIcons ? getIcons.nodes : undefined,
+            tagged: getIcons ? getIcons.nodes : undefined,
           });
 
           return args.logger.info({probing: description});
@@ -378,7 +378,7 @@ module.exports = (args, cbk) => {
             lnd: args.lnd,
             reason: failure.reason,
             route: failure.route,
-            tagged: !!getIcons ? getIcons.nodes : undefined,
+            tagged: getIcons ? getIcons.nodes : undefined,
           });
 
           return args.logger.info({failure: description});
@@ -391,7 +391,7 @@ module.exports = (args, cbk) => {
           const target = !args.find_max ? decodeRequest.tokens : undefined;
 
           args.logger.info({
-            target_amount: !!target ? formatTokens({tokens: target}) : target,
+            target_amount: target ? formatTokens({tokens: target}) : target,
             total_liquidity: formatTokens({tokens: liquidity}).display,
             total_fee: formatTokens({tokens: fees}).display,
             total_fee_rate: String(effectiveFeeRate(fees, liquidity)),

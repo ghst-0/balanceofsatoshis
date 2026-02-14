@@ -34,7 +34,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, (t, end) => {
-    if (!!error) {
+    if (error) {
       throws(() => method(args), new Error(error), 'Got error');
     } else {
       const res = method(args);

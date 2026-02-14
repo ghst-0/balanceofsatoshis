@@ -44,7 +44,7 @@ module.exports = ({filters, variables}) => {
 
     const parsed = parser.parse(formula);
 
-    if (!!parsed.error) {
+    if (parsed.error) {
       return {formula, error: describeParseError({error: parsed.error})};
     }
 
@@ -59,7 +59,7 @@ module.exports = ({filters, variables}) => {
   }
 
   // Exit early when there is a filter hit
-  if (!!filtered.filter(n => n !== false).length) {
+  if (filtered.filter(n => n !== false).length) {
     return {is_matching: false};
   }
 

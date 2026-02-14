@@ -74,7 +74,7 @@ module.exports = ({ended, id, original, pending, txs, vout}) => {
     return chan.transaction_id === id && chan.transaction_vout === vout;
   });
 
-  if (!!spendPending.length) {
+  if (spendPending.length) {
     spendPending
       .filter(pending => !!pending.is_closing)
       .forEach(pending => {
@@ -96,7 +96,7 @@ module.exports = ({ended, id, original, pending, txs, vout}) => {
     });
   }
 
-  if (!!spendTx) {
+  if (spendTx) {
     fromHex(spendTx.transaction).ins.forEach(input => {
       const grandParentTx = txs.find(n => n.id === original);
 
@@ -140,7 +140,7 @@ module.exports = ({ended, id, original, pending, txs, vout}) => {
     return {records};
   }
 
-  if (!!spendClose.is_cooperative_close) {
+  if (spendClose.is_cooperative_close) {
     records.push({
       action: 'cooperatively_closed_channel',
       balance: spendClose.final_local_balance,
@@ -152,7 +152,7 @@ module.exports = ({ended, id, original, pending, txs, vout}) => {
     });
   }
 
-  if (!!spendClose.is_local_force_close) {
+  if (spendClose.is_local_force_close) {
     const balance = spendClose.final_time_locked_balance;
 
     records.push({
@@ -166,7 +166,7 @@ module.exports = ({ended, id, original, pending, txs, vout}) => {
     });
   }
 
-  if (!!spendClose.is_remote_force_close) {
+  if (spendClose.is_remote_force_close) {
     records.push({
       action: 'peer_force_closed_channel',
       balance: spendClose.final_local_balance,

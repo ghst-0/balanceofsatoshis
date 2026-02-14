@@ -286,7 +286,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, async () => {
-    if (!!error) {
+    if (error) {
       await rejects(adjustTags(args), error, 'Got expected error');
     } else {
       const res = await adjustTags(args);

@@ -34,7 +34,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, (t, end) => {
-    if (!!error) {
+    if (error) {
       throws(() => sortBy(args), new Error(error), 'Got expected error');
     } else {
       const {sorted} = sortBy(args);

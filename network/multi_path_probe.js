@@ -99,8 +99,8 @@ module.exports = (args, cbk) => {
             const prevHop = hops[i - [hop].length];
 
             return {
-              from_public_key: !!prevHop ? prevHop : getKey.public_key,
-              to_public_key: !!nextHop ? nextHop : args.destination,
+              from_public_key: prevHop ? prevHop : getKey.public_key,
+              to_public_key: nextHop ? nextHop : args.destination,
             };
           });
         }));
@@ -127,7 +127,7 @@ module.exports = (args, cbk) => {
           tokens: args.tokens,
         },
         (error, probe) => {
-          if (!!error) {
+          if (error) {
             return cbk(null, {error});
           }
 

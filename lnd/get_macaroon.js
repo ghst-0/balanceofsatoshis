@@ -50,7 +50,7 @@ module.exports = ({fs, node, os, path}, cbk) => {
       // Get macaroon
       getMacaroon: ['validate', ({}, cbk) => {
         // Exit early when a saved node was specified
-        if (!!node) {
+        if (node) {
           return cbk(null, {});
         }
 

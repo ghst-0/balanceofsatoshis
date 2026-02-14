@@ -111,7 +111,7 @@ module.exports = (args, cbk) => {
         return asyncMap(getLnds.lnds, (lnd, cbk) => {
           return getIdentity({lnd}, (err, res) => {
             // Return no id when there is an error getting the wallet info
-            if (!!err) {
+            if (err) {
               return cbk();
             }
 
@@ -124,7 +124,7 @@ module.exports = (args, cbk) => {
       // Final set of connected nodes
       online: ['getConnected', 'startBot', ({getConnected, startBot}, cbk) => {
         // Report the failure that killed the bot
-        if (!!startBot.failure) {
+        if (startBot.failure) {
           args.logger.error({err: startBot.failure});
         }
 

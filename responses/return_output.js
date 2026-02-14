@@ -13,7 +13,7 @@
 */
 module.exports = ({logger, reject, resolve}) => {
   return (err, res) => {
-    if (!!err) {
+    if (err) {
       logger.error(err);
 
       return reject();

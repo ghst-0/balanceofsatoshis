@@ -40,7 +40,7 @@ module.exports = ({lnd, message, to}, cbk) => {
 
       // Encode to public key
       toPublicKey: ['getPublicKey', ({getPublicKey}, cbk) => {
-        if (!!to) {
+        if (to) {
           return cbk(null, {public_key: to});
         }
 

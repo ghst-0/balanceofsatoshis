@@ -26,7 +26,7 @@ module.exports = args => {
 
   const [chain, otherChain] = args.chains;
 
-  if (!!otherChain) {
+  if (otherChain) {
     throw new Error('CannotDetermineCurrencyForMultipleChains');
   }
 

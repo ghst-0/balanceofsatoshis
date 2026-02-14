@@ -193,7 +193,7 @@ module.exports = ({ask, lnd, logger}, cbk) => {
 
         return ask({
           choices: getTriggers.map(({connectivity, follow, id}) => {
-            if (!!connectivity) {
+            if (connectivity) {
               return {
                 name: `Connectivity with ${connectivity.id}`,
                 value: id,

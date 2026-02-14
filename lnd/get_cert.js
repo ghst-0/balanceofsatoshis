@@ -45,14 +45,14 @@ module.exports = ({fs, node, os, path}, cbk) => {
 
       // Get certificate
       getCert: ['validate', ({}, cbk) => {
-        if (!!node) {
+        if (node) {
           return cbk();
         }
 
         const dir = path || lndDirectory({os}).path;
 
         return fs.getFile(join(...[dir].concat(certPath)), (err, cert) => {
-          if (!!err) {
+          if (err) {
             return cbk([503, 'UnexpectedErrorGettingCertFileData', {err}]);
           }
 

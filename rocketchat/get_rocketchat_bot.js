@@ -99,7 +99,7 @@ module.exports = ({fs, proxy}, cbk) => {
       // Save the bot API key so it doesn't need to be entered next run
       saveKey: ['apiKey', 'makeDir', ({apiKey}, cbk) => {
         // Exit early when API key is already saved
-        if (!!apiKey.is_saved) {
+        if (apiKey.is_saved) {
           return cbk();
         }
 
@@ -107,7 +107,7 @@ module.exports = ({fs, proxy}, cbk) => {
 
         // Ignore errors when making directory, it may already be present
         return fs.writeFile(path, apiKey.key, err => {
-          if (!!err) {
+          if (err) {
             return cbk([503, 'FailedToSaveTelegramApiToken', {err}]);
           }
 

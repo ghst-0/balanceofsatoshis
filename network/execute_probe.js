@@ -156,7 +156,7 @@ module.exports = (args, cbk) => {
           probe_timeout_ms: timeoutMinutes || undefined,
           routes: args.routes,
           tokens: args.tokens,
-          total_mtokens: !!args.payment ? mtokens : undefined,
+          total_mtokens: args.payment ? mtokens : undefined,
         });
 
         const finished = (err, res) => {

@@ -20,7 +20,7 @@ const padLen = (lineLen, desc) => (Math.max(0, lineLen - desc.length) + 3) / 2;
 */
 module.exports = ({data, logger, reject, resolve}) => {
   return (err, res) => {
-    if (!!err) {
+    if (err) {
       logger.error({err});
 
       return reject();
@@ -30,7 +30,7 @@ module.exports = ({data, logger, reject, resolve}) => {
 
     const [line] = chart.split(newLine);
 
-    if (!!res.title) {
+    if (res.title) {
       const padding = ' '.repeat(padLen(line.length, res.title));
 
       logger.info(`${newLine}${padding}${res.title}`);
@@ -39,7 +39,7 @@ module.exports = ({data, logger, reject, resolve}) => {
     logger.info(String());
     logger.info(plot(res[data], {height}));
 
-    if (!!res.description) {
+    if (res.description) {
       const padding = ' '.repeat(padLen(line.length, res.description));
 
       logger.info(`${newLine}${padding}${res.description}`);

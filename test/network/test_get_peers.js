@@ -5,7 +5,6 @@ const test = require('node:test');
 
 const {getInfoResponse} = require('./../fixtures');
 const {getPeers} = require('./../../network');
-const {listChannelsResponse} = require('./../fixtures');
 const {pendingChannelsResponse} = require('./../fixtures');
 const {versionInfoResponse} = require('./../fixtures');
 
@@ -296,7 +295,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, async () => {
-    if (!!error) {
+    if (error) {
       await rejects(getPeers(args), error, 'Got expected error');
     } else {
       const {peers} = await getPeers(args);

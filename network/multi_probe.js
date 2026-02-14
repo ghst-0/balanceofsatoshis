@@ -55,7 +55,7 @@ module.exports = ({channels, from, ignore, probes, tokens}) => {
     throw new Error('ExpectedProbeDetailsToGenerateMultiProbeIgnores');
   }
 
-  if (!!probes.find(n => !isArray(n.relays))) {
+  if (probes.find(n => !isArray(n.relays))) {
     throw new Error('ExpectedArrayOfRelaysToGenerateMultiProbeIgnores');
   }
 

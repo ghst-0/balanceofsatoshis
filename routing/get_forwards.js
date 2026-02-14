@@ -86,7 +86,7 @@ module.exports = ({after, before, lnd, via}, cbk) => {
               limit: !token ? pageLimit : undefined,
             },
             (err, res) => {
-              if (!!err) {
+              if (err) {
                 return cbk(err);
               }
 
@@ -99,7 +99,7 @@ module.exports = ({after, before, lnd, via}, cbk) => {
             });
           },
           err => {
-            if (!!err) {
+            if (err) {
               return cbk(err);
             }
 
@@ -116,7 +116,7 @@ module.exports = ({after, before, lnd, via}, cbk) => {
         }
 
         return getChannels({lnd, is_private: true}, (err, res) => {
-          if (!!err) {
+          if (err) {
             return cbk(err);
           }
 
@@ -143,7 +143,7 @@ module.exports = ({after, before, lnd, via}, cbk) => {
             return cbk(null, {channels: []});
           }
 
-          if (!!err) {
+          if (err) {
             return cbk(err);
           }
 
@@ -161,10 +161,10 @@ module.exports = ({after, before, lnd, via}, cbk) => {
       {
         const {forwards} = forwardsViaPeer({
           via,
-          closed_channels: !!via ? getClosedChannels.channels : [],
+          closed_channels: via ? getClosedChannels.channels : [],
           forwards: getForwards,
-          private_channels: !!via ? getPrivateChannels.channels : [],
-          public_channels: !!via ? getNode.channels : [],
+          private_channels: via ? getPrivateChannels.channels : [],
+          public_channels: via ? getNode.channels : [],
         });
 
         return cbk(null, {forwards});

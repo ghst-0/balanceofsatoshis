@@ -27,7 +27,7 @@ module.exports = ({parameters}) => {
   const {records} = decodeTlvStream({encoded: parameters});
 
   // Check the parameters version
-  if (!!findRecord(records, typeVersion)) {
+  if (findRecord(records, typeVersion)) {
     throw new Error('UnexpectedVersionForEncodedConnectivityTrigger');
   }
 

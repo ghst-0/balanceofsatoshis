@@ -89,7 +89,7 @@ module.exports = (args, cbk) => {
           return cbk([400, 'SettingGlobalInboundRateDiscountNotSupported']);
         }
 
-        if (!!args.inbound_rate_discount) {
+        if (args.inbound_rate_discount) {
           if (!isNumber(args.inbound_rate_discount)) {
             return cbk([400, 'ExpectedNumericRateToSetInboundRateDiscount']);
           }
@@ -139,14 +139,14 @@ module.exports = (args, cbk) => {
           const nodes = getIcons.nodes.filter(n => n.aliases.includes(query));
 
           // Exit early when there is a tag match
-          if (!!nodes.length) {
+          if (nodes.length) {
             return cbk(null, nodes.map(n => ({public_key: n.public_key})));
           }
 
           return findKey({channels, query, lnd: args.lnd}, cbk);
         },
         (err, res) => {
-          if (!!err) {
+          if (err) {
             return cbk(err);
           }
 
@@ -164,7 +164,7 @@ module.exports = (args, cbk) => {
         const [peer, otherPeer] = getPeers;
 
         // Exit with error when multiple to peers are specified
-        if (!!otherPeer) {
+        if (otherPeer) {
           return cbk([400, 'MultipleToNotSupportedWhenReferencingNodeRate']);
         }
 
@@ -175,7 +175,7 @@ module.exports = (args, cbk) => {
           public_key: peer.public_key,
         },
         (err, res) => {
-          if (!!err) {
+          if (err) {
             return cbk(err);
           }
 
@@ -216,12 +216,12 @@ module.exports = (args, cbk) => {
               return cbk();
             }
 
-            if (!!err) {
+            if (err) {
               return cbk(err);
             }
 
             // Exit early when the channel policies are not defined
-            if (!!res.policies.find(n => n.cltv_delta === undefined)) {
+            if (res.policies.find(n => n.cltv_delta === undefined)) {
               return cbk();
             }
 
@@ -389,7 +389,7 @@ module.exports = (args, cbk) => {
 
           const {display} = chartAliasForPeer({
             alias,
-            icons: !!nodeIcons ? nodeIcons.icons : undefined,
+            icons: nodeIcons ? nodeIcons.icons : undefined,
             is_inactive: channels.find(n => !n.is_active),
             public_key: id,
           });

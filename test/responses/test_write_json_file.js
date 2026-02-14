@@ -41,7 +41,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, async () => {
-    if (!!error) {
+    if (error) {
       await rejects(writeJsonFile(args), error, 'Got expected err');
     } else {
       args.write = (file, data, cbk) => {

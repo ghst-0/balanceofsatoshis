@@ -54,7 +54,7 @@ module.exports = ({lnd}, cbk) => {
               limit: !token ? defaultInvoicesLimit : undefined,
             },
             (err, res) => {
-              if (!!err) {
+              if (err) {
                 return cbk(err);
               }
 
@@ -69,9 +69,8 @@ module.exports = ({lnd}, cbk) => {
                     connectivity: trigger.connectivity,
                     follow: trigger.follow,
                   });
-                } catch (err) {
+                } catch {
                   // Ignore invoices that are not triggers
-                  return;
                 }
               });
 
@@ -79,7 +78,7 @@ module.exports = ({lnd}, cbk) => {
             });
           },
           err => {
-            if (!!err) {
+            if (err) {
               return cbk(err);
             }
 

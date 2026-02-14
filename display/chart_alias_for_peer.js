@@ -36,23 +36,23 @@ const unreliableEmoji = '🤢';
 */
 module.exports = args => {
   const downtime = args.downtime_percentage;
-  const forwarding = !!args.is_forwarding ? forwardingEmoji : String();
-  const inactive = !!args.is_inactive ?  inactiveEmoji : String();
-  const inboundOff = !!args.is_inbound_disabled ? inboundOffEmoji : String();
-  const isPrivate = !!args.is_private;
-  const left = !!args.is_disconnected ? disconnectedEmoji : String();
-  const pendingLiquidity = !!args.is_pending ? pendingEmoji : String();
-  const privatePeer = !!args.is_private ? privateEmoji : String();
+  const forwarding = args.is_forwarding ? forwardingEmoji : String();
+  const inactive = args.is_inactive ?  inactiveEmoji : String();
+  const inboundOff = args.is_inbound_disabled ? inboundOffEmoji : String();
+  const isPrivate = args.is_private;
+  const left = args.is_disconnected ? disconnectedEmoji : String();
+  const pendingLiquidity = args.is_pending ? pendingEmoji : String();
+  const privatePeer = args.is_private ? privateEmoji : String();
   const regularAlias = args.alias.replace(isEmoji, String()).trim();
-  const smallMaxHtlc = !!args.is_small_max_htlc ? smallHtlc : String();
-  const thawing = !!args.is_thawing ? thawingEmoji : String();
+  const smallMaxHtlc = args.is_small_max_htlc ? smallHtlc : String();
+  const thawing = args.is_thawing ? thawingEmoji : String();
 
   const handle = regularAlias || shortKey(args.public_key);
   const highDowntime = !!downtime && downtime > maxDowntime;
 
   const isOftenDown = !isPrivate && !inactive && !!highDowntime;
 
-  const unreliable = !!isOftenDown ? unreliableEmoji : String();
+  const unreliable = isOftenDown ? unreliableEmoji : String();
 
   const markers = []
     .concat(!args.icons ? [] : args.icons)

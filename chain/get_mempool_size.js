@@ -60,7 +60,7 @@ module.exports = ({network, request, retries}, cbk) => {
             url: `${api}/api/mempool`,
           },
           (err, r, mempool) => {
-            if (!!err) {
+            if (err) {
               return cbk([503, 'FailedToGetMempoolSizeInfo', {err}]);
             }
 

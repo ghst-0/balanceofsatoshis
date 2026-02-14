@@ -90,7 +90,7 @@ module.exports = ({index, lnd, reason, route, tagged}, cbk) => {
 
         const {display} = chartAliasForPeer({
           alias: getFrom.alias,
-          icons: !!tag ? tag.icons : undefined,
+          icons: tag ? tag.icons : undefined,
           public_key: getFrom.id,
         });
 

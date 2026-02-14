@@ -37,7 +37,7 @@ module.exports = ({file, json, write}, cbk) => {
       // Write file
       write: ['validate', ({}, cbk) => {
         return write(file, stringify(json, null, paddingLength), err => {
-          if (!!err) {
+          if (err) {
             return cbk([503, 'FailedToWriteJsonToFile', {err}]);
           }
 

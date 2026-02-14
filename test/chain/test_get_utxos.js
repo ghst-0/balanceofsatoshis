@@ -111,7 +111,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, async () => {
-    if (!!error) {
+    if (error) {
       await rejects(getUtxos(args), error, 'Got expected error');
     } else if (!args.count_below && !args.is_count) {
       const {utxos} = await getUtxos(args);

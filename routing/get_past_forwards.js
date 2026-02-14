@@ -55,7 +55,7 @@ module.exports = ({days, lnd}, cbk) => {
           cbk => {
             return asyncRetry({}, cbk => {
               return getForwards({after, before, lnd, token}, (err, res) => {
-                if (!!err) {
+                if (err) {
                   return cbk(err);
                 }
 
@@ -69,7 +69,7 @@ module.exports = ({days, lnd}, cbk) => {
             cbk);
           },
           cbk => cbk(null, !token),
-          err => !!err ? cbk(err) : cbk(null, forwards)
+          err => err ? cbk(err) : cbk(null, forwards)
         );
       }],
 

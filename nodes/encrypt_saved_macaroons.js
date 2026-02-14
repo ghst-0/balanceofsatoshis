@@ -94,7 +94,7 @@ module.exports = ({fs, logger, nodes, spawn, to}, cbk) => {
           const plain = credentials.macaroon;
 
           return encryptToPublicKeys({plain, spawn, to}, (err, res) => {
-            if (!!err) {
+            if (err) {
               return cbk([503, 'UnexpectedErrorEncryptingMacaroon', {err}]);
             }
 

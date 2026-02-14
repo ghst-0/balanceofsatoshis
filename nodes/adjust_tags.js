@@ -55,7 +55,7 @@ module.exports = (args, cbk) => {
           return cbk([400, 'ExpectedArrayOfNodesToAddToTag']);
         }
 
-        if (!!args.add.filter(n => !isPublicKey(n)).length) {
+        if (args.add.filter(n => !isPublicKey(n)).length) {
           return cbk([400, 'ExpectedPublicKeyOfNodeToAddToTag']);
         }
 
@@ -71,7 +71,7 @@ module.exports = (args, cbk) => {
           return cbk([400, 'ExpectedArrayOfNodesToRemoveFromTag']);
         }
 
-        if (!!args.remove.filter(n => !isPublicKey(n)).length) {
+        if (args.remove.filter(n => !isPublicKey(n)).length) {
           return cbk([400, 'ExpectedPublicKeyOfNodeToRemoveFromTag']);
         }
 
@@ -133,7 +133,7 @@ module.exports = (args, cbk) => {
         // Look for matches on a tag that aren't direct matches
         const [tagMatch, ...tagMatches] = file.tags.filter(({alias, id}) => {
           // Exit early when there is a direct match already
-          if (!!tagById) {
+          if (tagById) {
             return id === tagById.id;
           }
 
@@ -148,7 +148,7 @@ module.exports = (args, cbk) => {
         }
 
         // Exit early with error when there is more than one match
-        if (!!tagMatches.length) {
+        if (tagMatches.length) {
           const matches = [].concat(tagMatch).concat(tagMatches);
 
           return cbk([400, 'AmbiguousTagToAdjustSpecified', {matches}]);
@@ -185,7 +185,7 @@ module.exports = (args, cbk) => {
         tagToAdjust.nodes = nodes.filter(n => !args.remove.includes(n));
 
         return args.fs.writeFile(tagFilePath(), stringify(file), err => {
-          if (!!err) {
+          if (err) {
             return cbk([503, 'UnexpectedErrorSavingTagFileUpdate', {err}]);
           }
 
@@ -195,7 +195,7 @@ module.exports = (args, cbk) => {
 
       // Final result shows either a single tag being adjusted, or all tags
       result: ['adjustTag', ({adjustTag, getTags}, cbk) => {
-        if (!!adjustTag) {
+        if (adjustTag) {
           return cbk(null, {tag: adjustTag});
         }
 

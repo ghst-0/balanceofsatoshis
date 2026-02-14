@@ -24,7 +24,7 @@ module.exports = ({array}) => {
 
   const shuffled = array.slice();
 
-  for (let i = shuffled.length - 1; !!i; i--) {
+  for (let i = shuffled.length - 1; i; i--) {
     const j = floor(random() * (i + 1));
 
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];

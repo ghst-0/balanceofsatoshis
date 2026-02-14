@@ -28,13 +28,13 @@ module.exports = ({date, month, year}) => {
 
   const after = moment.utc().startOf('year');
 
-  if (!!year) {
+  if (year) {
     after.year(year);
   }
 
   try {
     after.toISOString();
-  } catch (err) {
+  } catch {
     throw new Error('UnrecognizedFormatForAccountingYear');
   }
 
@@ -42,17 +42,17 @@ module.exports = ({date, month, year}) => {
 
   if (!!month && monthNumbers.indexOf(month) !== notFoundIndex) {
     [after, end].forEach(n => n.month(Number(month) - monthOffset));
-  } else if (!!month) {
+  } else if (month) {
     [after, end].forEach(n => n.month(month));
   }
 
-  if (!!date) {
+  if (date) {
     [after, end].forEach(n => n.date(date));
   }
 
-  if (!!date) {
+  if (date) {
     end.add([date].length, 'day');
-  } else if (!!month) {
+  } else if (month) {
     end.add([month].length, 'months');
   } else {
     end.add([after].length, 'years');

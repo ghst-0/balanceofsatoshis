@@ -71,7 +71,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, async () => {
-    if (!!error) {
+    if (error) {
       await rejects(getChainFees(args), error, 'Got expected error');
     } else {
       const fees = await getChainFees(args);

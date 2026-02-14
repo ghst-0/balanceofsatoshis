@@ -22,11 +22,11 @@ module.exports = args => {
 
   const total = args.tokens.reduce((sum, n) => n + sum, noTokens);
 
-  if (!!args.above) {
+  if (args.above) {
     return total > args.above ? total - args.above : noTokens;
   }
 
-  if (!!args.below) {
+  if (args.below) {
     return total < args.below ? args.below - total : noTokens;
   }
 

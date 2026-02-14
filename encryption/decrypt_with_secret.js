@@ -85,7 +85,7 @@ module.exports = ({encrypted, iv, salt, secret, settings, tag}, cbk) => {
         const keyLength = settings.key_length;
 
         return scrypt(fromHex(secret), salt, keyLength, (err, derivedKey) => {
-          if (!!err) {
+          if (err) {
             return cbk([503, 'UnexpectedErrorGettingDerivativeKey', {err}]);
           }
 

@@ -1,6 +1,6 @@
 const https = require('https');
 
-const asQueryString = qs => !!qs ? `?${qs}` : '';
+const asQueryString = qs => qs ? `?${qs}` : '';
 const httpsProtocol = 'https:';
 const {keys} = Object;
 const {parse} = JSON;
@@ -33,7 +33,7 @@ module.exports = (args, cbk) => {
   const qs = url.searchParams;
 
   // Include passed query string arguments
-  if (!!args.qs) {
+  if (args.qs) {
     keys(args.qs).forEach(key => qs.set(key, args.qs[key]));
   }
 
@@ -52,7 +52,7 @@ module.exports = (args, cbk) => {
 
     // Response is finished
     res.on('end', () => {
-      if (!!error) {
+      if (error) {
         return cbk(err);
       }
 

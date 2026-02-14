@@ -49,7 +49,7 @@ tests.forEach(({args, description, error, expected}) => {
       info: info => loggedInfo = info,
     };
 
-    if (!!args.table) {
+    if (args.table) {
       return returnObject({logger, table: 'table', resolve: n => {
         equal(loggedInfo, expected, 'Got expected table output');
 
@@ -71,7 +71,7 @@ tests.forEach(({args, description, error, expected}) => {
       });
     }
 
-    if (!!args.file) {
+    if (args.file) {
       return nextTick(() => {
         returnObject({
           file: args.file,
@@ -81,7 +81,7 @@ tests.forEach(({args, description, error, expected}) => {
       });
     }
 
-    if (!!error) {
+    if (error) {
       return returnObject({logger, reject: err => {
         equal(loggedErr, error, 'Error was logged');
 
@@ -89,7 +89,7 @@ tests.forEach(({args, description, error, expected}) => {
       }})(error);
     }
 
-    if (!!args.exit) {
+    if (args.exit) {
       return returnObject({logger, resolve: () => {}, exit: () => end()})(
         null,
         args.res

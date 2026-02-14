@@ -130,7 +130,7 @@ module.exports = ({filters, fs, lnd, logger, query, sort}, cbk) => {
 
         const mainAlias = chartAliasForPeer({
           alias: getNode.alias,
-          icons: !!mainIcons ? mainIcons.icons : undefined,
+          icons: mainIcons ? mainIcons.icons : undefined,
           public_key: key,
         });
 
@@ -163,7 +163,7 @@ module.exports = ({filters, fs, lnd, logger, query, sort}, cbk) => {
             tokens: distanceTokens,
           },
           (err, res) => {
-            if (!!err) {
+            if (err) {
               return cbk(err);
             }
 
@@ -239,7 +239,7 @@ module.exports = ({filters, fs, lnd, logger, query, sort}, cbk) => {
           });
 
           // Exit early when there is a filter error
-          if (!!matching.failure) {
+          if (matching.failure) {
             return matching.failure;
           }
 
@@ -268,7 +268,7 @@ module.exports = ({filters, fs, lnd, logger, query, sort}, cbk) => {
             peerKey,
           ];
 
-          if (!!hasDistanceFilter(filters)) {
+          if (hasDistanceFilter(filters)) {
             row.unshift(hops);
           }
 
@@ -277,7 +277,7 @@ module.exports = ({filters, fs, lnd, logger, query, sort}, cbk) => {
         .filter(n => !!n);
 
         // Exit early when there was an error in one of the filters
-        if (!!peers.find(n => !!n.error)) {
+        if (peers.find(n => !!n.error)) {
           return cbk([500, 'FailedToParseFilter', peers.find(n => n.error)]);
         }
 
@@ -295,13 +295,13 @@ module.exports = ({filters, fs, lnd, logger, query, sort}, cbk) => {
           const nodeIcons = getIcons.nodes.find(n => n.public_key === id);
 
           return getNodeAlias({id, lnd}, (err, res) => {
-            if (!!err) {
+            if (err) {
               return cbk(err);
             }
 
             const chartAlias = chartAliasForPeer({
               alias: res.alias,
-              icons: !!nodeIcons ? nodeIcons.icons : undefined,
+              icons: nodeIcons ? nodeIcons.icons : undefined,
               public_key: id,
             });
 
@@ -317,7 +317,7 @@ module.exports = ({filters, fs, lnd, logger, query, sort}, cbk) => {
 
         const headers = titles.slice();
 
-        if (!!hasDistanceFilter(filters)) {
+        if (hasDistanceFilter(filters)) {
           const first = headers.shift();
 
           headers.unshift(hopsTitle);

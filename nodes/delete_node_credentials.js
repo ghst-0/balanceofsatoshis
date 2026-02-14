@@ -40,7 +40,7 @@ module.exports = ({fs, node}, cbk) => {
         const path = join(homePath({}).path, node, credentialsFileName);
 
         return fs.removeFile(path, err => {
-          if (!!err) {
+          if (err) {
             return cbk([503, 'FailedToRemoveCredentialsFile', {err}]);
           }
 
@@ -51,7 +51,7 @@ module.exports = ({fs, node}, cbk) => {
       // Remove credentials directory
       removeDirectory: ['removeCredentials', ({}, cbk) => {
         return fs.removeDirectory(homePath({file: node}).path, err => {
-          if (!!err) {
+          if (err) {
             return cbk([503, 'FailedToRemoveCredentialsDirectory', {err}]);
           }
 

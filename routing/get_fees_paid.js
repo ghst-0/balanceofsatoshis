@@ -85,7 +85,7 @@ module.exports = (args, cbk) => {
           return cbk();
         }
 
-        if (!!args.days) {
+        if (args.days) {
           return cbk([400, 'ExpectedEitherDaysOrDatesToGetRoutingFeesPaid']);
         }
 
@@ -154,7 +154,7 @@ module.exports = (args, cbk) => {
           return getChannels({lnd}, cbk);
         },
         (err, res) => {
-          if (!!err) {
+          if (err) {
             return cbk(err);
           }
 
@@ -180,7 +180,7 @@ module.exports = (args, cbk) => {
             }
 
             // Ignore all other errors, since a peer may not exist on all nodes
-            if (!!err) {
+            if (err) {
               return cbk();
             }
 
@@ -188,7 +188,7 @@ module.exports = (args, cbk) => {
           });
         },
         (err, res) => {
-          if (!!err) {
+          if (err) {
             return cbk(err);
           }
 
@@ -198,7 +198,7 @@ module.exports = (args, cbk) => {
             return cbk([400, 'FailedToFindMatchesForInQueryAlias']);
           }
 
-          if (!!otherKey) {
+          if (otherKey) {
             return cbk([400, 'MultipleMatchesForInQueryAlias']);
           }
 
@@ -221,7 +221,7 @@ module.exports = (args, cbk) => {
             }
 
             // Ignore all other errors, since a peer may not exist on all nodes
-            if (!!err) {
+            if (err) {
               return cbk();
             }
 
@@ -229,7 +229,7 @@ module.exports = (args, cbk) => {
           });
         },
         (err, res) => {
-          if (!!err) {
+          if (err) {
             return cbk(err);
           }
 
@@ -239,7 +239,7 @@ module.exports = (args, cbk) => {
             return cbk([400, 'FailedToFindMatchesForOutQueryAlias']);
           }
 
-          if (!!otherKey) {
+          if (otherKey) {
             return cbk([400, 'MultipleMatchesForOutQueryAlias']);
           }
 
@@ -249,7 +249,7 @@ module.exports = (args, cbk) => {
 
       // Calculate the start date
       start: ['validate', ({}, cbk) => {
-        if (!!args.start_date) {
+        if (args.start_date) {
           return cbk(null, moment(args.start_date));
         }
 
@@ -270,13 +270,13 @@ module.exports = (args, cbk) => {
       // Get payments
       getPayments: ['start', 'validate', ({start}, cbk) => {
         // Exit early when only considering rebalance payments
-        if (!!args.is_rebalances_only) {
+        if (args.is_rebalances_only) {
           return getRebalancePayments({
             after: start.toISOString(),
             lnds: args.lnds,
           },
           (err, res) => {
-            if (!!err) {
+            if (err) {
               return cbk(err);
             }
 
@@ -293,7 +293,7 @@ module.exports = (args, cbk) => {
           return getPayments({after: start.toISOString(), lnd}, cbk);
         },
         (err, res) => {
-          if (!!err) {
+          if (err) {
             return cbk(err);
           }
 
@@ -397,7 +397,7 @@ module.exports = (args, cbk) => {
 
         const fees = forwards.reduce((sum, {attempts}) => {
           attempts.forEach(({hops, route}) => {
-            const usedHops = !!route ? route.hops : hops;
+            const usedHops = route ? route.hops : hops;
 
             return usedHops.slice().reverse().forEach((hop, i) => {
               if (!i) {
@@ -409,8 +409,6 @@ module.exports = (args, cbk) => {
               const current = sum[key] || BigInt(Number());
 
               sum[key] = current + BigInt(hop.fee_mtokens);
-
-              return;
             });
           });
 
@@ -420,7 +418,7 @@ module.exports = (args, cbk) => {
 
         const forwarded = forwards.reduce((sum, {attempts}) => {
           attempts.forEach(({hops, route}) => {
-            const usedHops = !!route ? route.hops : hops;
+            const usedHops = route ? route.hops : hops;
 
             return usedHops.slice().reverse().forEach((hop, i) => {
               if (!i) {
@@ -432,8 +430,6 @@ module.exports = (args, cbk) => {
               const current = sum[key] || BigInt(Number());
 
               sum[key] = current + BigInt(hop.forward_mtokens);
-
-              return;
             });
           });
 
@@ -459,11 +455,11 @@ module.exports = (args, cbk) => {
           });
         },
         (err, array) => {
-          if (!!err) {
+          if (err) {
             return cbk(err);
           }
 
-          const sort = !!args.is_most_fees_table ? 'fees_paid' : 'forwarded';
+          const sort = args.is_most_fees_table ? 'fees_paid' : 'forwarded';
 
           const peerKeys = getChannels.map(n => n.partner_public_key);
 
@@ -476,7 +472,7 @@ module.exports = (args, cbk) => {
 
               const isPeer = !!peerKeys.find(key => key === n.public_key);
 
-              return !!args.is_peer ? isPeer : !isPeer;
+              return args.is_peer ? isPeer : !isPeer;
             })
             .map(node => {
               const key = node.public_key;
@@ -485,7 +481,7 @@ module.exports = (args, cbk) => {
 
               const {display} = chartAliasForPeer({
                 alias: node.alias || ' ',
-                icons: !!nodeIcons ? nodeIcons.icons : undefined,
+                icons: nodeIcons ? nodeIcons.icons : undefined,
                 public_key: key,
               });
 
@@ -543,7 +539,7 @@ module.exports = (args, cbk) => {
           forwards,
           measure,
           segments,
-          end: !!end ? end.toISOString() : undefined,
+          end: end ? end.toISOString() : undefined,
         }));
       }],
 
@@ -560,7 +556,7 @@ module.exports = (args, cbk) => {
         const duration = `Fees paid in ${sum.fees.length} ${measure}s`;
         const paid = tokensAsBigUnit(total);
         const since = `from ${start.calendar().toLowerCase()}`;
-        const to = !!end ? ` to ${end.calendar().toLowerCase()}` : '';
+        const to = end ? ` to ${end.calendar().toLowerCase()}` : '';
 
         return cbk(null, `${duration} ${since}${to}. Total: ${paid}`);
       }],
@@ -577,8 +573,8 @@ module.exports = (args, cbk) => {
         const into = !args.in ? {} : await getNodeAlias({lnd, id: getInKey});
         const out = !args.out ? {} : await getNodeAlias({lnd, id: getOutKey});
 
-        const inPeer = !!args.in ? `in ${niceAlias(into)}` : '';
-        const outPeer = !!args.out ? `out ${niceAlias(out)}` : '';
+        const inPeer = args.in ? `in ${niceAlias(into)}` : '';
+        const outPeer = args.out ? `out ${niceAlias(out)}` : '';
 
         return [title, outPeer, inPeer].filter(n => !!n).join(' ');
       }],

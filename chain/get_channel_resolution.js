@@ -54,7 +54,7 @@ module.exports = (args, cbk) => {
 
       // Get commitment transaction
       getCommitmentTransaction: ['validate', ({}, cbk) => {
-        if (!!args.is_cooperative_close) {
+        if (args.is_cooperative_close) {
           return cbk();
         }
 
@@ -63,7 +63,7 @@ module.exports = (args, cbk) => {
         const found = args.transactions.find(n => n.id === id);
 
         // Exit early when the transaction is pre-provided
-        if (!!found) {
+        if (found) {
           return cbk(null, found.transaction);
         }
 
@@ -71,7 +71,7 @@ module.exports = (args, cbk) => {
           url: `${endpoints[args.network]}tx/${id}/hex`
         },
         (err, r, txHex) => {
-          if (!!err) {
+          if (err) {
             return cbk([503, 'UnexpectedErrorGettingCommitTxInfo', err]);
           }
 
@@ -104,7 +104,7 @@ module.exports = (args, cbk) => {
 
       // Get close tx output spends
       getCloseSpends: ['spends', ({spends}, cbk) => {
-        if (!!args.is_cooperative_close) {
+        if (args.is_cooperative_close) {
           return cbk(null, []);
         }
 
@@ -126,7 +126,7 @@ module.exports = (args, cbk) => {
           url: `${endpoints[args.network]}tx/${closeTxId}/outspends`,
         },
         (err, r, outspends) => {
-          if (!!err) {
+          if (err) {
             return cbk([503, 'UnexpectedErrorGettingOutspentsForTx', err]);
           }
 
@@ -146,7 +146,7 @@ module.exports = (args, cbk) => {
             return !n.txid || n.vin === undefined;
           });
 
-          if (!!unexpectedOutspend) {
+          if (unexpectedOutspend) {
             return cbk([503, 'UnexpectedResultFromOutspendQuery', outspends]);
           }
 
@@ -169,14 +169,14 @@ module.exports = (args, cbk) => {
             return cbk(null, {});
           }
 
-          if (!!txs[txid]) {
+          if (txs[txid]) {
             return cbk(null, {id: txid, transaction: txs[txid]});
           }
 
           const found = args.transactions.find(n => n.id === txid);
 
           // Exit early when the transaction is pre-provided
-          if (!!found) {
+          if (found) {
             return cbk(null, {id: txid, transaction: found.transaction});
           }
 
@@ -184,7 +184,7 @@ module.exports = (args, cbk) => {
             url: `${endpoints[args.network]}tx/${txid}/hex`
           },
           (err, r, txHex) => {
-            if (!!err) {
+            if (err) {
               return cbk([503, 'UnexpectedErrorGettingSpentTxInfo', err]);
             }
 
@@ -215,7 +215,7 @@ module.exports = (args, cbk) => {
         ({getCloseSpends, getCommitmentTransaction, getTransactions}, cbk) =>
       {
         // Exit early when the channel was closed cooperatively
-        if (!!args.is_cooperative_close) {
+        if (args.is_cooperative_close) {
           return cbk(null, {});
         }
 

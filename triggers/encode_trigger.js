@@ -39,7 +39,7 @@ module.exports = ({connectivity, follow}) => {
     throw new Error('ExpectedConnectivityOrFollowDetailsToEncodeTrigger');
   }
 
-  if (!!connectivity) {
+  if (connectivity) {
     // Encode the trigger parameters for a connectivity trigger
     const {encoded} = encodeTlvStream({
       records: [

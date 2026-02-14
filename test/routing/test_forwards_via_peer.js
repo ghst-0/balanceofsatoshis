@@ -26,7 +26,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, (t, end) => {
-    if (!!error) {
+    if (error) {
       throws(() => forwardsViaPeer(args), new Error(error), 'Got error');
     } else {
       const {forwards} = forwardsViaPeer(args);

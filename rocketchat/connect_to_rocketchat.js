@@ -106,12 +106,12 @@ module.exports = (args, cbk) => {
       // Set the units formatting
       setUnits: ['validate', ({}, cbk) => {
         // Set rounded value formatting type
-        if (!!args.is_rounded_units) {
+        if (args.is_rounded_units) {
           process.env.PREFERRED_TOKENS_TYPE = roundedUnitsType;
         }
 
         // Set small units value formatting type
-        if (!!args.is_small_units) {
+        if (args.is_small_units) {
           process.env.PREFERRED_TOKENS_TYPE = smallUnitsType;
         }
 
@@ -138,7 +138,7 @@ module.exports = (args, cbk) => {
             request: args.request,
           },
           (err, res) => {
-            if (!!err) {
+            if (err) {
               return cbk(err);
             }
 
@@ -156,7 +156,7 @@ module.exports = (args, cbk) => {
               offline: getNodes.filter(n => offline.includes(n.id)),
             },
             err => {
-              if (!!err) {
+              if (err) {
                 args.logger.error({post_nodes_offline_error: err});
               }
 

@@ -53,7 +53,7 @@ module.exports = args => {
     },
   ];
 
-  if (!!args.chain_fee) {
+  if (args.chain_fee) {
     report.push({
       subtitle: `${args.chain_fee} per vbyte`,
       title: 'Confirmation Fee:',

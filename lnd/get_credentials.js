@@ -56,7 +56,7 @@ module.exports = (args, cbk) => {
 
       // Ask for the transfer key
       key: ['validate', ({}, cbk) => {
-        if (!!args.is_cleartext) {
+        if (args.is_cleartext) {
           return cbk();
         }
 
@@ -89,7 +89,7 @@ module.exports = (args, cbk) => {
 
       // Packaged credentials
       credentials: ['getCredentials', ({getCredentials}, cbk) => {
-        if (!!args.is_cleartext) {
+        if (args.is_cleartext) {
           return cbk(null, {
             cleartext: {
               cert: getCredentials.cert,

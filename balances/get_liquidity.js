@@ -71,13 +71,13 @@ module.exports = (args, cbk) => {
 
         const tagById = getTags.tags.find(({id}) => id === args.with);
 
-        if (!!tagById) {
+        if (tagById) {
           return cbk(null, tagById);
         }
 
         const tagByAlias = getTags.tags.find(({alias}) => alias === args.with);
 
-        if (!!tagByAlias) {
+        if (tagByAlias) {
           return cbk(null, tagByAlias);
         }
 
@@ -86,11 +86,11 @@ module.exports = (args, cbk) => {
 
       // Liquidity with nodes
       withNodes: ['withTag', ({withTag}, cbk) => {
-        if (!!withTag) {
+        if (withTag) {
           return cbk(null, withTag.nodes);
         }
 
-        if (!!args.with) {
+        if (args.with) {
           return cbk(null, [args.with]);
         }
 

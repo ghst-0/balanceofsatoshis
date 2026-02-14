@@ -161,7 +161,7 @@ module.exports = (args, cbk) => {
 
         return asyncMap(ids, (id, cbk) => {
           return getChannel({id, lnd: args.lnd}, (err, res) => {
-            if (!!err) {
+            if (err) {
               return cbk([404, 'FailedToFindChannelToAvoid', {err, id}]);
             }
 
@@ -194,7 +194,7 @@ module.exports = (args, cbk) => {
               return cbk(null, []);
             }
 
-            if (!!err) {
+            if (err) {
               return cbk([404, 'FailedToFindEdgeChannelToAvoid', {err, id}]);
             }
 
@@ -241,7 +241,7 @@ module.exports = (args, cbk) => {
               return cbk(null, []);
             }
 
-            if (!!err) {
+            if (err) {
               return cbk(err);
             }
 
@@ -272,13 +272,11 @@ module.exports = (args, cbk) => {
                 keys(variables).forEach(key => {
                   parser.setVariable(key.toLowerCase(), variables[key]);
                   parser.setVariable(key.toUpperCase(), variables[key]);
-
-                  return;
                 });
 
                 const parsed = parser.parse(formula);
 
-                if (!!parsed.error) {
+                if (parsed.error) {
                   return {error: describeParseError({error: parsed.error})};
                 }
 
@@ -294,7 +292,7 @@ module.exports = (args, cbk) => {
 
             const {error} = outboundAvoids.find(n => !!n && !!n.error) || {};
 
-            if (!!error) {
+            if (error) {
               return cbk([400, 'InvalidAvoidDirective', {error, formula}]);
             }
 
@@ -319,7 +317,7 @@ module.exports = (args, cbk) => {
               return cbk(null, []);
             }
 
-            if (!!err) {
+            if (err) {
               return cbk(err);
             }
 
@@ -350,13 +348,11 @@ module.exports = (args, cbk) => {
                 keys(variables).forEach(key => {
                   parser.setVariable(key.toLowerCase(), variables[key]);
                   parser.setVariable(key.toUpperCase(), variables[key]);
-
-                  return;
                 });
 
                 const parsed = parser.parse(formula);
 
-                if (!!parsed.error) {
+                if (parsed.error) {
                   return {error: describeParseError({error: parsed.error})};
                 }
 
@@ -372,7 +368,7 @@ module.exports = (args, cbk) => {
 
             const {error} = inboundAvoids.find(n => !!n && !!n.error) || {};
 
-            if (!!error) {
+            if (error) {
               return cbk([400, 'InvalidAvoidDirective', {error, formula}]);
             }
 
@@ -393,7 +389,7 @@ module.exports = (args, cbk) => {
             channels: args.channels,
           },
           (err, res) => {
-            if (!!err) {
+            if (err) {
               return cbk(err);
             }
 

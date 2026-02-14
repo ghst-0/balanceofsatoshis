@@ -85,9 +85,9 @@ module.exports = (args, cbk) => {
 
         // Gather all component balances
         const balances = [
-          !!args.is_offchain_only ? none : getChainBalance.chain_balance,
-          !!args.is_onchain_only ? none : getChanBalance.channel_balance,
-          !!args.is_onchain_only ? none : futureCommitFees,
+          args.is_offchain_only ? none : getChainBalance.chain_balance,
+          args.is_onchain_only ? none : getChanBalance.channel_balance,
+          args.is_onchain_only ? none : futureCommitFees,
           pendingChain,
           pendingChanToks,
         ];

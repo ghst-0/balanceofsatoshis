@@ -130,7 +130,7 @@ module.exports = (args, cbk) => {
       // Destination to pay
       to: ['validate', ({}, cbk) => {
         // Exit early when sending a push payment
-        if (!!args.is_push) {
+        if (args.is_push) {
           const secret = randomBytes(preimageByteLength);
 
           return cbk(null, {
@@ -163,7 +163,7 @@ module.exports = (args, cbk) => {
           }
 
           // Exit early when tokens are specified for a request
-          if (!!args.tokens) {
+          if (args.tokens) {
             return cbk(null, {
               cltv_delta: details.cltv_delta,
               destination: details.destination,
@@ -213,7 +213,7 @@ module.exports = (args, cbk) => {
         },
         (err, res) => {
           // Suppress errors when the node is not found
-          if (!!err) {
+          if (err) {
             return cbk(null, {alias: String()});
           }
 
@@ -233,7 +233,7 @@ module.exports = (args, cbk) => {
         }
 
         return getPeers({lnd: args.lnd}, (err, res) => {
-          if (!!err) {
+          if (err) {
             return cbk(err);
           }
 
@@ -257,7 +257,7 @@ module.exports = (args, cbk) => {
         ({getDestinationNode, getIdentity, getPeerFeatures, to}, cbk) =>
       {
         // Exit early when features are directly known
-        if (!!to.features) {
+        if (to.features) {
           return cbk(null, {features: to.features});
         }
 
@@ -292,7 +292,7 @@ module.exports = (args, cbk) => {
         date.writeUIntBE(now(), Number(), datePrecisionLength);
 
         // Add message
-        if (!!args.message) {
+        if (args.message) {
           messages.push({
             type: messageType,
             value: Buffer.from(args.message).toString('hex'),
@@ -321,7 +321,7 @@ module.exports = (args, cbk) => {
           messages.push({type: signatureType, value: signature});
         }
 
-        if (!!args.is_push) {
+        if (args.is_push) {
           messages.push({type: keySendPreimageType, value: to.secret});
         }
 
@@ -413,12 +413,12 @@ module.exports = (args, cbk) => {
           max_fee: args.max_fee,
           max_fee_mtokens: args.max_fee_mtokens,
           mtokens: !BigInt(to.mtokens) ? tokAsMtok(defaultTokens) : to.mtokens,
-          outgoing_channel: !!outId ? outId.id : undefined,
+          outgoing_channel: outId ? outId.id : undefined,
           payment: to.payment,
           routes: to.routes,
-          tagged: !!getIcons ? getIcons.nodes : undefined,
+          tagged: getIcons ? getIcons.nodes : undefined,
           timeout_minutes: args.timeout_minutes || undefined,
-          total_mtokens: !!to.payment ? to.mtokens : undefined,
+          total_mtokens: to.payment ? to.mtokens : undefined,
         },
         cbk);
       }],
@@ -454,8 +454,6 @@ module.exports = (args, cbk) => {
             maximum: min(outId.max, max(maximum, probe.route.tokens)),
           });
         });
-
-        return;
       }],
 
       // If there is a successful route, pay it
@@ -502,7 +500,7 @@ module.exports = (args, cbk) => {
           route_maximum: getMax.maximum,
           paid: !pay ? undefined : pay.tokens,
           preimage: !pay ? undefined : pay.secret,
-          probed: !!pay ? undefined : route.tokens - route.fee,
+          probed: pay ? undefined : route.tokens - route.fee,
           relays: !route ? undefined : route.hops.map(n => n.public_key),
           success: !route ? undefined : route.hops.map(({channel}) => channel),
         });

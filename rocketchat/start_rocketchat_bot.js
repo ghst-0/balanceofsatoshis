@@ -132,7 +132,7 @@ module.exports = (args, cbk) => {
       getNodes: ['validate', ({}, cbk) => {
         return asyncMap(args.lnds, (lnd, cbk) => {
           return getWalletInfo({lnd}, (err, res) => {
-            if (!!err) {
+            if (err) {
               return cbk([503, 'FailedToGetNodeInfo', {err}]);
             }
 
@@ -155,7 +155,7 @@ module.exports = (args, cbk) => {
       // Setup the bot start action
       initBot: ['getNodes', ({getNodes}, cbk) => {
         // Exit early when the bot was already setup
-        if (!!isBotInit) {
+        if (isBotInit) {
           return cbk();
         }
 
@@ -313,7 +313,7 @@ module.exports = (args, cbk) => {
           try {
             await asyncRetry({
               errorFilter: err => {
-                if (err && /^404/.test(err.message)) {
+                if (err && err.message.startsWith('404')) {
                   return false;
                 }
 
@@ -455,7 +455,7 @@ module.exports = (args, cbk) => {
       // Ask the user to confirm their user id
       userId: ['initBot', ({}, cbk) => {
         // Exit early when the id is specified
-        if (!!connectedId) {
+        if (connectedId) {
           return cbk();
         }
 
@@ -523,7 +523,7 @@ module.exports = (args, cbk) => {
 
           sub.on('backup', ({backup}) => {
             // Cancel pending backup notification when there is a new backup
-            if (!!postBackupTimeoutHandle) {
+            if (postBackupTimeoutHandle) {
               clearTimeout(postBackupTimeoutHandle);
             }
 
@@ -536,7 +536,7 @@ module.exports = (args, cbk) => {
                 node: {alias: node.alias, public_key: node.public_key},
                 send: (id, n) => args.bot.api.sendDocument(id, fileAsDoc(n)),
               },
-              err => !!err ? args.logger.error({post_backup_err: err}) : null);
+              err => err ? args.logger.error({post_backup_err: err}) : null);
             },
             restartSubscriptionTimeMs);
           });
@@ -632,7 +632,7 @@ module.exports = (args, cbk) => {
 
             return getForwards({after, before, limit, lnd}, (err, res) => {
               // Exit early and ignore errors
-              if (!!err) {
+              if (err) {
                 return setTimeout(cbk, restartSubscriptionTimeMs);
               }
 
@@ -656,7 +656,7 @@ module.exports = (args, cbk) => {
                 send: (id, msg, opt) => args.bot.api.sendMessage(id, msg, opt),
               },
               err => {
-                if (!!err) {
+                if (err) {
                   args.logger.error({forwards_notify_err: err});
                 }
 
@@ -709,7 +709,7 @@ module.exports = (args, cbk) => {
               },
               send: (id, msg, opts) => args.bot.api.sendMessage(id, msg, opts),
             },
-            err => !!err ? args.logger.error({settled_err: err}) : null);
+            err => err ? args.logger.error({settled_err: err}) : null);
           });
 
           sub.on('error', err => {
@@ -873,7 +873,7 @@ module.exports = (args, cbk) => {
             } catch (err) {
               args.logger.error({chain_tx_err: err, node: from});
 
-              if (!!isFinished) {
+              if (isFinished) {
                 return;
               }
 
@@ -888,7 +888,7 @@ module.exports = (args, cbk) => {
           sub.once('error', err => {
             sub.removeAllListeners();
 
-            if (!!isFinished) {
+            if (isFinished) {
               return;
             }
 

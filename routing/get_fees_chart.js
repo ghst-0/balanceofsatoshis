@@ -9,7 +9,7 @@ const feesForSegment = require('./fees_for_segment');
 const {getTags} = require('./../tags');
 const getForwards = require('./get_forwards');
 
-const asDate = n => !!n ? n.toISOString() : undefined;
+const asDate = n => n ? n.toISOString() : undefined;
 const daysBetween = (a, b) => moment(a).diff(b, 'days') + 1;
 const daysPerWeek = 7;
 const defaultDays = 60;
@@ -66,7 +66,7 @@ module.exports = (args, cbk) => {
           return cbk();
         }
 
-        if (!!args.days) {
+        if (args.days) {
           return cbk([400, 'ExpectedEitherDaysOrDatesToGetFeesChart']);
         }
 
@@ -121,7 +121,7 @@ module.exports = (args, cbk) => {
 
       // Calculate the start date
       start: ['validate', ({}, cbk) => {
-        if (!!args.start_date) {
+        if (args.start_date) {
           return cbk(null, moment(args.start_date));
         }
 
@@ -167,13 +167,13 @@ module.exports = (args, cbk) => {
 
         const tagById = getTags.tags.find(({id}) => id === args.via);
 
-        if (!!tagById) {
+        if (tagById) {
           return cbk(null, tagById);
         }
 
         const tagByAlias = getTags.tags.find(({alias}) => alias === args.via);
 
-        if (!!tagByAlias) {
+        if (tagByAlias) {
           return cbk(null, tagByAlias);
         }
 
@@ -188,7 +188,7 @@ module.exports = (args, cbk) => {
         }
 
         // Exit early when via is a tag match
-        if (!!viaTag) {
+        if (viaTag) {
           return cbk();
         }
 
@@ -199,11 +199,11 @@ module.exports = (args, cbk) => {
 
       // Fees via nodes
       via: ['viaTag', ({viaTag}, cbk) => {
-        if (!!viaTag) {
+        if (viaTag) {
           return cbk(null, viaTag.nodes);
         }
 
-        if (!!args.via) {
+        if (args.via) {
           return cbk(null, [args.via]);
         }
 
@@ -216,9 +216,9 @@ module.exports = (args, cbk) => {
           return getForwards({
             lnd,
             via,
-            after: asDate(start), 
+            after: asDate(start),
             before: asDate(end),
-          }, 
+          },
           cbk);
         },
         cbk);
@@ -274,7 +274,7 @@ module.exports = (args, cbk) => {
           forwards,
           measure,
           segments,
-          end: !!end ? end.toISOString() : undefined,
+          end: end ? end.toISOString() : undefined,
         }));
       }],
 
@@ -290,14 +290,14 @@ module.exports = (args, cbk) => {
         ({end, forwards, measure, start, totalEarned, totalForwarded, sum}, cbk) =>
       {
         const since = `from ${start.calendar().toLowerCase()}`;
-        const to = !!end ? ` to ${end.calendar().toLowerCase()}` : '';
+        const to = end ? ` to ${end.calendar().toLowerCase()}` : '';
 
-        if (!!args.is_count) {
+        if (args.is_count) {
           const duration = `Forwarded in ${sum.count.length} ${measure}s`;
           const forwarded = `Total: ${forwards.length} forwards`;
 
           return cbk(null, `${duration} ${since}${to}. ${forwarded}`);
-        } else if (!!args.is_forwarded) {
+        } else if (args.is_forwarded) {
           const duration = `Forwarded in ${sum.count.length} ${measure}s`;
 
           const {display} = formatTokens({tokens: totalForwarded});
@@ -313,11 +313,11 @@ module.exports = (args, cbk) => {
 
       // Heading
       head: ['validate', ({}, cbk) => {
-        if (!!args.is_count) {
+        if (args.is_count) {
           return cbk(null, 'Forwards count');
         }
 
-        if (!!args.is_forwarded) {
+        if (args.is_forwarded) {
           return cbk(null, 'Forwarded amount');
         }
 
@@ -343,11 +343,11 @@ module.exports = (args, cbk) => {
         'title',
         ({description, sum, title}, cbk) =>
       {
-        if (!!args.is_count) {
+        if (args.is_count) {
           return cbk(null, {description, title, data: sum.count});
         }
 
-        if (!!args.is_forwarded) {
+        if (args.is_forwarded) {
           return cbk(null, {description, title, data: sum.forwarded});
         }
 

@@ -66,7 +66,7 @@ module.exports = ({fs, node, request, style}, cbk) => {
     // Get autopilot status
     getAutopilot: ['getLnd', ({getLnd}, cbk) => {
       return getAutopilot({lnd: getLnd.lnd}, (err, res) => {
-        if (!!err) {
+        if (err) {
           return cbk(null, {});
         }
 
@@ -96,7 +96,7 @@ module.exports = ({fs, node, request, style}, cbk) => {
         confirmation_target: defaultConfTarget,
       },
       (err, res) => {
-        if (!!err) {
+        if (err) {
           return cbk();
         }
 
@@ -154,7 +154,7 @@ module.exports = ({fs, node, request, style}, cbk) => {
 
       return asyncMap(rebalances, (rebalance, cbk) => {
         return getInvoice({id: rebalance.id, lnd: getLnd.lnd}, (err, res) => {
-          if (!!err) {
+          if (err) {
             return cbk(err);
           }
 
@@ -176,7 +176,7 @@ module.exports = ({fs, node, request, style}, cbk) => {
             lnd: getLnd.lnd,
           },
           (err, channel) => {
-            if (!!err) {
+            if (err) {
               return cbk(null, {
                 created_at: rebalance.created_at,
                 fee: rebalance.fee,
@@ -324,7 +324,7 @@ module.exports = ({fs, node, request, style}, cbk) => {
             details: `Increased inbound liquidity on ${outbound} by ${amount}`,
           });
 
-          if (!!inbound) {
+          if (inbound) {
             elements.push({
               details: `Decreased inbound liquidity on ${inbound}`,
             });
@@ -362,7 +362,7 @@ module.exports = ({fs, node, request, style}, cbk) => {
             details: `Sent: ${formatAsBigUnit(payment.tokens)} ${currency}`,
           });
 
-          if (!!payment.fee) {
+          if (payment.fee) {
             elements.push({
               details: `Fee: ${formatAsBigUnit(payment.fee)} ${currency}`,
             });
@@ -424,7 +424,7 @@ module.exports = ({fs, node, request, style}, cbk) => {
 
         elements.push({action: 'Routing activity'});
 
-        if (!!peer.earned_inbound_fees) {
+        if (peer.earned_inbound_fees) {
           const inbound = formatAsBigUnit(peer.earned_inbound_fees);
 
           elements.push({
@@ -432,7 +432,7 @@ module.exports = ({fs, node, request, style}, cbk) => {
           });
         }
 
-        if (!!peer.earned_outbound_fees) {
+        if (peer.earned_outbound_fees) {
           const outbound = formatAsBigUnit(peer.earned_outbound_fees);
 
           elements.push({
@@ -455,7 +455,7 @@ module.exports = ({fs, node, request, style}, cbk) => {
         return activity.push({elements, date: last});
       });
 
-      if (!!activity.length) {
+      if (activity.length) {
         report.push({});
         report.push({title: 'Recent Activity:'});
       }

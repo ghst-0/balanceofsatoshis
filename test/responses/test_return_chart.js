@@ -41,7 +41,7 @@ tests.forEach(({args, description, error, expected, res}) => {
       info: n => loggedInfo.push(n),
     };
 
-    if (!!error) {
+    if (error) {
       return returnChart({logger ,reject: () => {
         deepEqual(loggedErrors, [{err: error}], 'Error logged as expected');
 

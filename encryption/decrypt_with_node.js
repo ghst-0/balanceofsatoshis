@@ -43,7 +43,7 @@ module.exports = ({encrypted, lnd}, cbk) => {
       // Decode encrypted CBOR
       decode: ['validate', ({}, cbk) => {
         return decodeFirst(encrypted, (err, details) => {
-          if (!!err) {
+          if (err) {
             return cbk([400, 'ExpectedCborEncodedEncryptedData', {err}]);
           }
 
@@ -83,7 +83,7 @@ module.exports = ({encrypted, lnd}, cbk) => {
           public_key: foreignKey,
         },
         (err, res) => {
-          if (!!err) {
+          if (err) {
             return cbk(null, {public_key: foreignKey});
           }
 

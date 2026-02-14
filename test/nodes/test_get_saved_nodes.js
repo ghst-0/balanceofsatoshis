@@ -123,7 +123,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, async () => {
-    if (!!error) {
+    if (error) {
       await rejects(getSavedNodes(args), error, 'Got expected error');
     } else {
       const {nodes} = await getSavedNodes(args);

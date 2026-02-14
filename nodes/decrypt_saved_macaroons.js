@@ -66,7 +66,7 @@ module.exports = ({fs, logger, nodes, spawn}, cbk) => {
           logger.info({decrypt_credentials_for: node});
 
           return decryptCiphertext({cipher, spawn}, (err, res) => {
-            if (!!err) {
+            if (err) {
               return cbk([503, 'UnexpectedErrorDecryptingMacaroon', {err}]);
             }
 

@@ -13,7 +13,7 @@ const {returnResult} = require('asyncjs-util');
 const {Transaction} = require('bitcoinjs-lib');
 
 const describeChan = n => `${n.action} with ${(n.node || '' + n.with).trim()}`;
-const expiresAt = n => !!n ? moment(n).calendar() : undefined;
+const expiresAt = n => n ? moment(n).calendar() : undefined;
 const flatten = arr => [].concat(...arr);
 const {fromHex} = Transaction;
 const none = 0;
@@ -75,7 +75,7 @@ module.exports = (args, cbk) => {
       getLocked: ['validate', ({}, cbk) => {
         return getLockedUtxos({lnd: args.lnd}, (err, res) => {
           // Ignore errors
-          if (!!err) {
+          if (err) {
             return cbk(null, []);
           }
 
@@ -181,7 +181,7 @@ module.exports = (args, cbk) => {
         ({getRelated, getTx, getUtxos, locked}, cbk) =>
       {
         const utxos = [].concat(getUtxos.utxos).concat(locked).filter(utxo => {
-          if (!!args.min_tokens) {
+          if (args.min_tokens) {
             return utxo.tokens >= args.min_tokens;
           }
 
@@ -189,7 +189,7 @@ module.exports = (args, cbk) => {
         });
 
         // Exit early when looking for a UTXO count below n
-        if (!!args.count_below) {
+        if (args.count_below) {
           const below = args.count_below;
 
           const total = utxos.length < below ? below - utxos.length : none;
@@ -218,7 +218,7 @@ module.exports = (args, cbk) => {
             is_unconfirmed: !utxo.confirmation_count || undefined,
             address: utxo.address || undefined,
             related_description: (t || {}).description || undefined,
-            related_channels: !!related.length ? flatten(related) : undefined,
+            related_channels: related.length ? flatten(related) : undefined,
             locked: utxo.lock_id || undefined,
             lock_expires_at: expiresAt(utxo.lock_expires_at),
           };

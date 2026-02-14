@@ -69,7 +69,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, async () => {
-    if (!!error) {
+    if (error) {
       await rejects(putSavedCredentials(args), error, 'Got expected error');
     } else {
       await putSavedCredentials(args);

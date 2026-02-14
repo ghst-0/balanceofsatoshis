@@ -127,7 +127,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, async () => {
-    if (!!error) {
+    if (error) {
       await rejects(findRecord(args), error, 'Got expected error');
     } else {
       const res = await findRecord(args);

@@ -68,7 +68,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, async () => {
-    if (!!error) {
+    if (error) {
       throws(() => lndDirectory(args), new Error(error), 'Got expected error');
     } else {
       const {path} = await lndDirectory(args);

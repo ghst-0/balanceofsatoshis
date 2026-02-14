@@ -92,7 +92,7 @@ module.exports = args => {
     route.mtokens = tokensAsMtokens(route.tokens).toString();
 
     // For simplicity, only adjust the largest route, the first one
-    if (!!i) {
+    if (i) {
       return route;
     }
 

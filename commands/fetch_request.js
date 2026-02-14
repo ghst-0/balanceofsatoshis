@@ -22,7 +22,7 @@ module.exports = ({fetch}, cbk) => {
     	const controller = new AbortController();
 
       // Setup the timeout controller
-      if (!!options.timeout) {
+      if (options.timeout) {
         const timeout = setTimeout(() => controller.abort(), options.timeout);
 
         timeoutSignals.set(controller.signal, timeout);
@@ -40,7 +40,7 @@ module.exports = ({fetch}, cbk) => {
 
         const res = {statusCode: response.status};
 
-        if (!!options.json) {
+        if (options.json) {
           return cbk(null, res, await response.json());
         } else {
           return cbk(null, res, await response.text());
@@ -50,7 +50,7 @@ module.exports = ({fetch}, cbk) => {
         return cbk(err);
       } finally {
         // Reset the timeout since the request is over
-        if (!!options.timeout) {
+        if (options.timeout) {
           clearTimeout(timeoutSignals.get(controller.signal));
         }
       }

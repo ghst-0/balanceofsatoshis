@@ -76,10 +76,10 @@ module.exports = (args, cbk) => {
           socket: args.socket,
         });
 
-        const path = join(...[homePath({}).path, args.node, credentials]);
+        const path = join(homePath({}).path, args.node, credentials);
 
         return args.fs.writeFile(path, file, err => {
-          if (!!err) {
+          if (err) {
             return cbk([503, 'UnexpectedErrorWritingSavedCredentials', {err}]);
           }
 

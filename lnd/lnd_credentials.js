@@ -20,7 +20,6 @@ const getPath = require('./get_path');
 const {getSavedCredentials} = require('./../nodes');
 const getSocket = require('./get_socket');
 const {homePath} = require('../storage');
-const {permissionEntities} = require('./constants');
 
 const config = 'config.json';
 const defaultLndDirPath = process.env.BOS_DEFAULT_LND_PATH;
@@ -56,11 +55,11 @@ module.exports = (args, cbk) => {
     return asyncAuto({
       // Figure out which node the credentials are for
       forNode: cbk => {
-        if (!!args.node) {
+        if (args.node) {
           return cbk(null, args.node);
         }
 
-        if (!!defaultNodeName) {
+        if (defaultNodeName) {
           return cbk(null, defaultNodeName);
         }
 
@@ -81,7 +80,7 @@ module.exports = (args, cbk) => {
 
           const config = parse(res.toString());
 
-          if (!!config.default_saved_node) {
+          if (config.default_saved_node) {
             return cbk(null, config.default_saved_node);
           }
 
@@ -92,12 +91,12 @@ module.exports = (args, cbk) => {
       // Look for a special path
       getPath: ['forNode', ({forNode}, cbk) => {
         // Exit early when a specific node is used
-        if (!!forNode) {
+        if (forNode) {
           return cbk(null, {});
         }
 
         // Exit early when there is a default LND path
-        if (!!defaultLndDirPath) {
+        if (defaultLndDirPath) {
           return cbk(null, {path: defaultLndDirPath});
         }
 
@@ -154,12 +153,12 @@ module.exports = (args, cbk) => {
 
         const cipher = credentials.encrypted_macaroon;
 
-        if (!!args.logger) {
+        if (args.logger) {
           args.logger.info({decrypt_credentials_for: forNode});
         }
 
         return decryptCiphertext({cipher, spawn}, (err, res) => {
-          if (!!err) {
+          if (err) {
             return cbk(err);
           }
 

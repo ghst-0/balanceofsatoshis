@@ -251,7 +251,7 @@ module.exports = (args, cbk) => {
             alias: node.alias,
             earned_inbound_fees: sources.reduce((sum, n) => sum + n.fee, 0),
             earned_outbound_fees: forwards.reduce((sum, n) => sum + n.fee, 0),
-            icons: !!nodeIcons ? nodeIcons.icons : undefined,
+            icons: nodeIcons ? nodeIcons.icons : undefined,
             is_disconnected: isDisconnected || undefined,
             is_forwarding: hasHtlcChannel || undefined,
             is_inactive: !isDisconnected && !active.length || undefined,
@@ -354,7 +354,7 @@ module.exports = (args, cbk) => {
               'Earned Out',
               'Inbound',
               'Outbound',
-              !!isWideSize ? 'Public Key' : null,
+              isWideSize ? 'Public Key' : null,
             ]).map(n => !args.is_monochrome ? bold(n) : n)])
             .concat(forwards.peers.map(peer => {
               return notNull([
@@ -384,7 +384,7 @@ module.exports = (args, cbk) => {
                   is_monochrome: args.is_monochrome,
                   tokens: peer.liquidity_outbound,
                 }).display,
-                !!isWideSize ? peer.public_key : null,
+                isWideSize ? peer.public_key : null,
               ]);
             })),
         });

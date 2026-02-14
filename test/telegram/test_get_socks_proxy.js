@@ -59,7 +59,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, async () => {
-    if (!!error) {
+    if (error) {
       await rejects(method(args), error, 'Got error');
     } else {
       const {agent} = await method(args);

@@ -31,7 +31,7 @@ module.exports = args => {
 
   // Exit early when the partner was responsible for close fees
   if (args.is_partner_initiated === true) {
-    return {fees: !!balanceSpend ? balanceSpend.fee : Number()};
+    return {fees: balanceSpend ? balanceSpend.fee : Number()};
   }
 
   // Exit early when the closing transaction isn't known
@@ -44,7 +44,7 @@ module.exports = args => {
 
   const fees = []
     .concat(args.capacity - outValue)
-    .concat(!!balanceSpend ? balanceSpend.fee : Number());
+    .concat(balanceSpend ? balanceSpend.fee : Number());
 
   return {fees: sumOf(fees)};
 };

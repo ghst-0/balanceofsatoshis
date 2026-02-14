@@ -50,7 +50,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, (t, end) => {
-    if (!!error) {
+    if (error) {
       throws(() => balanceFromTokens(args), new Error(error));
     } else {
       const balance = balanceFromTokens(args);

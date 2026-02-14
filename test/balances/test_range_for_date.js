@@ -43,7 +43,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, (t, end) => {
-    if (!!error) {
+    if (error) {
       throws(() => rangeForDate(args), new Error(error), 'Got expected error');
     } else if (!args.year && !!args.month) {
       equal(!!rangeForDate(args).after, true, 'Got expected after date');

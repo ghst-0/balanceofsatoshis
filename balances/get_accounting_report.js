@@ -104,7 +104,7 @@ module.exports = (args, cbk) => {
         const csvType = `${categories[args.category]}_csv`;
 
         // Exit early when a CSV dump is requested
-        if (!!args.is_csv) {
+        if (args.is_csv) {
           return cbk(null, getAccounting[csvType]);
         }
 
@@ -114,7 +114,7 @@ module.exports = (args, cbk) => {
       // Calculate total amounts
       total: ['getAccounting', ({getAccounting}, cbk) => {
         // Exit early when a CSV dump is requested
-        if (!!args.is_csv) {
+        if (args.is_csv) {
           return cbk();
         }
 
@@ -124,7 +124,7 @@ module.exports = (args, cbk) => {
         const tokens = sumOf(rows.map(n => n.amount));
 
         // Exit early when there is no fiat data
-        if (!!args.is_fiat_disabled) {
+        if (args.is_fiat_disabled) {
           return cbk(null, {tokens, fiat: empty});
         }
 
@@ -137,7 +137,7 @@ module.exports = (args, cbk) => {
       // Clean rows for display if necessary
       report: ['accounting', 'total',({accounting, total}, cbk) => {
         // Exit early when there is no cleaning necessary
-        if (!!args.is_csv) {
+        if (args.is_csv) {
           return cbk(null, accounting);
         }
 

@@ -37,7 +37,7 @@ module.exports = ({fs, path}, cbk) => {
       // Get the configuration file
       getFile: ['validate', ({}, cbk) => {
         return fs.getFile(path, (err, res) => {
-          if (!!err) {
+          if (err) {
             return cbk([400, 'FailedToFindFileAtProxySpecifiedPath', {err}]);
           }
 
@@ -66,15 +66,15 @@ module.exports = ({fs, path}, cbk) => {
 
           const url = new URL(`socks://${host}`);
 
-          if (!!password) {
+          if (password) {
             url.password = password;
           }
 
-          if (!!port) {
+          if (port) {
             url.port = port;
           }
 
-          if (!!userId) {
+          if (userId) {
             url.username = userId;
           }
 

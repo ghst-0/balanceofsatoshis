@@ -56,7 +56,7 @@ module.exports = ({accuracy, from, to}, test, cbk) => {
 
             // Find out where the cursor lies in the range
             return test({cursor}, (err, isLow) => {
-              if (!!err) {
+              if (err) {
                 return cbk(err);
               }
 
@@ -74,7 +74,7 @@ module.exports = ({accuracy, from, to}, test, cbk) => {
             });
           },
           err => {
-            if (!!err) {
+            if (err) {
               return cbk(err);
             }
 

@@ -60,7 +60,7 @@ module.exports = ({fs, network}, cbk) => {
       // Check that the data directory exists
       checkDataDir: ['dataDir', ({dataDir}, cbk) => {
         return fs.getFileStatus(dataDir, (err, res) => {
-          if (!!err) {
+          if (err) {
             return cbk([503, 'UnexpectedErrCheckingForDataDirectory', {err}]);
           }
 
@@ -77,7 +77,7 @@ module.exports = ({fs, network}, cbk) => {
         return fs.getDirectoryFiles(dataDir, (err, files) => {
           return asyncFilter(files, (file, cbk) => {
             return fs.getFileStatus(homePath({file}).path, (err, res) => {
-              if (!!err) {
+              if (err) {
                 return cbk([503, 'UnexpectedErrCheckingForNodeDir', {err}]);
               }
 
@@ -113,7 +113,7 @@ module.exports = ({fs, network}, cbk) => {
           const {lnd} = authenticatedLndGrpc(credentials);
 
           return getWalletInfo({lnd}, (err, res) => {
-            if (!!err) {
+            if (err) {
               return cbk(null, {node_name: node});
             }
 
@@ -139,7 +139,7 @@ module.exports = ({fs, network}, cbk) => {
 
         return asyncFilter(nodes, ({lnd}, cbk) => {
           return getNetwork({lnd}, (err, res) => {
-            if (!!err) {
+            if (err) {
               return cbk(err);
             }
 

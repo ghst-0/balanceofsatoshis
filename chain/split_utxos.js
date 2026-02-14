@@ -85,7 +85,7 @@ module.exports = (args, cbk) => {
 
     // Generate addresses
     getAddresses: ['checkFunds', 'outputCount', ({outputCount}, cbk) => {
-      if (!!args.is_dry_run) {
+      if (args.is_dry_run) {
         return cbk(null, []);
       }
 
@@ -101,7 +101,7 @@ module.exports = (args, cbk) => {
       'outputCount',
       ({getAddresses, outputCount}, cbk) =>
     {
-      if (!!args.is_dry_run) {
+      if (args.is_dry_run) {
         return cbk(null, {});
       }
 

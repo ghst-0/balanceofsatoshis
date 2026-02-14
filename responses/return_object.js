@@ -29,15 +29,15 @@ const summary = n => `${n}_summary`;
 */
 module.exports = ({exit, file, logger, reject, resolve, table, write}) => {
   return (err, res) => {
-    if (!!err) {
+    if (err) {
       logger.error({err});
 
       return reject();
     }
 
-    if (!!file) {
+    if (file) {
       return writeJsonFile({file, write, json: res}, err => {
-        if (!!err) {
+        if (err) {
           return reject(err);
         }
 
@@ -55,7 +55,7 @@ module.exports = ({exit, file, logger, reject, resolve, table, write}) => {
     }
 
     // Exit early when a table output is requested
-    if (!!table) {
+    if (table) {
       logger.info(renderTable(res[table], {border}));
 
       if (isArray(res[summary(table)])) {
@@ -71,7 +71,7 @@ module.exports = ({exit, file, logger, reject, resolve, table, write}) => {
       logger.info(res);
     }
 
-    if (!!exit) {
+    if (exit) {
       exit();
     }
 

@@ -52,7 +52,7 @@ module.exports = ({fs, node, os, path}, cbk) => {
       // Get configuration file
       getConfFile: ['validate', ({}, cbk) => {
         // Exit early when a saved node is specified
-        if (!!node) {
+        if (node) {
           return cbk();
         }
 
@@ -126,7 +126,7 @@ module.exports = ({fs, node, os, path}, cbk) => {
           }
 
           return cbk(null, `${deriveHost}:${port}`);
-        } catch (err) {
+        } catch {
           // Ignore errors
           return cbk();
         }

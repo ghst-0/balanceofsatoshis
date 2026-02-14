@@ -110,7 +110,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, async () => {
-    if (!!error) {
+    if (error) {
       await rejects(getAccountingReport(args), error, 'Got expected error');
     } else {
       const res = await getAccountingReport(args);

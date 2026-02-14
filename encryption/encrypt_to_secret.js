@@ -65,7 +65,7 @@ module.exports = ({encoding, from, plain, secret, to}, cbk) => {
       // Generate a derivative key
       key: ['salt', ({salt}, cbk) => {
         return scrypt(fromHex(secret), salt, keyLength, (err, derivedKey) => {
-          if (!!err) {
+          if (err) {
             return cbk([503, 'UnexpectedErrorGeneratingDerivativeKey', {err}]);
           }
 
@@ -79,7 +79,7 @@ module.exports = ({encoding, from, plain, secret, to}, cbk) => {
 
         try {
           createCipheriv(algorithm, key, iv);
-        } catch (err) {
+        } catch {
           return cbk([500, 'FailedToCreateCipherWhenEncryptingToSecret']);
         }
 

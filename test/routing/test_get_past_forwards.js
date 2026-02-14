@@ -48,7 +48,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, async () => {
-    if (!!error) {
+    if (error) {
       await rejects(getPastForwards(args, args.test), error, 'Got error');
     } else {
       const {forwards} = await getPastForwards(args);

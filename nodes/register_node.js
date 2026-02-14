@@ -90,7 +90,7 @@ module.exports = ({ask, cryptography, fs, logger, node}, cbk) => {
           publicKeyEncoding,
         },
         (err, publicKey, privateKey) => {
-          if (!!err) {
+          if (err) {
             return cbk([503, 'FailedToGenerateCredentialsKey', {err}]);
           }
 
@@ -141,7 +141,7 @@ module.exports = ({ask, cryptography, fs, logger, node}, cbk) => {
         const encoded = Buffer.from(enterCredentials, 'hex');
 
         return decodeFirst(encoded, (err, node) => {
-          if (!!err) {
+          if (err) {
             return cbk([400, 'ExpectedValidEncodedCredentials', {err}]);
           }
 
@@ -259,7 +259,7 @@ module.exports = ({ask, cryptography, fs, logger, node}, cbk) => {
 
       // Name for node
       nodeName: ['details', ({details}, cbk) => {
-        if (!!node) {
+        if (node) {
           return cbk(null, node);
         }
 

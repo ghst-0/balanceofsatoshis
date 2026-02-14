@@ -55,7 +55,7 @@ const tests = [
 
 tests.forEach(({args, description, error, expected}) => {
   return test(description, async () => {
-    if (!!error) {
+    if (error) {
       await rejects(decryptCiphertext(args), error, 'Got expected error');
     } else {
       const {clear} = await decryptCiphertext(args);

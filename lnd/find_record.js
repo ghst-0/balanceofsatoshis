@@ -96,13 +96,13 @@ module.exports = ({lnd, query}, cbk) => {
           return cbk(null, {channels: [], nodes: []});
         }
 
-        if (!!getKey.value) {
+        if (getKey.value) {
           return getNode({
             lnd,
             public_key: getKey.value.public_key,
           },
           (err, res) => {
-            if (!!err) {
+            if (err) {
               return cbk(err);
             }
 
@@ -138,7 +138,7 @@ module.exports = ({lnd, query}, cbk) => {
             return cbk(null, {});
           }
 
-          if (!!err) {
+          if (err) {
             return cbk(err);
           }
 
@@ -248,7 +248,7 @@ module.exports = ({lnd, query}, cbk) => {
                     capacity: formatTokens({tokens: chan.capacity}).display,
                     funding: `${chan.transaction_id} ${chan.transaction_vout}`,
                     peer_created: chan.is_partner_initiated || undefined,
-                    pending_payments: !!pending.length ? pending : undefined,
+                    pending_payments: pending.length ? pending : undefined,
                   };
                 }),
             }
@@ -292,8 +292,8 @@ module.exports = ({lnd, query}, cbk) => {
 
         return cbk(null, {
           chain_transaction: !!getTx && !!getTx.tx ? getTx : undefined,
-          channels: !!channels.length ? channels : undefined,
-          nodes: !!nodes.length ? nodes : undefined,
+          channels: channels.length ? channels : undefined,
+          nodes: nodes.length ? nodes : undefined,
           payment: getPayment.payment || undefined,
           payment_failed: getPayment.failed || undefined,
           payment_pending: getPayment.is_pending || undefined,
