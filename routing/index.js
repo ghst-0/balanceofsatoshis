@@ -1,3 +1,4 @@
+const adjustFees = require('./adjust_fees');
 const channelsFromHints = require('./channels_from_hints');
 const getChainFeesChart = require('./get_chain_fees_chart');
 const getFeesChart = require('./get_fees_chart');
@@ -7,6 +8,7 @@ const getPastForwards = require('./get_past_forwards');
 const ignoreFromAvoid = require('./ignore_from_avoid');
 
 module.exports = {
+  adjustFees,
   channelsFromHints,
   getChainFeesChart,
   getFeesChart,

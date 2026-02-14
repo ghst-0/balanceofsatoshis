@@ -1,7 +1,5 @@
 const asyncAuto = require('async/auto');
-const asyncEach = require('async/each');
 const asyncMap = require('async/map');
-const asyncRetry = require('async/retry');
 const {findKey} = require('ln-sync');
 const {getChannel} = require('ln-service');
 const {getChannels} = require('ln-service');
@@ -12,9 +10,7 @@ const {getNodeAlias} = require('ln-sync');
 const {getPendingChannels} = require('ln-service');
 const {gray} = require('colorette');
 const {green} = require('colorette');
-const moment = require('moment');
 const {returnResult} = require('asyncjs-util');
-const {updateChannelFee} = require('ln-sync');
 
 const {chartAliasForPeer} = require('./../display');
 const {formatFeeRate} = require('./../display');
@@ -23,9 +19,7 @@ const parseFeeRateFormula = require('./parse_fee_rate_formula');
 
 const asRate = rate => formatFeeRate({rate}).display;
 const asTxOut = n => `${n.transaction_id}:${n.transaction_vout}`;
-const {ceil} = Math;
 const flatten = arr => [].concat(...arr);
-const interval = 1000 * 60 * 2;
 const isAllUndefined = arr => arr.findIndex(n => n !== undefined) === -1;
 const {isArray} = Array;
 const isNumber = n => !!n && !isNaN(n);
@@ -36,9 +30,7 @@ const nodeMatch = /\bFEE_RATE_OF_[0-9A-F]{66}\b/gim;
 const noFee = gray('Unknown Rate');
 const present = (arg, existing) => arg !== undefined ? arg : existing;
 const pubKeyForNodeMatch = n => n.substring(12).toLowerCase();
-const shortKey = key => key.substring(0, 20);
 const sumOf = arr => arr.reduce((sum, n) => sum + n, 0);
-const times = 360;
 const uniq = arr => Array.from(new Set(arr));
 
 /** View and adjust routing fees
@@ -350,51 +342,10 @@ module.exports = (args, cbk) => {
         cbk);
       }],
 
-      // Execute fee updates
-      updateFees: [
-        'feeUpdates',
-        'getPublicKey',
-        ({feeUpdates, getPublicKey}, cbk) =>
-      {
-        if (!feeUpdates) {
-          return cbk();
-        }
-
-        return asyncEach(flatten(feeUpdates), (update, cbk) => {
-          return asyncRetry({interval, times}, cbk => {
-            return updateChannelFee({
-              base_fee_mtokens: update.base_fee_mtokens,
-              cltv_delta: update.cltv_delta,
-              fee_rate: ceil(update.fee_rate),
-              from: getPublicKey.public_key,
-              inbound_rate_discount: ceil(update.inbound_rate_discount),
-              lnd: args.lnd,
-              transaction_id: update.transaction_id,
-              transaction_vout: update.transaction_vout,
-            },
-            err => {
-              if (!!err) {
-                args.logger.error(err);
-
-                args.logger.info({
-                  next_retry: moment().add(interval, 'ms').calendar(),
-                });
-
-                return cbk(err);
-              }
-
-              return cbk();
-            });
-          },
-          cbk);
-        },
-        cbk);
-      }],
-
       // Get final fee rates
-      getRates: ['updateFees', ({}, cbk) => {
+      getRates: ({}, cbk) => {
         return getFeeRates({lnd: args.lnd}, cbk);
-      }],
+      },
 
       // Get fee rundown
       fees: [
