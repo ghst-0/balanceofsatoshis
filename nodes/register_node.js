@@ -7,7 +7,6 @@ const {derAsPem} = require('./../encryption');
 const {homePath} = require('../storage');
 const putSavedCredentials = require('./put_saved_credentials');
 
-const credentialsFileName = 'credentials.json';
 const defaultHost = 'localhost';
 const defaultRpcPort = 10009;
 const keyType = 'rsa';

@@ -5,7 +5,6 @@ const asyncForever = require('async/forever');
 const asyncMap = require('async/map');
 const asyncRetry = require('async/retry');
 const {getForwards} = require('ln-service');
-const {getNetwork} = require('ln-service');
 const {getTransactionRecord} = require('ln-sync');
 const {getWalletInfo} = require('ln-service');
 const {handleBackupCommand} = require('ln-telegram');
@@ -21,7 +20,6 @@ const {handleInfoCommand} = require('ln-telegram');
 const {handleInvoiceCommand} = require('ln-telegram');
 const {handleLiquidityCommand} = require('ln-telegram');
 const {handleMempoolCommand} = require('ln-telegram');
-const {handlePayCommand} = require('ln-telegram');
 const {handlePendingCommand} = require('ln-telegram');
 const {handleStartCommand} = require('ln-telegram');
 const {handleStopCommand} = require('ln-telegram');
@@ -33,18 +31,14 @@ const {notifyOfForwards} = require('ln-telegram');
 const {postChainTransaction} = require('ln-telegram');
 const {postClosedMessage} = require('ln-telegram');
 const {postClosingMessage} = require('ln-telegram');
-const {postCreatedTrade} = require('ln-telegram');
 const {postOpenMessage} = require('ln-telegram');
 const {postOpeningMessage} = require('ln-telegram');
 const {postNodesOnline} = require('ln-telegram');
 const {postSettledInvoice} = require('ln-telegram');
 const {postSettledPayment} = require('ln-telegram');
-const {postSettledTrade} = require('ln-telegram');
 const {postUpdatedBackup} = require('ln-telegram');
 const {returnResult} = require('asyncjs-util');
-const {serviceAnchoredTrades} = require('paid-services');
 const {subscribeToBackups} = require('ln-service');
-const {subscribeToBlocks} = require('goldengate');
 const {subscribeToChannels} = require('ln-service');
 const {subscribeToInvoices} = require('ln-service');
 const {subscribeToPastPayments} = require('ln-service');
@@ -66,7 +60,6 @@ let isBotInit = false;
 const isNumber = n => !isNaN(n);
 const limit = 99999;
 const markdown = {parse_mode: 'Markdown'};
-const maxCommandDelayMs = 1000 * 10;
 const restartSubscriptionTimeMs = 1000 * 30;
 const sanitize = n => (n || '').replace(/_/g, '\\_').replace(/[*~`]/g, '');
 
@@ -835,76 +828,6 @@ module.exports = (args, cbk) => {
             sub.removeAllListeners();
 
             return cbk([503, 'UnexpectedErrorInPendingSubscription', {err}]);
-          });
-
-          return;
-        },
-        cbk);
-      }],
-
-      // Service trade secrets
-      secrets: ['getNodes', 'userId', ({getNodes}, cbk) => {
-        return asyncEach(getNodes, (node, cbk) => {
-          const start = new Date().toISOString();
-
-          const sub = serviceAnchoredTrades({
-            lnd: node.lnd,
-            request: args.request,
-          });
-
-          subscriptions.push(sub);
-
-          sub.on('settled', async trade => {
-            // Ignore trades without tokens
-            if (!trade.tokens) {
-              return;
-            }
-
-            try {
-              await postSettledTrade({
-                api: args.bot.api,
-                description: trade.description,
-                destination: node.public_key,
-                lnd: node.lnd,
-                nodes: getNodes,
-                to: trade.to,
-                tokens: trade.tokens,
-                user: connectedId,
-              });
-            } catch (err) {
-              args.logger.error({err});
-            }
-          });
-
-          sub.on('start', async trade => {
-            // Exit early when this is an older trade or has no tokens
-            if (!trade.tokens || trade.created_at < start) {
-              return;
-            }
-
-            try {
-              await postCreatedTrade({
-                api: args.bot.api,
-                description: trade.description,
-                destination: node.public_key,
-                expires_at: trade.expires_at,
-                id: trade.id,
-                lnd: node.lnd,
-                nodes: getNodes,
-                tokens: trade.tokens,
-                user: connectedId,
-              });
-            } catch (err) {
-              args.logger.error({err});
-            }
-          });
-
-          sub.once('error', err => {
-            sub.removeAllListeners();
-
-            args.logger.error({err});
-
-            return cbk(err);
           });
 
           return;

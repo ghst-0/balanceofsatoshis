@@ -1,5 +1,4 @@
 const asyncAuto = require('async/auto');
-const asyncFilter = require('async/filter');
 const asyncMap = require('async/map');
 const {getIdentity} = require('ln-service');
 const {returnResult} = require('asyncjs-util');
@@ -7,7 +6,6 @@ const {returnResult} = require('asyncjs-util');
 const {getLnds} = require('./../lnd');
 const startTelegramBot = require('./start_rocketchat_bot');
 
-const defaultError = [503, 'TelegramBotStopped'];
 const {isArray} = Array;
 
 /** Run the telegram bot for a node or multiple nodes
