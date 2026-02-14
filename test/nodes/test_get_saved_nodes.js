@@ -130,7 +130,5 @@ tests.forEach(({args, description, error, expected}) => {
 
       deepEqual(nodes, expected.nodes, 'Got expected nodes');
     }
-
-    return;
   });
 });

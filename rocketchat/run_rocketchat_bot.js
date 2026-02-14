@@ -128,8 +128,6 @@ module.exports = (args, cbk) => {
           args.logger.error({err: startBot.failure});
         }
 
-        const online = getConnected.filter(n => !!n);
-
         return cbk(null, {
           connected: startBot.connected,
           online: getConnected.filter(n => !!n),

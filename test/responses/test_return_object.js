@@ -101,7 +101,5 @@ tests.forEach(({args, description, error, expected}) => {
 
       return end();
     }})(null, args.res);
-
-    return;
   });
 });

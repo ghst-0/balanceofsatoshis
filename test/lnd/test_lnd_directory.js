@@ -75,7 +75,5 @@ tests.forEach(({args, description, error, expected}) => {
 
       equal(path, expected.path, 'Got expected path');
     }
-
-    return;
   });
 });

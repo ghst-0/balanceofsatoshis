@@ -47,7 +47,5 @@ tests.forEach(({args, description, error, expected}) => {
 
       equal(macaroon, expected.macaroon, 'Got expected macaroon');
     }
-
-    return;
   });
 });

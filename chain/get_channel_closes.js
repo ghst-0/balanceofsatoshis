@@ -4,7 +4,6 @@ const {getChainTransactions} = require('ln-service');
 const {getClosedChannels} = require('ln-service');
 const {getHeight} = require('ln-service');
 const {getNetwork} = require('ln-sync');
-const {getNode} = require('ln-service');
 const {getNodeAlias} = require('ln-sync');
 const {returnResult} = require('asyncjs-util');
 

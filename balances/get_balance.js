@@ -7,7 +7,6 @@ const {returnResult} = require('asyncjs-util');
 
 const balanceFromTokens = require('./balance_from_tokens');
 
-const {max} = Math;
 const none = 0;
 
 /** Get the existing balance

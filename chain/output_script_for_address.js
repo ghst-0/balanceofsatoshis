@@ -33,7 +33,7 @@ module.exports = ({address, network}) => {
     // Exit early when this is not a bech32 address
     try {
       fromBech32(address);
-    } catch (_) {
+    } catch {
       throw err;
     }
 

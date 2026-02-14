@@ -6,7 +6,6 @@ const {returnResult} = require('asyncjs-util');
 const {sendToChainAddresses} = require('ln-service');
 
 const consumedUtxoCount = 1;
-const decBase = 10;
 const format ='p2wpkh';
 const minimumUtxoTokens = 1e5;
 const newArrayOfSize = n => Array.from(Array(n));

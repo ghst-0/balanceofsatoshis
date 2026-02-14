@@ -62,8 +62,6 @@ module.exports = ({plain, spawn, to}, cbk) => {
         encrypt.stdin.write(`${plain}\n`);
 
         encrypt.stdin.end();
-
-        return;
       }],
     },
     returnResult({reject, resolve, of: 'encrypt'}, cbk));

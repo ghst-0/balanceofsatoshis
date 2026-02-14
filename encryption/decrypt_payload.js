@@ -48,7 +48,7 @@ module.exports = ({encrypted, secret}) => {
     const clear = decrypt({ciphertext}, key, {iv, padding, mode: mode.CFB});
 
     return {payload: clear.toString(enc.Utf8)};
-  } catch (err) {
+  } catch {
     throw new Error('FailedToDecryptCipherTextWithSecretKey');
   }
 };

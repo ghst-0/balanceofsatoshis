@@ -1,6 +1,5 @@
 const moment = require('moment');
 
-const dollarFormat = cents => (cents / 100).toFixed(2);
 const formatAsBigUnit = tokens => (tokens / 1e8).toFixed(8);
 const percentFormat = n => isNaN(n) ? '0' : (n * 100).toFixed();
 

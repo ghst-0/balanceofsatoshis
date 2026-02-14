@@ -95,7 +95,5 @@ tests.forEach(({args, description, expected}) => {
     const description = await describeRoute(args);
 
     deepEqual(description, expected, 'Got expected route description');
-
-    return;
   });
 });

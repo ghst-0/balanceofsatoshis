@@ -65,7 +65,5 @@ tests.forEach(({args, description, error, expected}) => {
 
       equal(maximum, expected.maximum, 'Got expected value');
     }
-
-    return;
   });
 });

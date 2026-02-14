@@ -104,8 +104,6 @@ module.exports = ({index, lnd, reason, route, tagged}, cbk) => {
           return cbk();
         }
 
-        const tag = (tagged || []).find(n => n.public_key === getTo.id);
-
         const {display} = chartAliasForPeer({
           alias: getTo.alias,
           public_key: getTo.id,

@@ -55,7 +55,5 @@ tests.forEach(({args, description, error, expected}) => {
 
       deepEqual(forwards, expected.forwards, 'Got expected forwards');
     }
-
-    return;
   });
 });

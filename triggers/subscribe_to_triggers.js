@@ -70,7 +70,7 @@ module.exports = ({lnds}) => {
   const register = ({description, id}, lnd) => {
     try {
       decodeTrigger({encoded: description});
-    } catch (err) {
+    } catch {
       // Exit early when the invoice is not a trigger invoice
       return;
     }
@@ -93,8 +93,6 @@ module.exports = ({lnds}) => {
 
       delete triggers[invoice.id];
     });
-
-    return;
   };
 
   lnds.forEach(lnd => {
@@ -170,7 +168,6 @@ module.exports = ({lnds}) => {
 
     // Listen for connected peers subscription
     peersSub.on('connected', (update, cbk) => {
-      const id = update.public_key;
 
       // See if the peer matches a relevant trigger
       const follows = keys(triggers)
@@ -187,7 +184,6 @@ module.exports = ({lnds}) => {
 
     // Listen for disconnected peers subscription
     peersSub.on('disconnected', (update, cbk) => {
-      const id = update.public_key;
 
       // See if the peer matches a relevant trigger
       const follows = keys(triggers)

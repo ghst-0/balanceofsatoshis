@@ -89,7 +89,5 @@ tests.forEach(({args, description, error, expected}) => {
       deepEqual(credentials, expected.credentials, 'Got expected credentials');
       equal(node, expected.node, 'Got expected node name');
     }
-
-    return;
   });
 });

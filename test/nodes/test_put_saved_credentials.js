@@ -74,7 +74,5 @@ tests.forEach(({args, description, error, expected}) => {
     } else {
       await putSavedCredentials(args);
     }
-
-    return;
   });
 });

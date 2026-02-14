@@ -52,7 +52,7 @@ module.exports = ({fs, node}, cbk) => {
 
       // Get the credentials file
       getFile: ['validate', ({}, cbk) => {
-        const path = join(...[homePath({}).path, node, credentials]);
+        const path = join(homePath({}).path, node, credentials);
 
         return fs.getFile(path, (err, res) => {
           // Exit early on errors, there is no credential found

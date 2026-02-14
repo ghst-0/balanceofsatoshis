@@ -41,7 +41,5 @@ tests.forEach(({args, description, error, expected}) => {
 
       deepEqual(rows, expected.rows, 'Got expected table rows');
     }
-
-    return;
   });
 });

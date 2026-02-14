@@ -1,6 +1,5 @@
 const asyncAuto = require('async/auto');
 const {encode} = require('cbor');
-const {grantAccess} = require('ln-service');
 const moment = require('moment');
 const {returnResult} = require('asyncjs-util');
 

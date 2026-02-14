@@ -4,7 +4,7 @@ const {monthNumbers} = require('./constants');
 const {monthOffset} = require('./constants');
 const {notFoundIndex} = require('./constants');
 
-/** Get a before and after range 
+/** Get a before and after range
 
   {
     [date]: <Day of Month String>
@@ -60,7 +60,7 @@ module.exports = ({date, month, year}) => {
 
   try {
     after.toISOString();
-  } catch (err) {
+  } catch {
     throw new Error('UnrecognizedFormatForAccountingMonth');
   }
 

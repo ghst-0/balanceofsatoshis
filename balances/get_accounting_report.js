@@ -6,9 +6,6 @@ const {returnResult} = require('asyncjs-util');
 const categories = require('./accounting_categories');
 const {defaultCurrency} = require('./constants');
 const {defaultFiat} = require('./constants');
-const {monthNumbers} = require('./constants');
-const {monthOffset} = require('./constants');
-const {notFoundIndex} = require('./constants');
 const rangeForDate = require('./range_for_date');
 const tableRowsFromCsv = require('./table_rows_from_csv');
 

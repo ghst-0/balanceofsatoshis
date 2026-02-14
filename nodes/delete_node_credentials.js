@@ -37,7 +37,7 @@ module.exports = ({fs, node}, cbk) => {
 
       // Remove credentials file
       removeCredentials: ['validate', ({}, cbk) => {
-        const path = join(...[homePath({}).path, node, credentialsFileName]);
+        const path = join(homePath({}).path, node, credentialsFileName);
 
         return fs.removeFile(path, err => {
           if (!!err) {

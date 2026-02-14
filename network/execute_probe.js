@@ -1,11 +1,7 @@
 const asyncAuto = require('async/auto');
-const asyncMapSeries = require('async/mapSeries');
-const {getNode} = require('ln-service');
 const {returnResult} = require('asyncjs-util');
-const {subscribeToProbe} = require('ln-service');
 const {subscribeToProbeForRoute} = require('ln-service');
 
-const {describeConfidence} = require('./../display');
 const {describeRoute} = require('./../display');
 const {describeRoutingFailure} = require('./../display');
 
@@ -139,7 +135,6 @@ module.exports = (args, cbk) => {
       // Probe
       probe: ['mtokens', 'strictMaxFee', ({mtokens, strictMaxFee}, cbk) => {
         const attemptedPaths = [];
-        const {features} = args;
         const start = now();
 
         const timeoutMinutes = minutesAsMs((args.timeout_minutes || Number()));
@@ -215,8 +210,6 @@ module.exports = (args, cbk) => {
 
           return args.logger.info({evaluating: description});
         });
-
-        return;
       }],
     },
     returnResult({reject, resolve, of: 'probe'}, cbk));

@@ -55,7 +55,5 @@ tests.forEach(({args, description, error, expected}) => {
 
       equal(balances.balance, expected.balance, 'Balance is calculated');
     }
-
-    return;
   });
 });

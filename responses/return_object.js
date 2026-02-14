@@ -1,7 +1,6 @@
 const {getBorderCharacters} = require('table');
 const renderTable = require('table').table;
 
-const pkg = require('./../package.json');
 const writeJsonFile = require('./write_json_file');
 
 const border = getBorderCharacters('norc');

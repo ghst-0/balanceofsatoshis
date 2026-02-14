@@ -1,7 +1,3 @@
-const beginKey = '-----BEGIN PUBLIC KEY-----';
-const endKey = '-----END PUBLIC KEY-----';
-const split = /.{0,64}/g;
-
 /** Get a DER encoded public key as a PEM encoded public key
 
   {

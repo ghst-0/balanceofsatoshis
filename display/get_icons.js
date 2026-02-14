@@ -65,7 +65,7 @@ module.exports = ({fs}, cbk) => {
             });
 
             return cbk(null, {nodes});
-          } catch (err) {
+          } catch {
             return cbk(null, {nodes: []});
           }
         });

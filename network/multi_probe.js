@@ -59,10 +59,6 @@ module.exports = ({channels, from, ignore, probes, tokens}) => {
     throw new Error('ExpectedArrayOfRelaysToGenerateMultiProbeIgnores');
   }
 
-  const latencies = probes.map(n => n.latency_ms).filter(n => !!n);
-
-  const msSpent = latencies.reduce((sum, n) => sum + n, Number());
-
   const pairs = probes.map(probe => {
     const [out, ...network] = probe.relays.map((to, i, arr) => {
       return {from_public_key: arr[--i] || from, to_public_key: to};

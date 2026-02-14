@@ -52,8 +52,6 @@ module.exports = ({cipher, spawn}, cbk) => {
         decrypt.stdin.write(`${cipher}`);
 
         decrypt.stdin.end();
-
-        return;
       }],
     },
     returnResult({reject, resolve, of: 'decrypt'}, cbk));

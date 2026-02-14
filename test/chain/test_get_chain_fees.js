@@ -78,7 +78,5 @@ tests.forEach(({args, description, error, expected}) => {
 
       deepEqual(fees, expected, 'Got expected fees rundown');
     }
-
-    return;
   });
 });

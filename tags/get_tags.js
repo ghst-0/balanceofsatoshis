@@ -55,7 +55,7 @@ module.exports = ({fs}, cbk) => {
             }
 
             return cbk(null, {tags});
-          } catch (err) {
+          } catch {
             return cbk(null, defaultTags);
           }
         });

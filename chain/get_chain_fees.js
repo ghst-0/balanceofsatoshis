@@ -9,7 +9,6 @@ const bytesPerKb = 1e3;
 const {ceil} = Math;
 const defaultBlockCount = 144;
 const iteration = 1;
-const minFeeRate = 1;
 const start = 2;
 
 /** Get chain fees

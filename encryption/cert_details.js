@@ -110,7 +110,7 @@ module.exports = args => {
   // Recursively attempt to parse if possible
   try {
     return parseChildren();
-  } catch (e) {
+  } catch {
     asn1.children.length = defaultLengthBytesCount;
 
     // Nothing more is able to be parsed

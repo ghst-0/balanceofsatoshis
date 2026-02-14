@@ -305,7 +305,5 @@ tests.forEach(({args, description, error, expected}) => {
 
       deepEqual(peers, expected.peers, 'Got expected peers');
     }
-
-    return;
   });
 });

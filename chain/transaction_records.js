@@ -112,7 +112,6 @@ module.exports = ({ended, id, original, pending, txs, vout}) => {
         }
 
         return fromHex(grandTx.transaction).ins.forEach(greatIn => {
-          const greatTx = txs.find(n => n.id === idFromHash(greatIn.hash));
 
           const closingTime = ended.find(chan => {
             return chan.close_transaction_id === idFromHash(greatIn.hash);

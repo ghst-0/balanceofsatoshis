@@ -66,7 +66,5 @@ tests.forEach(({args, description, error, expected}) => {
 
       equal(agent.constructor.name, expected, 'Got expected SOCKS proxy');
     }
-
-    return;
   });
 });

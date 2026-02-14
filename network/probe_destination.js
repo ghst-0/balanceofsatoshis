@@ -2,7 +2,6 @@ const {createHash} = require('crypto');
 const {randomBytes} = require('crypto');
 
 const asyncAuto = require('async/auto');
-const {decodePaymentRequest} = require('ln-service');
 const {getChannels} = require('ln-service');
 const {getIdentity} = require('ln-service');
 const {getNode} = require('ln-service');
@@ -25,7 +24,6 @@ const dateBytesLength = 8;
 const datePrecisionLength = 6;
 const dateType = '34349343';
 const defaultCltvDelta = 144;
-const defaultMaxFee = 1337;
 const defaultTokens = 1;
 const featureTypeChannelType = 45;
 const featureTypeTrustedFunding = 51;

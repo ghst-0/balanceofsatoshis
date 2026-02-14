@@ -35,7 +35,5 @@ tests.forEach(({args, description, error, expected}) => {
 
       deepEqual(closes, expected, 'Got expected closed channels');
     }
-
-    return;
   });
 });

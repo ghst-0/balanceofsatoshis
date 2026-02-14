@@ -19,8 +19,6 @@ const makeSpawn = args => {
         if (!args.is_error && event === 'end') {
           return cbk();
         }
-
-        return;
       }},
       stdin: {end: () => {}, setEncoding: () => {}, write: () => {}},
     };
@@ -64,7 +62,5 @@ tests.forEach(({args, description, error, expected}) => {
 
       equal(clear, expected.clear, 'Got expected clear text output');
     }
-
-    return;
   });
 });

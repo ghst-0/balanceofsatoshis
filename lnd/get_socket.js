@@ -79,7 +79,7 @@ module.exports = ({fs, node, os, path}, cbk) => {
           }
 
           return cbk(null, conf);
-        } catch (err) {
+        } catch {
           // Ignore errors in configuration parsing
           return cbk();
         }

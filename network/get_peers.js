@@ -19,7 +19,6 @@ const moment = require('moment');
 const {returnResult} = require('asyncjs-util');
 const size = require('window-size');
 
-const {authenticatedLnd} = require('./../lnd');
 const {chartAliasForPeer} = require('./../display');
 const {formatFeeRate} = require('./../display');
 const {getIcons} = require('./../display');
@@ -537,7 +536,7 @@ module.exports = (args, cbk) => {
               lnd: args.lnd,
               public_key: publicKey,
             });
-          } catch (err) {}
+          } catch {}
 
           return {
             alias: node.alias,

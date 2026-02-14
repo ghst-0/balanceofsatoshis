@@ -400,8 +400,6 @@ module.exports = (args, cbk) => {
 
           return cbk();
         });
-
-        return;
       }],
 
       // Results of probe

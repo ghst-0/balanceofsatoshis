@@ -78,6 +78,4 @@ module.exports = (args, cbk) => {
   });
 
   req.end();
-
-  return;
 };

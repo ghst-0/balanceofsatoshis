@@ -1,6 +1,4 @@
-const {homedir} = require('os');
 const {join} = require('path');
-const {platform} = require('os');
 
 const asyncAuto = require('async/auto');
 const {returnResult} = require('asyncjs-util');

@@ -53,8 +53,6 @@ module.exports = ({command, lnd}, cbk) => {
           if (token === '--avoid' && isEdge(next)) {
             edges.add(channelForEdge(next));
           }
-
-          return;
         });
 
         return cbk(null, {ids: setAsArray(edges)});
@@ -92,8 +90,6 @@ module.exports = ({command, lnd}, cbk) => {
           // Mark the avoid edge where channel is missing as a skip
           skips.add(i);
           skips.add(i + 1);
-
-          return;
         });
 
         return cbk(null, detokenize(tokens.filter((_, i) => !skips.has(i))));

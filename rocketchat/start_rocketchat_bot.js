@@ -9,7 +9,6 @@ const {getTransactionRecord} = require('ln-sync');
 const {getWalletInfo} = require('ln-service');
 const {handleBackupCommand} = require('ln-telegram');
 const {handleBalanceCommand} = require('ln-telegram');
-const {handleBlocknotifyCommand} = require('ln-telegram');
 const {handleButtonPush} = require('ln-telegram');
 const {handleConnectCommand} = require('ln-telegram');
 const {handleCostsCommand} = require('ln-telegram');
@@ -88,7 +87,6 @@ const sanitize = n => (n || '').replace(/_/g, '\\_').replace(/[*~`]/g, '');
 module.exports = (args, cbk) => {
   let connectedId = args.id;
   let isStopped = false;
-  let paymentsLimit = args.payments_limit;
   const subscriptions = [];
 
   return new Promise((resolve, reject) => {
@@ -208,17 +206,6 @@ module.exports = (args, cbk) => {
           } catch (err) {
             args.logger.error({err});
           }
-        });
-
-        // Handle command to get notified on the next block
-        args.bot.command('blocknotify', ctx => {
-          handleBlocknotifyCommand({
-            from: ctx.message.from.id,
-            id: connectedId,
-            reply: n => ctx.reply(n, markdown),
-            request: args.request,
-          },
-          err => !!err ? args.logger.error({err}) : null);
         });
 
         // Handle command to get the connect id
@@ -552,8 +539,6 @@ module.exports = (args, cbk) => {
               err => !!err ? args.logger.error({post_backup_err: err}) : null);
             },
             restartSubscriptionTimeMs);
-
-            return;
           });
 
           sub.once('error', err => {
@@ -615,8 +600,6 @@ module.exports = (args, cbk) => {
 
             return cbk([503, 'UnexpectedErrorInChannelsSubscription', {err}]);
           });
-
-          return;
         },
         cbk);
       }],
@@ -829,8 +812,6 @@ module.exports = (args, cbk) => {
 
             return cbk([503, 'UnexpectedErrorInPendingSubscription', {err}]);
           });
-
-          return;
         },
         cbk);
       }],
@@ -917,8 +898,6 @@ module.exports = (args, cbk) => {
 
             return cbk(err);
           });
-
-          return;
         },
         cbk);
       }],

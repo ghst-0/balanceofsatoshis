@@ -53,7 +53,5 @@ tests.forEach(({args, description, error, expected}) => {
 
       await writeJsonFile(args);
     }
-
-    return;
   });
 });

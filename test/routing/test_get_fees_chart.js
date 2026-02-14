@@ -105,7 +105,5 @@ tests.forEach(({args, description, error, expected}) => {
       equal(!!description, true, 'Got description');
       equal(title, expected.title, 'Got expected title');
     }
-
-    return;
   });
 });

@@ -2,7 +2,6 @@ const asyncAuto = require('async/auto');
 const asyncReflect = require('async/reflect');
 const {chanFormat} = require('bolt07');
 const {formatTokens} = require('ln-sync');
-const {getChannel} = require('ln-service');
 const {getChannels} = require('ln-service');
 const {getClosedChannels} = require('ln-service');
 const {getHeight} = require('ln-service');
@@ -22,7 +21,6 @@ const blocksTime = (n, p) => moment.duration(n * 10, 'minutes').humanize(p);
 const estimateDiskFootprint = n => `${(n.past_states*55/1e6).toFixed(2)}mb`;
 const {isArray} = Array;
 const isHash = n => !!n && /^[0-9A-F]{64}$/i.test(n);
-const isPublicKey = n => !!n && /^0[2-3][0-9A-F]{64}$/i.test(n);
 const notFound = 404;
 const standardIdHexLength = Buffer.alloc(32).toString('hex').length;
 
@@ -263,7 +261,7 @@ module.exports = ({lnd, query}, cbk) => {
               if (channel.id === chanFormat({number: query}).channel) {
                 return true;
               }
-            } catch (err) {}
+            } catch {}
 
             return channel.id === query;
           })

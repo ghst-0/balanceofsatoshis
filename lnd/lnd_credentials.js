@@ -20,7 +20,6 @@ const getPath = require('./get_path');
 const {getSavedCredentials} = require('./../nodes');
 const getSocket = require('./get_socket');
 const {homePath} = require('../storage');
-const {noSpendPerms} = require('./constants');
 const {permissionEntities} = require('./constants');
 
 const config = 'config.json';
@@ -29,7 +28,6 @@ const defaultNodeName = process.env.BOS_DEFAULT_SAVED_NODE;
 const fs = {getFile: readFile};
 const os = {homedir, platform, userInfo};
 const {parse} = JSON;
-const readPerms = permissionEntities.map(entity => `${entity}:read`);
 const socket = 'localhost:10009';
 
 /** LND credentials

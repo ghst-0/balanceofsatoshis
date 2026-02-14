@@ -8,7 +8,6 @@ const lndCredentials = require('./lnd_credentials');
 const base64AsString = base64 => Buffer.from(base64, 'base64').toString();
 const bufferAsHex = buffer => buffer.toString('hex');
 const msPerDay = 1000 * 60 * 60 * 24;
-const {now} = Date;
 const {round} = Math;
 
 /** Get the number of days a node's cert is still valid

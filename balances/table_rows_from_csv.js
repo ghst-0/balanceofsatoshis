@@ -1,10 +1,6 @@
 const asyncAuto = require('async/auto');
 const {returnResult} = require('asyncjs-util');
 
-const columnDivider = ',';
-const newLine = '\n';
-const quoteMark = '"';
-
 /** Get rows for table output from CSV
 
   {

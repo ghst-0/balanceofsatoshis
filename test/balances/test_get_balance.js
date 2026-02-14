@@ -60,7 +60,5 @@ tests.forEach(({args, description, error, expected}) => {
       equal(balances.balance, expected.balance, 'Balance is calculated');
       equal(balances.channel_balance, expected.channel_balance, 'Chan tokens');
     }
-
-    return;
   });
 });

@@ -131,7 +131,5 @@ tests.forEach(({args, description, error, expected}) => {
 
       equal(count, expected.count, 'Got expected count');
     }
-
-    return;
   });
 });

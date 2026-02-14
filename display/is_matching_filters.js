@@ -40,8 +40,6 @@ module.exports = ({filters, variables}) => {
     keys(vars).forEach(key => {
       parser.setVariable(key.toLowerCase(), vars[key]);
       parser.setVariable(key.toUpperCase(), vars[key]);
-
-      return;
     });
 
     const parsed = parser.parse(formula);

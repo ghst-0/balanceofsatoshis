@@ -103,7 +103,5 @@ tests.forEach(({args, description, error, expected}) => {
 
       equal(socket, expected.socket, 'Got expected socket');
     }
-
-    return;
   });
 });

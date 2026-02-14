@@ -52,7 +52,5 @@ tests.forEach(({args, description, error, expected}) => {
 
       equal(cert, expected.cert, 'Got expected cert');
     }
-
-    return;
   });
 });

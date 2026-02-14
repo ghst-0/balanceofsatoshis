@@ -1,14 +1,10 @@
 const asyncAuto = require('async/auto');
-const {getChannels} = require('ln-service');
 const {getLiquidity} = require('ln-sync');
-const {getNode} = require('ln-service');
 const {returnResult} = require('asyncjs-util');
 
 const balanceFromTokens = require('./balance_from_tokens');
 const {getTags} = require('./../tags');
 
-const {round} = Math;
-const topPercentile = 0.9;
 
 /** Get the channel available liquidity
 
