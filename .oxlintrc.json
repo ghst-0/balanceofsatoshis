@@ -13,7 +13,6 @@
     "perf": "warn",
     "pedantic": "warn"
   },
-  "files": ["**/*.js"],
   "rules": {
     "eslint/array-callback-return": ["warn", { "checkForEach": true }],
     "eslint/eqeqeq": ["warn", "always", {"null": "ignore"}],
@@ -47,6 +46,7 @@
     "eslint/max-lines-per-function": "off",
     "eslint/max-nested-callbacks": "off",
     "eslint/new-cap": "off",
+    "eslint/no-empty-pattern": "off",
     "eslint/radix": "off",
     "import/consistent-type-specifier-style": "warn",
     "import/exports-last": "warn",
