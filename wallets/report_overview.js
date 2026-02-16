@@ -1,4 +1,4 @@
-const moment = require('moment');
+import moment from 'moment';
 
 const formatAsBigUnit = tokens => (tokens / 1e8).toFixed(8);
 const percentFormat = n => isNaN(n) ? '0' : (n * 100).toFixed();
@@ -25,7 +25,7 @@ const percentFormat = n => isNaN(n) ? '0' : (n * 100).toFixed();
     }]
   }
 */
-module.exports = args => {
+export default args => {
   const balance = formatAsBigUnit(args.balance);
 
   const report = [

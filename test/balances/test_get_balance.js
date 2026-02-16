@@ -1,9 +1,8 @@
-const {equal} = require('node:assert').strict;
-const {rejects} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { equal, rejects } from 'node:assert/strict';
 
-const {getBalance} = require('./../../balances');
-const {listChannelsResponse} = require('./../fixtures');
+import { getBalance } from './../../balances/index.js';
+import { listChannelsResponse } from './../fixtures/index.js';
 
 const makeLnd = ({unconfirmedBalance}) => {
   return {

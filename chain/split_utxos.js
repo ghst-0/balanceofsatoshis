@@ -1,9 +1,7 @@
-const asyncAuto = require('async/auto');
-const asyncMapSeries = require('async/mapSeries');
-const {createChainAddress} = require('ln-service');
-const {getUtxos} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
-const {sendToChainAddresses} = require('ln-service');
+import asyncAuto from 'async/auto.js';
+import asyncMapSeries from 'async/mapSeries.js';
+import { createChainAddress, getUtxos, sendToChainAddresses } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
 
 const consumedUtxoCount = 1;
 const format ='p2wpkh';
@@ -24,7 +22,7 @@ const newArrayOfSize = n => Array.from(Array(n));
     [tokens_per_vbyte]: <Fee Tokens Per Virtual Byte Number>
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return asyncAuto({
     // Check arguments
     validate: cbk => {

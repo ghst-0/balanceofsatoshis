@@ -1,13 +1,13 @@
-const certExpiration = require('./cert_expiration');
-const decryptCiphertext = require('./decrypt_ciphertext');
-const decryptPayload = require('./decrypt_payload');
-const decryptWithNode = require('./decrypt_with_node');
-const derAsPem = require('./der_as_pem');
-const encryptToNode = require('./encrypt_to_node');
-const encryptToPublicKeys = require('./encrypt_to_public_keys');
-const pemAsDer = require('./pem_as_der');
+import certExpiration from './cert_expiration.js';
+import decryptCiphertext from './decrypt_ciphertext.js';
+import decryptPayload from './decrypt_payload.js';
+import decryptWithNode from './decrypt_with_node.js';
+import derAsPem from './der_as_pem.js';
+import encryptToNode from './encrypt_to_node.js';
+import encryptToPublicKeys from './encrypt_to_public_keys.js';
+import pemAsDer from './pem_as_der.js';
 
-module.exports = {
+export {
   certExpiration,
   decryptCiphertext,
   decryptPayload,
@@ -15,5 +15,5 @@ module.exports = {
   derAsPem,
   encryptToNode,
   encryptToPublicKeys,
-  pemAsDer,
+  pemAsDer
 };

@@ -1,13 +1,12 @@
-const asyncAuto = require('async/auto');
-const asyncForever = require('async/forever');
-const asyncMap = require('async/map');
-const {getWalletInfo} = require('ln-service');
-const {postNodesOffline} = require('ln-telegram');
-const {returnResult} = require('asyncjs-util');
-
-const {getLnds} = require('./../lnd');
-const getRocketChatBot = require('./get_rocketchat_bot');
-const runRocketChatBot = require('./run_rocketchat_bot');
+import asyncAuto from 'async/auto.js';
+import asyncForever from 'async/forever.js';
+import asyncMap from 'async/map.js';
+import { getWalletInfo } from 'ln-service';
+import { postNodesOffline } from 'ln-telegram';
+import { returnResult } from 'asyncjs-util';
+import { getLnds } from './../lnd/index.js';
+import getRocketChatBot from './get_rocketchat_bot.js';
+import runRocketChatBot from './run_rocketchat_bot.js';
 
 const defaultPaymentsBudget = 0;
 const isNumber = n => !isNaN(n);
@@ -41,7 +40,7 @@ const smallUnitsType = 'full';
 
   @returns via cbk or Promise
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

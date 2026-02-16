@@ -1,8 +1,7 @@
-const {equal} = require('node:assert').strict;
-const {rejects} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { equal, rejects } from 'node:assert/strict';
 
-const getMaximum = require('./../../routing/get_maximum');
+import getMaximum from './../../routing/get_maximum.js';
 
 const space = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 

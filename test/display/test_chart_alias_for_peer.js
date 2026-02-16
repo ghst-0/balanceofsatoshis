@@ -1,7 +1,7 @@
-const {equal} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { equal } from 'node:assert/strict';
 
-const {chartAliasForPeer} = require('./../../display');
+import { chartAliasForPeer } from './../../display/index.js';
 
 const tests = [
   {

@@ -1,8 +1,7 @@
-const {join} = require('path');
-
-const asyncAuto = require('async/auto');
-const asyncDetect = require('async/detect');
-const {returnResult} = require('asyncjs-util');
+import { join } from 'node:path';
+import asyncAuto from 'async/auto.js';
+import asyncDetect from 'async/detect.js';
+import { returnResult } from 'asyncjs-util';
 
 const certPath = ['tls.cert'];
 const umbrelUser = 'umbrel';
@@ -25,7 +24,7 @@ const umbrelV1Path = '/home/umbrel/umbrel/app-data/lightning/data/lnd';
     [path]: <Found LND Directory Path String>
   }
 */
-module.exports = ({fs, os}, cbk) => {
+export default ({fs, os}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

@@ -1,11 +1,9 @@
-const {join} = require('path');
-const {URL} = require('url');
-
-const asyncAuto = require('async/auto');
-const {parse} = require('ini');
-const {returnResult} = require('asyncjs-util');
-
-const lndDirectory = require('./lnd_directory');
+import { join } from 'node:path';
+import { URL } from 'node:url';
+import asyncAuto from 'async/auto.js';
+import { parse } from 'ini';
+import { returnResult } from 'asyncjs-util';
+import lndDirectory from './lnd_directory.js';
 
 const applicationOptions = 'Application Options';
 const confPath = ['lnd.conf'];
@@ -33,7 +31,7 @@ const scheme = 'rpc://';
     [socket]: <RPC Socket String>
   }
 */
-module.exports = ({fs, node, os, path}, cbk) => {
+export default ({fs, node, os, path}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

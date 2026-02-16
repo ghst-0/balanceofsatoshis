@@ -1,25 +1,18 @@
-const {homedir} = require('os');
-const {platform} = require('os');
-const {publicEncrypt} = require('crypto');
-const {readFile} = require('fs');
-const {spawn} = require('child_process');
-const {userInfo} = require('os');
-
-const asyncAuto = require('async/auto');
-const {authenticatedLndGrpc} = require('ln-service');
-const {grantAccess} = require('ln-service');
-const {restrictMacaroon} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
-
-const credentialRestrictions = require('./credential_restrictions');
-const {decryptCiphertext} = require('./../encryption');
-const {derAsPem} = require('./../encryption');
-const getCert = require('./get_cert');
-const getMacaroon = require('./get_macaroon');
-const getPath = require('./get_path');
-const {getSavedCredentials} = require('./../nodes');
-const getSocket = require('./get_socket');
-const {homePath} = require('../storage');
+import { homedir, platform, userInfo } from 'node:os';
+import { publicEncrypt } from 'node:crypto';
+import { readFile } from 'node:fs';
+import { spawn } from 'node:child_process';
+import asyncAuto from 'async/auto.js';
+import { authenticatedLndGrpc, grantAccess, restrictMacaroon } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
+import credentialRestrictions from './credential_restrictions.js';
+import { decryptCiphertext, derAsPem } from './../encryption/index.js';
+import getCert from './get_cert.js';
+import getMacaroon from './get_macaroon.js';
+import getPath from './get_path.js';
+import { getSavedCredentials } from './../nodes/index.js';
+import getSocket from './get_socket.js';
+import { homePath } from '../storage/index.js';
 
 const config = 'config.json';
 const defaultLndDirPath = process.env.BOS_DEFAULT_LND_PATH;
@@ -50,7 +43,7 @@ const socket = 'localhost:10009';
     socket: <Socket String>
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Figure out which node the credentials are for

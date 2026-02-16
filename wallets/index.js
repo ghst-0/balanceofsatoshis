@@ -1,7 +1,7 @@
-const getReceivedChart = require('./get_received_chart');
-const getReport = require('./get_report');
+import getReceivedChart from './get_received_chart.js';
+import getReport from './get_report.js';
 
-module.exports = {
+export {
   getReceivedChart,
   getReport
 };

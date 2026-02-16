@@ -1,13 +1,13 @@
-const balanceFromTokens = require('./balance_from_tokens');
-const getAccountingReport = require('./get_accounting_report');
-const getBalance = require('./get_balance');
-const getDetailedBalance = require('./get_detailed_balance');
-const getLiquidity = require('./get_liquidity');
+import balanceFromTokens from './balance_from_tokens.js';
+import getAccountingReport from './get_accounting_report.js';
+import getBalance from './get_balance.js';
+import getDetailedBalance from './get_detailed_balance.js';
+import getLiquidity from './get_liquidity.js';
 
-module.exports = {
+export {
   balanceFromTokens,
   getAccountingReport,
   getBalance,
   getDetailedBalance,
-  getLiquidity,
+  getLiquidity
 };

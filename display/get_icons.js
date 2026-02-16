@@ -1,7 +1,6 @@
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
-
-const {homePath} = require('../storage');
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
+import { homePath } from '../storage/index.js';
 
 const flatten = arr => [].concat(...arr);
 const {isArray} = Array;
@@ -26,7 +25,7 @@ const uniq = arr => Array.from(new Set(arr));
     }]
   }
 */
-module.exports = ({fs}, cbk) => {
+export default ({fs}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

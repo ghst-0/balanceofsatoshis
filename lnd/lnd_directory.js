@@ -1,6 +1,5 @@
-const {join} = require('path');
-
-const platforms = require('./platforms');
+import { join } from 'node:path';
+import platforms from './platforms.json' with { type: 'json' };
 
 const umbrelPath = '/home/umbrel/umbrel/lnd';
 const umbrelUser = 'umbrel';
@@ -23,7 +22,7 @@ const umbrelUser = 'umbrel';
     path: <LND Directory Path String>
   }
 */
-module.exports = ({os}) => {
+export default ({os}) => {
   if (!os) {
     throw new Error('ExpectedOperatingSytemMethodsToDetermineLndDirectory');
   }

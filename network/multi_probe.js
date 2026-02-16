@@ -46,7 +46,7 @@ const uniq = arr => Array.from(new Set(arr));
     }]
   }
 */
-module.exports = ({channels, from, ignore, probes, tokens}) => {
+export default ({channels, from, ignore, probes, tokens}) => {
   if (!isArray(probes)) {
     throw new Error('ExpectedArrayOfProbesToGenerateMultiProbeIgnores');
   }

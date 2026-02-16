@@ -19,7 +19,7 @@ const lessThan = -1;
     sorted: [<Sorted Element Object>]
   }
 */
-module.exports = ({array, attribute}) => {
+export default ({array, attribute}) => {
   if (!isArray(array)) {
     throw new Error('ExpectedArrayToSortByAttribute');
   }

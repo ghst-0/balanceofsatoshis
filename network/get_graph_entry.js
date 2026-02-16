@@ -1,23 +1,16 @@
-const {isIP} = require('net');
+import { isIP } from 'node:net';
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import { decodeChanId } from 'bolt07';
+import { findKey, formatTokens, getNodeAlias } from 'ln-sync';
+import { getHeight, getNode, getRouteToDestination } from 'ln-service';
 
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const {decodeChanId} = require('bolt07');
-const {findKey} = require('ln-sync');
-const {formatTokens} = require('ln-sync');
-const {getHeight} = require('ln-service');
-const {getNode} = require('ln-service');
-const {getNodeAlias} = require('ln-sync');
-const {getRouteToDestination} = require('ln-service');
-const moment = require('moment');
-const {returnResult} = require('asyncjs-util');
+import moment from 'moment';
+import { returnResult } from 'asyncjs-util';
+import { chartAliasForPeer, formatFeeRate, getIcons, isMatchingFilters } from './../display/index.js';
+import constants from './constants.json' with { type: 'json' };
 
-const {chartAliasForPeer} = require('./../display');
-const {emojiIcons} = require('./constants');
-const {formatFeeRate} = require('./../display');
-const {getIcons} = require('./../display');
-const {isMatchingFilters} = require('./../display');
-
+const { emojiIcons } = constants;
 const ageMs = time => moment(new Date(Date.now() - time)).fromNow(true);
 const blockTime = (current, start) => 1000 * 60 * 10 * (current - start);
 const defaultSort = 'age';
@@ -58,7 +51,7 @@ const uniq = arr => Array.from(new Set(arr));
     rows: [[<Table Cell String>]]
   }
 */
-module.exports = ({filters, fs, lnd, logger, query, sort}, cbk) => {
+export default ({filters, fs, lnd, logger, query, sort}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

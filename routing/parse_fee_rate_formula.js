@@ -1,4 +1,4 @@
-const {Parser} = require('hot-formula-parser');
+import { Parser } from 'hot-formula-parser';
 
 const bipsAsPpm = bips => bips * 1e2;
 const {ceil} = Math;
@@ -23,7 +23,7 @@ const percentAsPpm = percent => percent * 1e4;
     [rate]: <PPM Fee Rate Number>
   }
 */
-module.exports = args => {
+export default args => {
   if (args.fee_rate === undefined) {
     return {};
   }

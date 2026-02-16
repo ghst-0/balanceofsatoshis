@@ -1,12 +1,11 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const asyncMapSeries = require('async/mapSeries');
-const {returnResult} = require('asyncjs-util');
-
-const decryptSavedMacaroons = require('./decrypt_saved_macaroons');
-const {encryptToPublicKeys} = require('./../encryption');
-const getSavedCredentials = require('./get_saved_credentials');
-const putSavedCredentials = require('./put_saved_credentials');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import asyncMapSeries from 'async/mapSeries.js';
+import { returnResult } from 'asyncjs-util';
+import decryptSavedMacaroons from './decrypt_saved_macaroons.js';
+import { encryptToPublicKeys } from './../encryption/index.js';
+import getSavedCredentials from './get_saved_credentials.js';
+import putSavedCredentials from './put_saved_credentials.js';
 
 const ids = n => n.slice().sort().join(',');
 const {isArray} = Array;
@@ -27,7 +26,7 @@ const notFoundIndex = -1;
 
   @returns via cbk or Promise
 */
-module.exports = ({fs, logger, nodes, spawn, to}, cbk) => {
+export default ({fs, logger, nodes, spawn, to}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

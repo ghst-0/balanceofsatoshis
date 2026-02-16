@@ -1,14 +1,13 @@
-const asyncAuto = require('async/auto');
-const asyncFilterLimit = require('async/filterLimit');
-const asyncMap = require('async/map');
-const {formatTokens} = require('ln-sync');
-const {getAllInvoices} = require('ln-sync');
-const {getPayment} = require('ln-service');
-const moment = require('moment');
-const {returnResult} = require('asyncjs-util');
-
-const {segmentMeasure} = require('./../display');
-const {sumsForSegment} = require('./../display');
+import asyncAuto from 'async/auto.js';
+import asyncFilterLimit from 'async/filterLimit.js';
+import asyncMap from 'async/map.js';
+import { formatTokens } from 'ln-sync';
+import { getAllInvoices } from 'ln-sync';
+import { getPayment } from 'ln-service';
+import moment from 'moment';
+import { returnResult } from 'asyncjs-util';
+import { segmentMeasure } from './../display/index.js';
+import { sumsForSegment } from './../display/index.js';
 
 const daysBetween = (a, b) => moment(a).diff(b, 'days') + 1;
 const defaultDays = 60;
@@ -38,7 +37,7 @@ const parseDate = n => Date.parse(n);
     title: <Chart Title String>
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

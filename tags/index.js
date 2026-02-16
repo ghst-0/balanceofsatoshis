@@ -1,3 +1,3 @@
-const getTags = require('./get_tags');
+import getTags from './get_tags.js';
 
-module.exports = {getTags};
+export { getTags };

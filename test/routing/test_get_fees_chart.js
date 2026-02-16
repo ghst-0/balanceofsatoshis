@@ -1,11 +1,8 @@
-const {equal} = require('node:assert').strict;
-const {rejects} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { equal, rejects } from 'node:assert/strict';
 
-const {chanInfoResponse} = require('./../fixtures');
-const {getFeesChart} = require('./../../routing');
-const {getNodeInfoResponse} = require('./../fixtures');
-const {versionInfoResponse} = require('./../fixtures');
+import { chanInfoResponse, getNodeInfoResponse, versionInfoResponse } from './../fixtures/index.js';
+import { getFeesChart } from './../../routing/index.js';
 
 const fs = {getFile: ({}, cbk) => cbk('err')};
 
@@ -22,7 +19,7 @@ const lnds = [{
   },
   version: {
     getVersion: ({}, cbk) => cbk(null, versionInfoResponse),
-  },
+  }
 }];
 
 const tests = [
@@ -94,16 +91,22 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected}) => {
-  return test(description, async () => {
+for (let i = 0; i < tests.length; i++){
+  const { args, description, error, expected } = tests[i]
+  test(description, async () => {
+    console.log('i: ', i)
     if (error) {
       await rejects(getFeesChart(args), error, 'Got expected error');
+      console.log('Got expected error')
     } else {
-      const {data, description, title} = await getFeesChart(args);
+      const { data, description, title } = await getFeesChart(args);
 
       equal(data.join(','), expected.data, 'Got expected fees');
+      console.log('Got expected fees')
       equal(!!description, true, 'Got description');
+      console.log('Got description')
       equal(title, expected.title, 'Got expected title');
+      console.log('Got expected title')
     }
-  });
-});
+  })
+}

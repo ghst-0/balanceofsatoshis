@@ -1,5 +1,5 @@
-const {decodeChanId} = require('bolt07');
-const moment = require('moment');
+import { decodeChanId } from 'bolt07';
+import moment from 'moment';
 
 const action = 'Opened channel';
 const minutesPerBlock = network => network === 'ltcmainnet' ? 10 / 4 : 10;
@@ -44,7 +44,7 @@ const tokensAsBigToken = tokens => (tokens / 1e8).toFixed(8);
     }]
   }
 */
-module.exports = ({backups, chain, channels, days, nodes, now}) => {
+export default ({backups, chain, channels, days, nodes, now}) => {
   const activity = [];
   const blocks = minutesPerDay / minutesPerBlock(chain.network) * days;
   const msPerBlock = msPerMinute * minutesPerBlock(chain.network);

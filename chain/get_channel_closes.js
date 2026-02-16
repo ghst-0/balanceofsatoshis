@@ -1,14 +1,10 @@
-const asyncAuto = require('async/auto');
-const asyncMapSeries = require('async/mapSeries');
-const {getChainTransactions} = require('ln-service');
-const {getClosedChannels} = require('ln-service');
-const {getHeight} = require('ln-service');
-const {getNetwork} = require('ln-sync');
-const {getNodeAlias} = require('ln-sync');
-const {returnResult} = require('asyncjs-util');
-
-const closingFees = require('./closing_fees');
-const getChannelResolution = require('./get_channel_resolution');
+import asyncAuto from 'async/auto.js';
+import asyncMapSeries from 'async/mapSeries.js';
+import { getChainTransactions, getClosedChannels, getHeight } from 'ln-service';
+import { getNetwork, getNodeAlias } from 'ln-sync';
+import { returnResult } from 'asyncjs-util';
+import closingFees from './closing_fees.js';
+import getChannelResolution from './get_channel_resolution.js';
 
 const defaultLimit = 20;
 
@@ -42,7 +38,7 @@ const defaultLimit = 20;
     [closing_fee_paid]: <Closing Fees Paid Related To Channel Tokens Number>
   }
 */
-module.exports = ({limit, lnd, request}, cbk) => {
+export default ({limit, lnd, request}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

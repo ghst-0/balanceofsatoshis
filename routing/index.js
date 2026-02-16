@@ -1,13 +1,13 @@
-const adjustFees = require('./adjust_fees');
-const channelsFromHints = require('./channels_from_hints');
-const getChainFeesChart = require('./get_chain_fees_chart');
-const getFeesChart = require('./get_fees_chart');
-const getFeesPaid = require('./get_fees_paid');
-const getIgnores = require('./get_ignores');
-const getPastForwards = require('./get_past_forwards');
-const ignoreFromAvoid = require('./ignore_from_avoid');
+import adjustFees from './adjust_fees.js';
+import channelsFromHints from './channels_from_hints.js';
+import getChainFeesChart from './get_chain_fees_chart.js';
+import getFeesChart from './get_fees_chart.js';
+import getFeesPaid from './get_fees_paid.js';
+import getIgnores from './get_ignores.js';
+import getPastForwards from './get_past_forwards.js';
+import ignoreFromAvoid from './ignore_from_avoid.js';
 
-module.exports = {
+export {
   adjustFees,
   channelsFromHints,
   getChainFeesChart,
@@ -15,5 +15,5 @@ module.exports = {
   getFeesPaid,
   getIgnores,
   getPastForwards,
-  ignoreFromAvoid,
+  ignoreFromAvoid
 };

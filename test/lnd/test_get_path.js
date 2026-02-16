@@ -1,8 +1,7 @@
-const {deepEqual} = require('node:assert').strict;
-const {rejects} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { deepEqual, rejects } from 'node:assert/strict';
 
-const getPath = require('./../../lnd/get_path');
+import getPath from './../../lnd/get_path.js';
 
 const os = {userInfo: () => ({username: 'umbrel'})};
 

@@ -13,7 +13,7 @@ const {random} = Math;
     shuffled: [<Shuffled Element Object>]
   }
 */
-module.exports = ({array}) => {
+export default ({array}) => {
   if (!isArray(array)) {
     throw new Error('ExpectedArrayToShuffle');
   }

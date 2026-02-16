@@ -1,8 +1,7 @@
-const {equal} = require('node:assert').strict;
-const test = require('node:test');
-const {throws} = require('node:assert').strict;
+import test from 'node:test';
+import { equal, throws } from 'node:assert/strict';
 
-const {shuffle} = require('./../../arrays');
+import { shuffle } from './../../arrays/index.js';
 
 const tests = [
   {

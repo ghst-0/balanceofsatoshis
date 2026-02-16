@@ -1,13 +1,13 @@
-const getChainFees = require('./get_chain_fees');
-const getChannelCloses = require('./get_channel_closes');
-const getUtxos = require('./get_utxos');
-const outputScriptForAddress = require('./output_script_for_address');
-const splitUtxos = require('./split_utxos');
+import getChainFees from './get_chain_fees.js';
+import getChannelCloses from './get_channel_closes.js';
+import getUtxos from './get_utxos.js';
+import outputScriptForAddress from './output_script_for_address.js';
+import splitUtxos from './split_utxos.js';
 
-module.exports = {
+export {
   getChainFees,
   getChannelCloses,
   getUtxos,
   outputScriptForAddress,
-  splitUtxos,
+  splitUtxos
 };

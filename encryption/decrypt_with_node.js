@@ -1,12 +1,10 @@
-const asyncAuto = require('async/auto');
-const {decodeFirst} = require('cbor');
-const {diffieHellmanComputeSecret} = require('ln-service');
-const {getIdentity} = require('ln-service');
-const {getNode} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import cbor from 'cbor';
+import { diffieHellmanComputeSecret, getIdentity, getNode } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
+import decryptWithSecret from './decrypt_with_secret.js';
 
-const decryptWithSecret = require('./decrypt_with_secret');
-
+const { decodeFirst } = cbor;
 const hexAsBuf = hex => Buffer.from(hex, 'hex');
 const {isArray} = Array;
 
@@ -24,7 +22,7 @@ const {isArray} = Array;
     with_public_key: <With Public Key Hex String>
   }
 */
-module.exports = ({encrypted, lnd}, cbk) => {
+export default ({encrypted, lnd}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

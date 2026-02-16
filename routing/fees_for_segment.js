@@ -1,4 +1,4 @@
-const moment = require('moment');
+import moment from 'moment';
 
 const defaultSegmentBy = 'created_at';
 
@@ -21,7 +21,7 @@ const defaultSegmentBy = 'created_at';
     fees: [<Fee Earnings In Segment Number>]
   }
 */
-module.exports = ({by, end, forwards, measure, segments}) => {
+export default ({by, end, forwards, measure, segments}) => {
   const fees = [...Array(segments)].map((_, i) => {
     const segment = moment(end).subtract(i, measure);
 

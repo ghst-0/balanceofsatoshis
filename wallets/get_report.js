@@ -1,29 +1,28 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const {bolden} = require('@alexbosworth/html2unicode');
-const {getAutopilot} = require('ln-service');
-const {getBackups} = require('ln-service');
-const {getChainFeeRate} = require('ln-service');
-const {getChannel} = require('ln-service');
-const {getChannels} = require('ln-service');
-const {getClosedChannels} = require('ln-service');
-const {getInvoice} = require('ln-service');
-const {getInvoices} = require('ln-service');
-const {getNetwork} = require('ln-sync');
-const {getNetworkGraph} = require('ln-service');
-const {getPayments} = require('ln-sync');
-const {getWalletInfo} = require('ln-service');
-const {italicize} = require('@alexbosworth/html2unicode');
-const moment = require('moment');
-const {parsePaymentRequest} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
-
-const {authenticatedLnd} = require('./../lnd');
-const channelsAsReportActivity = require('./channels_as_report_activity');
-const {currencyForNetwork} = require('./../network');
-const {getBalance} = require('./../balances');
-const {getForwards} = require('./../network');
-const reportOverview = require('./report_overview');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import { bolden } from '@alexbosworth/html2unicode';
+import { getAutopilot } from 'ln-service';
+import { getBackups } from 'ln-service';
+import { getChainFeeRate } from 'ln-service';
+import { getChannel } from 'ln-service';
+import { getChannels } from 'ln-service';
+import { getClosedChannels } from 'ln-service';
+import { getInvoice } from 'ln-service';
+import { getInvoices } from 'ln-service';
+import { getNetwork } from 'ln-sync';
+import { getNetworkGraph } from 'ln-service';
+import { getPayments } from 'ln-sync';
+import { getWalletInfo } from 'ln-service';
+import { italicize } from '@alexbosworth/html2unicode';
+import moment from 'moment';
+import { parsePaymentRequest } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
+import { authenticatedLnd } from './../lnd/index.js';
+import channelsAsReportActivity from './channels_as_report_activity.js';
+import { currencyForNetwork } from './../network/index.js';
+import { getBalance } from './../balances/index.js';
+import { getForwards } from './../network/index.js';
+import reportOverview from './report_overview.js';
 
 const afterMs = 1000 * 60 * 60 * 24;
 const defaultConfTarget = 6;
@@ -48,7 +47,7 @@ const styled = 'styled';
   @returns via cbk
   {}
 */
-module.exports = ({fs, node, request, style}, cbk) => {
+export default ({fs, node, request, style}, cbk) => {
   return asyncAuto({
     // Get authenticated lnd connection
     getLnd: cbk => authenticatedLnd({node}, cbk),

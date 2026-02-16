@@ -1,4 +1,4 @@
-const shuffle = require('./shuffle');
-const sortBy = require('./sort_by');
+import shuffle from './shuffle.js';
+import sortBy from './sort_by.js';
 
-module.exports = {shuffle, sortBy};
+export { shuffle, sortBy };

@@ -1,9 +1,7 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const {getChannel} = require('ln-service');
-const {getChannels} = require('ln-service');
-const {getNode} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import { getChannel, getChannels, getNode } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
 
 const tokensAsMtokens = tokens => BigInt(tokens) * BigInt(1e3);
 
@@ -29,7 +27,7 @@ const tokensAsMtokens = tokens => BigInt(tokens) * BigInt(1e3);
     }]
   }
 */
-module.exports = ({destination, identity, lnd, through, tokens}, cbk) => {
+export default ({destination, identity, lnd, through, tokens}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

@@ -1,11 +1,11 @@
-const adjustTags = require('./adjust_tags');
-const getSavedCredentials = require('./get_saved_credentials');
-const getSavedNodes = require('./get_saved_nodes');
-const manageSavedNodes = require('./manage_saved_nodes');
+import adjustTags from './adjust_tags.js';
+import getSavedCredentials from './get_saved_credentials.js';
+import getSavedNodes from './get_saved_nodes.js';
+import manageSavedNodes from './manage_saved_nodes.js';
 
-module.exports = {
+export {
   adjustTags,
   getSavedCredentials,
   getSavedNodes,
-  manageSavedNodes,
+  manageSavedNodes
 };

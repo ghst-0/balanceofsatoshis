@@ -5,7 +5,7 @@
   @returns
   <Interrogation Function>
 */
-module.exports = ({}) => {
+export default ({}) => {
   return new Promise(async resolve => {
     const inquirer = (await import('inquirer')).default;
 

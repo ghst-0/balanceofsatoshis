@@ -1,8 +1,7 @@
-const {equal} = require('node:assert').strict;
-const test = require('node:test');
-const {throws} = require('node:assert').strict;
+import test from 'node:test';
+import { equal, throws } from 'node:assert/strict';
 
-const {balanceFromTokens} = require('./../../balances');
+import { balanceFromTokens } from './../../balances/index.js';
 
 const tests = [
   // No tokens

@@ -1,7 +1,7 @@
-const {rejects} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { rejects } from 'node:assert/strict';
 
-const putSavedCredentials = require('./../../nodes/put_saved_credentials');
+import putSavedCredentials from './../../nodes/put_saved_credentials.js';
 
 const tests = [
   {

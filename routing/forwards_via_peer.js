@@ -40,7 +40,7 @@ const uniq = arr => Array.from(new Set(arr));
     }]
   }
 */
-module.exports = args => {
+export default args => {
   if (!args.via) {
     return {forwards: args.forwards};
   }

@@ -1,10 +1,9 @@
-const {deepEqual} = require('node:assert').strict;
-const EventEmitter = require('node:events');
-const {rejects} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { deepEqual, rejects } from 'node:assert/strict';
+import EventEmitter from 'node:events';
 
-const {describeGraphResponse} = require('./../fixtures');
-const {findRecord} = require('./../../lnd');
+import { describeGraphResponse } from './../fixtures/index.js';
+import { findRecord } from './../../lnd/index.js';
 
 const tests = [
   {

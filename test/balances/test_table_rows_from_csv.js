@@ -1,8 +1,7 @@
-const {deepEqual} = require('node:assert').strict;
-const {rejects} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { deepEqual, rejects } from 'node:assert/strict';
 
-const tableRowsFromCsv = require('./../../balances/table_rows_from_csv');
+import tableRowsFromCsv from './../../balances/table_rows_from_csv.js';
 
 const tests = [
   {

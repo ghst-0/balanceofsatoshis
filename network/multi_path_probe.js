@@ -1,10 +1,8 @@
-const asyncAuto = require('async/auto');
-const {getChannels} = require('ln-service');
-const {getIdentity} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
-
-const multiProbe = require('./multi_probe');
-const probeDestination = require('./probe_destination');
+import asyncAuto from 'async/auto.js';
+import { getChannels, getIdentity } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
+import multiProbe from './multi_probe.js';
+import probeDestination from './probe_destination.js';
 
 const flatten = arr => [].concat(...arr);
 const {isArray} = Array;
@@ -51,7 +49,7 @@ const {isArray} = Array;
     }
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

@@ -1,9 +1,8 @@
-const {deepEqual} = require('node:assert').strict;
-const {rejects} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { deepEqual, rejects } from 'node:assert/strict';
 
-const {getChannelCloses} = require('./../../chain');
-const {getInfoResponse} = require('./../fixtures');
+import { getChannelCloses } from './../../chain/index.js';
+import { getInfoResponse } from './../fixtures/index.js';
 
 const getInfoRes = () => JSON.parse(JSON.stringify(getInfoResponse));
 

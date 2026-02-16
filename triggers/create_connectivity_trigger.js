@@ -1,8 +1,7 @@
-const asyncAuto = require('async/auto');
-const {createInvoice} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
-
-const encodeTrigger = require('./encode_trigger');
+import asyncAuto from 'async/auto.js';
+import { createInvoice } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
+import encodeTrigger from './encode_trigger.js';
 
 const daysAsMs = days => Number(days) * 1000 * 60 * 60 * 24;
 const defaultTriggerDays = 365;
@@ -17,7 +16,7 @@ const futureDate = ms => new Date(Date.now() + ms).toISOString();
 
   @returns via cbk or Promise
 */
-module.exports = ({id, lnd}, cbk) => {
+export default ({id, lnd}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

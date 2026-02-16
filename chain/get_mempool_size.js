@@ -1,6 +1,6 @@
-const asyncAuto = require('async/auto');
-const asyncRetry = require('async/retry');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncRetry from 'async/retry.js';
+import { returnResult } from 'asyncjs-util';
 
 const interval = n => 50 * Math.pow(2, n);
 const isNumber = n => !isNaN(n);
@@ -18,7 +18,7 @@ const isNumber = n => !isNaN(n);
     [vbytes]: <Size of Mempool Virtual Bytes Number>
   }
 */
-module.exports = ({network, request, retries}, cbk) => {
+export default ({network, request, retries}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

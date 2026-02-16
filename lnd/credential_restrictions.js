@@ -1,6 +1,6 @@
-const {noSpendPerms} = require('./constants');
-const {permissionEntities} = require('./constants');
+import constants from './constants.json' with { type: 'json' };
 
+const { noSpendPerms, permissionEntities } = constants;
 const readPerms = permissionEntities.map(entity => `${entity}:read`);
 
 /** Derive restrictions for macaroon
@@ -19,7 +19,7 @@ const readPerms = permissionEntities.map(entity => `${entity}:read`);
     }
   }
 */
-module.exports = args => {
+export default args => {
   const methods = args.methods || [];
 
   // Exit early when specific credentials are not requested

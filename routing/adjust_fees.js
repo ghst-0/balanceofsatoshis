@@ -1,21 +1,11 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const {findKey} = require('ln-sync');
-const {getChannel} = require('ln-service');
-const {getChannels} = require('ln-service');
-const {getFeeRates} = require('ln-service');
-const {getIdentity} = require('ln-service');
-const {getNode} = require('ln-service');
-const {getNodeAlias} = require('ln-sync');
-const {getPendingChannels} = require('ln-service');
-const {gray} = require('colorette');
-const {green} = require('colorette');
-const {returnResult} = require('asyncjs-util');
-
-const {chartAliasForPeer} = require('./../display');
-const {formatFeeRate} = require('./../display');
-const {getIcons} = require('./../display');
-const parseFeeRateFormula = require('./parse_fee_rate_formula');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import { findKey, getNodeAlias } from 'ln-sync';
+import { getChannel, getChannels, getFeeRates, getIdentity, getNode, getPendingChannels } from 'ln-service';
+import { gray, green } from 'colorette';
+import { returnResult } from 'asyncjs-util';
+import { chartAliasForPeer, formatFeeRate, getIcons } from './../display/index.js';
+import parseFeeRateFormula from './parse_fee_rate_formula.js';
 
 const asRate = rate => formatFeeRate({rate}).display;
 const asTxOut = n => `${n.transaction_id}:${n.transaction_vout}`;
@@ -52,7 +42,7 @@ const uniq = arr => Array.from(new Set(arr));
     rows: [[<Table Cell String>]]
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

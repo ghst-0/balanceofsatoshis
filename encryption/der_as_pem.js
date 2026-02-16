@@ -18,7 +18,7 @@ const split = /.{0,64}/g;
     pem: <Pem Encoded Public Key String>
   }
 */
-module.exports = ({cert, key}) => {
+export default ({cert, key}) => {
   const base64Key = Buffer.from(cert || key, 'hex').toString('base64');
   const endMarkLen = endMarker.length;
 

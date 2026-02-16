@@ -1,10 +1,11 @@
-const {rejects} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { rejects } from 'node:assert/strict';
 
-const {encode} = require('cbor');
+import cbor from 'cbor';
 
-const registerNode = require('./../../nodes/register_node');
+import registerNode from './../../nodes/register_node.js';
 
+const { encode } = cbor;
 const tests = [
   {
     args: {},

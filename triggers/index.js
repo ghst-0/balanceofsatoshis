@@ -1,3 +1,3 @@
-const manageTriggers = require('./manage_triggers');
+import manageTriggers from './manage_triggers.js';
 
-module.exports = {manageTriggers};
+export { manageTriggers };

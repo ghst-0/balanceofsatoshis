@@ -1,7 +1,6 @@
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
-
-const {getLnds} = require('./../lnd');
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
+import { getLnds } from './../lnd/index.js';
 
 const {isArray} = Array;
 
@@ -27,7 +26,7 @@ const {isArray} = Array;
     }]
   }
 */
-module.exports = ({logger, names, nodes}, cbk) => {
+export default ({logger, names, nodes}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

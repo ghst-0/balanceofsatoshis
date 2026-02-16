@@ -1,13 +1,11 @@
-const asyncAuto = require('async/auto');
-const asyncFilter = require('async/filter');
-const asyncMap = require('async/map');
-const {authenticatedLndGrpc} = require('ln-service');
-const {getNetwork} = require('ln-sync');
-const {getWalletInfo} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
-
-const getSavedCredentials = require('./get_saved_credentials');
-const {homePath} = require('../storage');
+import asyncAuto from 'async/auto.js';
+import asyncFilter from 'async/filter.js';
+import asyncMap from 'async/map.js';
+import { authenticatedLndGrpc, getWalletInfo } from 'ln-service';
+import { getNetwork } from 'ln-sync';
+import { returnResult } from 'asyncjs-util';
+import getSavedCredentials from './get_saved_credentials.js';
+import { homePath } from '../storage/index.js';
 
 /** Get a list of saved nodes
 
@@ -30,7 +28,7 @@ const {homePath} = require('../storage');
     }]
   }
 */
-module.exports = ({fs, network}, cbk) => {
+export default ({fs, network}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

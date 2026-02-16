@@ -1,9 +1,7 @@
-const {join} = require('path');
-
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
-
-const lndDirectory = require('./lnd_directory');
+import { join } from 'node:path';
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
+import lndDirectory from './lnd_directory.js';
 
 const certPath = ['tls.cert'];
 
@@ -27,7 +25,7 @@ const certPath = ['tls.cert'];
     [cert]: <Cert File Base64 Encoded String>
   }
 */
-module.exports = ({fs, node, os, path}, cbk) => {
+export default ({fs, node, os, path}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

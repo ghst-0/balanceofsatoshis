@@ -1,6 +1,5 @@
-const {Parser} = require('hot-formula-parser');
-
-const describeParseError = require('./describe_parse_error');
+import { Parser } from 'hot-formula-parser';
+import describeParseError from './describe_parse_error.js';
 
 const {assign} = Object;
 const defaultVariables = {btc: 1e8, k: 1e3, m: 1e6, mm: 1e6};
@@ -24,7 +23,7 @@ const {keys} = Object;
     [is_matching]: <Variables Are Consistent With Filters Bool>
   }
 */
-module.exports = ({filters, variables}) => {
+export default ({filters, variables}) => {
   // Exit early when there is nothing to match on
   if (!filters.length) {
     return {is_matching: true};

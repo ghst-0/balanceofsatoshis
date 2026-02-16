@@ -1,8 +1,7 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const {formatTokens} = require('ln-sync');
-const {getNodeFunds} = require('ln-sync');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import { formatTokens, getNodeFunds } from 'ln-sync';
+import { returnResult } from 'asyncjs-util';
 
 const format = tokens => formatTokens({tokens}).display.trim();
 const {isArray} = Array;
@@ -27,7 +26,7 @@ const {isArray} = Array;
     [utxos_count]: <Total UTXOs Count Number>
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

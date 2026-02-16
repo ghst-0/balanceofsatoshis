@@ -1,11 +1,11 @@
-const asyncAuto = require('async/auto');
-const asyncMapSeries = require('async/mapSeries');
-const {resolutionType} = require('bolt03');
-const {returnResult} = require('asyncjs-util');
-const {Transaction} = require('bitcoinjs-lib');
+import asyncAuto from 'async/auto.js';
+import asyncMapSeries from 'async/mapSeries.js';
+import { resolutionType } from 'bolt03';
+import { returnResult } from 'asyncjs-util';
+import { Transaction } from 'bitcoinjs-lib';
+import blockstream from './blockstream.json' with { type: 'json' };
 
-const {endpoints} = require('./blockstream');
-
+const { endpoints } = blockstream;
 const closeSpendsDelayMs = 1000;
 const flatten = arr => [].concat(...arr);
 const getTxDelayMs = 2000;
@@ -32,7 +32,7 @@ const getTxDelayMs = 2000;
     }]
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

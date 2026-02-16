@@ -1,5 +1,5 @@
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
 
 /** Decrypt ciphertext that has been encrypted to GPG keys
 
@@ -13,7 +13,7 @@ const {returnResult} = require('asyncjs-util');
     clear: <Clear Text String>
   }
 */
-module.exports = ({cipher, spawn}, cbk) => {
+export default ({cipher, spawn}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

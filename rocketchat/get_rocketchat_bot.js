@@ -1,11 +1,10 @@
-const asyncAuto = require('async/auto');
-const asyncReflect = require('async/reflect');
-const {Bot} = require('grammy');
-const {returnResult} = require('asyncjs-util');
-
-const getSocksProxy = require('./get_socks_proxy');
-const {homePath} = require('../storage');
-const interaction = require('./interaction');
+import asyncAuto from 'async/auto.js';
+import asyncReflect from 'async/reflect.js';
+import { Bot } from 'grammy';
+import { returnResult } from 'asyncjs-util';
+import getSocksProxy from './get_socks_proxy.js';
+import { homePath } from '../storage/index.js';
+import interaction from './interaction.json' with { type: 'json' };
 
 const botKeyFile = 'telegram_bot_api_key';
 
@@ -27,7 +26,7 @@ const botKeyFile = 'telegram_bot_api_key';
     key: <Telegram API Key String>
   }
 */
-module.exports = ({fs, proxy}, cbk) => {
+export default ({fs, proxy}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Import inquirer

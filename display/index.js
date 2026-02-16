@@ -1,15 +1,15 @@
-const chartAliasForPeer = require('./chart_alias_for_peer');
-const describeConfidence = require('./describe_confidence');
-const describeParseError = require('./describe_parse_error');
-const describeRoute = require('./describe_route');
-const describeRoutingFailure = require('./describe_routing_failure');
-const formatFeeRate = require('./format_fee_rate');
-const getIcons = require('./get_icons');
-const isMatchingFilters = require('./is_matching_filters');
-const segmentMeasure = require('./segment_measure');
-const sumsForSegment = require('./sums_for_segment');
+import chartAliasForPeer from './chart_alias_for_peer.js';
+import describeConfidence from './describe_confidence.js';
+import describeParseError from './describe_parse_error.js';
+import describeRoute from './describe_route.js';
+import describeRoutingFailure from './describe_routing_failure.js';
+import formatFeeRate from './format_fee_rate.js';
+import getIcons from './get_icons.js';
+import isMatchingFilters from './is_matching_filters.js';
+import segmentMeasure from './segment_measure.js';
+import sumsForSegment from './sums_for_segment.js';
 
-module.exports = {
+export {
   chartAliasForPeer,
   describeConfidence,
   describeParseError,
@@ -19,5 +19,5 @@ module.exports = {
   getIcons,
   isMatchingFilters,
   segmentMeasure,
-  sumsForSegment,
+  sumsForSegment
 };

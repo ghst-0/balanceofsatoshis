@@ -1,9 +1,7 @@
-const {deepEqual} = require('node:assert').strict;
-const {equal} = require('node:assert').strict;
-const {rejects} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { equal, deepEqual, rejects } from 'node:assert/strict';
 
-const {getSavedCredentials} = require('./../../nodes');
+import { getSavedCredentials } from './../../nodes/index.js';
 
 const tests = [
   {

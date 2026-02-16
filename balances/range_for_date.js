@@ -1,8 +1,7 @@
-const moment = require('moment');
+import moment from 'moment';
+import constants from './constants.json' with { type: 'json' };
 
-const {monthNumbers} = require('./constants');
-const {monthOffset} = require('./constants');
-const {notFoundIndex} = require('./constants');
+const { monthNumbers, monthOffset, notFoundIndex } = constants
 
 /** Get a before and after range
 
@@ -21,7 +20,7 @@ const {notFoundIndex} = require('./constants');
     [before]: <Before ISO 8601 Date String>
   }
 */
-module.exports = ({date, month, year}) => {
+export default ({date, month, year}) => {
   if (!date && !year && !month) {
     return {};
   }

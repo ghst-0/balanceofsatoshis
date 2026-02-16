@@ -1,5 +1,5 @@
-const {homedir} = require('os');
-const {join} = require('path');
+import { homedir } from 'node:os';
+import { join } from 'node:path';
 
 const home = join(homedir(), '.bos');
 
@@ -14,7 +14,7 @@ const home = join(homedir(), '.bos');
     path: <Home Directory Path String>
   }
 */
-module.exports = ({file}) => {
+export default ({file}) => {
   const dir = process.env.BOS_DATA_PATH || home;
 
   return {path: join(...[dir, file].filter(n => !!n))};

@@ -1,53 +1,53 @@
-const {actOnMessageReply} = require('ln-telegram');
-const asyncAuto = require('async/auto');
-const asyncEach = require('async/each');
-const asyncForever = require('async/forever');
-const asyncMap = require('async/map');
-const asyncRetry = require('async/retry');
-const {getForwards} = require('ln-service');
-const {getTransactionRecord} = require('ln-sync');
-const {getWalletInfo} = require('ln-service');
-const {handleBackupCommand} = require('ln-telegram');
-const {handleBalanceCommand} = require('ln-telegram');
-const {handleButtonPush} = require('ln-telegram');
-const {handleConnectCommand} = require('ln-telegram');
-const {handleCostsCommand} = require('ln-telegram');
-const {handleEarningsCommand} = require('ln-telegram');
-const {handleEditedMessage} = require('ln-telegram');
-const {handleGraphCommand} = require('ln-telegram');
-const {handleInfoCommand} = require('ln-telegram');
-const {handleInvoiceCommand} = require('ln-telegram');
-const {handleLiquidityCommand} = require('ln-telegram');
-const {handleMempoolCommand} = require('ln-telegram');
-const {handlePendingCommand} = require('ln-telegram');
-const {handleStartCommand} = require('ln-telegram');
-const {handleStopCommand} = require('ln-telegram');
-const {handleVersionCommand} = require('ln-telegram');
-const {InputFile} = require('grammy');
-const {isMessageReplyAction} = require('ln-telegram');
-const {noLocktimeIdForTransaction} = require('@alexbosworth/blockchain');
-const {notifyOfForwards} = require('ln-telegram');
-const {postChainTransaction} = require('ln-telegram');
-const {postClosedMessage} = require('ln-telegram');
-const {postClosingMessage} = require('ln-telegram');
-const {postOpenMessage} = require('ln-telegram');
-const {postOpeningMessage} = require('ln-telegram');
-const {postNodesOnline} = require('ln-telegram');
-const {postSettledInvoice} = require('ln-telegram');
-const {postSettledPayment} = require('ln-telegram');
-const {postUpdatedBackup} = require('ln-telegram');
-const {returnResult} = require('asyncjs-util');
-const {subscribeToBackups} = require('ln-service');
-const {subscribeToChannels} = require('ln-service');
-const {subscribeToInvoices} = require('ln-service');
-const {subscribeToPastPayments} = require('ln-service');
-const {subscribeToPendingChannels} = require('ln-sync');
-const {subscribeToTransactions} = require('ln-service');
-
-const getNodeDetails = require('./get_node_details');
-const interaction = require('./interaction');
-const named = require('./../package').name;
-const {version} = require('./../package');
+import {
+  actOnMessageReply,
+  handleBackupCommand,
+  handleBalanceCommand,
+  handleButtonPush,
+  handleConnectCommand,
+  handleCostsCommand,
+  handleEarningsCommand,
+  handleEditedMessage,
+  handleGraphCommand,
+  handleInfoCommand,
+  handleInvoiceCommand,
+  handleLiquidityCommand,
+  handleMempoolCommand,
+  handlePendingCommand,
+  handleStartCommand,
+  handleStopCommand,
+  handleVersionCommand,
+  isMessageReplyAction,
+  notifyOfForwards,
+  postChainTransaction,
+  postClosedMessage,
+  postClosingMessage,
+  postOpenMessage,
+  postOpeningMessage,
+  postNodesOnline,
+  postSettledInvoice,
+  postSettledPayment,
+  postUpdatedBackup
+} from 'ln-telegram';
+import asyncAuto from 'async/auto.js';
+import asyncEach from 'async/each.js';
+import asyncForever from 'async/forever.js';
+import asyncMap from 'async/map.js';
+import asyncRetry from 'async/retry.js';
+import { getForwards,
+  getWalletInfo,
+  subscribeToBackups,
+  subscribeToChannels,
+  subscribeToInvoices,
+  subscribeToPastPayments,
+  subscribeToTransactions
+} from 'ln-service';
+import { getTransactionRecord, subscribeToPendingChannels } from 'ln-sync';
+import { InputFile } from 'grammy';
+import { noLocktimeIdForTransaction } from '@alexbosworth/blockchain';
+import { returnResult } from 'asyncjs-util';
+import getNodeDetails from './get_node_details.js';
+import interaction from './interaction.json' with { type: 'json' };
+import { name as named, version } from './../package.json' with { type: 'json' };
 
 const fileAsDoc = file => new InputFile(file.source, file.filename);
 const fromName = node => `${node.alias} ${node.public_key.substring(0, 8)}`;
@@ -84,7 +84,7 @@ const sanitize = n => (n || '').replace(/_/g, '\\_').replace(/[*~`]/g, '');
     failure: <Termination Error Object>
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   let connectedId = args.id;
   let isStopped = false;
   const subscriptions = [];

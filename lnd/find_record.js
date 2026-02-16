@@ -1,19 +1,18 @@
-const asyncAuto = require('async/auto');
-const asyncReflect = require('async/reflect');
-const {chanFormat} = require('bolt07');
-const {formatTokens} = require('ln-sync');
-const {getChannels} = require('ln-service');
-const {getClosedChannels} = require('ln-service');
-const {getHeight} = require('ln-service');
-const {getNetworkGraph} = require('ln-service');
-const {getNode} = require('ln-service');
-const {getPayment} = require('ln-service');
-const {getTransactionRecord} = require('ln-sync');
-const {gray} = require('colorette');
-const moment = require('moment');
-const {returnResult} = require('asyncjs-util');
-
-const {findKey} = require('ln-sync');
+import asyncAuto from 'async/auto.js';
+import asyncReflect from 'async/reflect.js';
+import { chanFormat } from 'bolt07';
+import { formatTokens, getTransactionRecord, findKey } from 'ln-sync';
+import {
+  getChannels,
+  getClosedChannels,
+  getHeight,
+  getNetworkGraph,
+  getNode,
+  getPayment
+} from 'ln-service';
+import { gray } from 'colorette';
+import moment from 'moment';
+import { returnResult } from 'asyncjs-util';
 
 const asBigUnit = tokens => (tokens / 1e8).toFixed(8);
 const balance = ({display}) => display.trim() || gray('0.00000000');
@@ -59,7 +58,7 @@ const standardIdHexLength = Buffer.alloc(32).toString('hex').length;
     [payment_pending]: <Payment Pending Bool>
   }
 */
-module.exports = ({lnd, query}, cbk) => {
+export default ({lnd, query}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

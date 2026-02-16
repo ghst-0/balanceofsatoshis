@@ -1,3 +1,3 @@
-const homePath = require('./home_path');
+import homePath from './home_path.js';
 
-module.exports = {homePath};
+export { homePath };

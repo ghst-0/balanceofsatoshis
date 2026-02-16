@@ -1,8 +1,7 @@
-const {deepEqual} = require('node:assert').strict;
-const test = require('node:test');
-const {throws} = require('node:assert').strict;
+import test from 'node:test';
+import { throws, deepEqual } from 'node:assert/strict';
 
-const multiProbe = require('./../../network/multi_probe');
+import multiProbe from './../../network/multi_probe.js';
 
 const tests = [
   {

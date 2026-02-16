@@ -1,4 +1,4 @@
-const {encodeTlvStream} = require('bolt01');
+import { encodeTlvStream } from 'bolt01';
 
 const isPublicKey = n => !!n && /^0[2-3][0-9A-F]{64}$/i.test(n);
 const typeNodeId = '1';
@@ -20,7 +20,7 @@ const typeNodeId = '1';
     encoded: <Trigger Parameters Hex String>
   }
 */
-module.exports = ({id}) => {
+export default ({id}) => {
   if (!isPublicKey(id)) {
     throw new Error('ExpectedPublicKeyToEncodeConnectivityParams');
   }

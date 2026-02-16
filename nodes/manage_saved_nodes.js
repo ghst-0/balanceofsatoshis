@@ -1,15 +1,13 @@
-const asyncAuto = require('async/auto');
-const {generateKeyPair} = require('crypto');
-const {privateDecrypt} = require('crypto');
-const {returnResult} = require('asyncjs-util');
-
-const decryptSavedMacaroons = require('./decrypt_saved_macaroons');
-const deleteNodeCredentials = require('./delete_node_credentials');
-const encryptSavedMacaroons = require('./encrypt_saved_macaroons');
-const getSavedCredentials = require('./get_saved_credentials');
-const getSavedNodes = require('./get_saved_nodes');
-const {homePath} = require('../storage');
-const registerNode = require('./register_node');
+import asyncAuto from 'async/auto.js';
+import { generateKeyPair, privateDecrypt } from 'node:crypto';
+import { returnResult } from 'asyncjs-util';
+import decryptSavedMacaroons from './decrypt_saved_macaroons.js';
+import deleteNodeCredentials from './delete_node_credentials.js';
+import encryptSavedMacaroons from './encrypt_saved_macaroons.js';
+import getSavedCredentials from './get_saved_credentials.js';
+import getSavedNodes from './get_saved_nodes.js';
+import { homePath } from '../storage/index.js';
+import registerNode from './register_node.js';
 
 const {isArray} = Array;
 
@@ -47,7 +45,7 @@ const {isArray} = Array;
     }]
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

@@ -1,12 +1,10 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const {formatTokens} = require('ln-sync');
-const {getChainTransactions} = require('ln-accounting');
-const {getNetwork} = require('ln-sync');
-const moment = require('moment');
-const {returnResult} = require('asyncjs-util');
-
-const feesForSegment = require('./fees_for_segment');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import { formatTokens, getNetwork } from 'ln-sync';
+import { getChainTransactions } from 'ln-accounting';
+import moment from 'moment';
+import { returnResult } from 'asyncjs-util';
+import feesForSegment from './fees_for_segment.js';
 
 const daysBetween = (a, b) => moment(a).diff(b, 'days') + 1;
 const daysPerWeek = 7;
@@ -40,7 +38,7 @@ const parseDate = n => Date.parse(n);
     title: <Chart Title String>
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

@@ -1,7 +1,6 @@
-const {encodeTlvStream} = require('bolt01');
-
-const encodeConnectivityParams = require('./encode_connectivity_params');
-const encodeFollowParams = require('./encode_follow_params');
+import { encodeTlvStream } from 'bolt01';
+import encodeConnectivityParams from './encode_connectivity_params.js';
+import encodeFollowParams from './encode_follow_params.js';
 
 const hexAsBase64 = hex => Buffer.from(hex, 'hex').toString('base64');
 const methodConnectivity = '01';
@@ -34,7 +33,7 @@ const version = '01';
     encoded: <Encoded Trigger String>
   }
 */
-module.exports = ({connectivity, follow}) => {
+export default ({connectivity, follow}) => {
   if (!connectivity && !follow) {
     throw new Error('ExpectedConnectivityOrFollowDetailsToEncodeTrigger');
   }

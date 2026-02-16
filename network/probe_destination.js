@@ -1,21 +1,12 @@
-const {createHash} = require('crypto');
-const {randomBytes} = require('crypto');
-
-const asyncAuto = require('async/auto');
-const {getChannels} = require('ln-service');
-const {getIdentity} = require('ln-service');
-const {getNode} = require('ln-service');
-const {getPeers} = require('ln-service');
-const moment = require('moment');
-const {parsePaymentRequest} = require('ln-service');
-const {payViaRoutes} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
-const {signBytes} = require('ln-service');
-const {subscribeToFindMaxPayable} = require('probing');
-
-const executeProbe = require('./execute_probe');
-const {getIcons} = require('./../display');
-const {sortBy} = require('./../arrays');
+import { createHash, randomBytes } from 'node:crypto';
+import asyncAuto from 'async/auto.js';
+import { getChannels, getIdentity, getNode, getPeers, parsePaymentRequest, payViaRoutes, signBytes } from 'ln-service';
+import moment from 'moment';
+import { returnResult } from 'asyncjs-util';
+import { subscribeToFindMaxPayable } from 'probing';
+import executeProbe from './execute_probe.js';
+import { getIcons } from './../display/index.js';
+import { sortBy } from './../arrays/index.js';
 
 const bufFromHex = hex => Buffer.from(hex, 'hex');
 const channelReserve = n => n.local_reserve || Math.floor(n.capacity * 0.01);
@@ -87,7 +78,7 @@ const tokAsMtok = tokens => (BigInt(tokens || 0) * BigInt(1e3)).toString();
     [success]: [<Standard Format Channel Id String>]
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

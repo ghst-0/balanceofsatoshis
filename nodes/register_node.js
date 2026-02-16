@@ -1,12 +1,12 @@
-const asyncAuto = require('async/auto');
-const {decodeFirst} = require('cbor');
-const {returnResult} = require('asyncjs-util');
-const sanitize = require('sanitize-filename');
+import asyncAuto from 'async/auto.js';
+import cbor from 'cbor';
+import { returnResult } from 'asyncjs-util';
+import sanitize from 'sanitize-filename';
+import { derAsPem } from './../encryption/index.js';
+import { homePath } from '../storage/index.js';
+import putSavedCredentials from './put_saved_credentials.js';
 
-const {derAsPem} = require('./../encryption');
-const {homePath} = require('../storage');
-const putSavedCredentials = require('./put_saved_credentials');
-
+const { decodeFirst } = cbor;
 const defaultHost = 'localhost';
 const defaultRpcPort = 10009;
 const keyType = 'rsa';
@@ -31,7 +31,7 @@ const publicKeyEncoding = {format: 'der', type: 'spki'};
 
   @returns via cbk or Promise
 */
-module.exports = ({ask, cryptography, fs, logger, node}, cbk) => {
+export default ({ask, cryptography, fs, logger, node}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

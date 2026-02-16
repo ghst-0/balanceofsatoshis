@@ -1,11 +1,11 @@
-const asyncAuto = require('async/auto');
-const {encode} = require('cbor');
-const moment = require('moment');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import cbor from 'cbor';
+import moment from 'moment';
+import { returnResult } from 'asyncjs-util';
+import lndCredentials from './lnd_credentials.js';
+import { pemAsDer } from './../encryption/index.js';
 
-const lndCredentials = require('./lnd_credentials');
-const {pemAsDer} = require('./../encryption');
-
+const { encode } = cbor;
 /** Get exported credentials
 
   {
@@ -29,7 +29,7 @@ const {pemAsDer} = require('./../encryption');
     [credentials]: <Encrypted Node Credentials CBOR Hex String>
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

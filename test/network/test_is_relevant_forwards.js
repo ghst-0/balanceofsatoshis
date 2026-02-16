@@ -1,7 +1,7 @@
-const {equal} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { equal } from 'node:assert/strict';
 
-const method = require('./../../network/is_relevant_forward');
+import method from './../../network/is_relevant_forward.js';
 
 const tests = [
   {

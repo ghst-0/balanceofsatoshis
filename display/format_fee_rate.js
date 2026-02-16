@@ -13,7 +13,7 @@ const highRate = 5e5;
     display: <Display Formatted Rate String>
   }
 */
-module.exports = ({rate}) => {
+export default ({rate}) => {
   if (rate === undefined) {
     return {display: String()};
   }

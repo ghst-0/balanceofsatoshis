@@ -1,6 +1,5 @@
-const {stringify} = require('querystring');
-
-const {AbortController} = require('abort-controller');
+import { stringify } from 'node:querystring';
+import { AbortController } from 'abort-controller';
 
 const encodeQs = qs => !qs ? '' : '?' + stringify(qs);
 const timeoutSignals = new WeakMap();
@@ -16,7 +15,7 @@ const timeoutSignals = new WeakMap();
     request: <Request Function>
   }
 */
-module.exports = ({fetch}, cbk) => {
+export default ({fetch}, cbk) => {
   return (options, cbk) => {
     (async () => {
     	const controller = new AbortController();

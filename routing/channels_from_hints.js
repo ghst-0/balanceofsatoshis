@@ -1,4 +1,4 @@
-const {parsePaymentRequest} = require('ln-service');
+import { parsePaymentRequest } from 'ln-service';
 
 const defaultCapacity = Number.MAX_SAFE_INTEGER;
 
@@ -29,7 +29,7 @@ const defaultCapacity = Number.MAX_SAFE_INTEGER;
     }]
   }
 */
-module.exports = ({request}) => {
+export default ({request}) => {
   const channels = [];
 
   // Exit early when there is no request to derive channels for

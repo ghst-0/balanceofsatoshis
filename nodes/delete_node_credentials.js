@@ -1,9 +1,7 @@
-const {join} = require('path');
-
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
-
-const {homePath} = require('../storage');
+import { join } from 'node:path';
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
+import { homePath } from '../storage/index.js';
 
 const credentialsFileName = 'credentials.json';
 
@@ -19,7 +17,7 @@ const credentialsFileName = 'credentials.json';
 
   @returns via cbk or Promise
 */
-module.exports = ({fs, node}, cbk) => {
+export default ({fs, node}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

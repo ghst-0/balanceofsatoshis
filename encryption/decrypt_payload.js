@@ -1,16 +1,8 @@
-const {AES} = require('crypto-js');
-const {enc} = require('crypto-js');
-const {lib} = require('crypto-js');
-const {mode} = require('crypto-js');
-const {pad} = require('crypto-js');
+import CryptoJS from 'crypto-js';
 
-const {decrypt} = AES;
-const {Hex} = enc;
-const padding = pad.NoPadding;
 const takeCipherWords = words => words.slice(4);
 const takeIvWords = words => words.slice(0, 4);
 const trim = (hex, index) => hex.slice(0, index === 0 ? undefined : index);
-const {WordArray} = lib;
 const zeroIndex = h => h.split('').slice().reverse().findIndex(n => n !== '0');
 
 /** Decrypt encrypted payload
@@ -28,7 +20,7 @@ const zeroIndex = h => h.split('').slice().reverse().findIndex(n => n !== '0');
     payload: <UTF8 Payload String>
   }
 */
-module.exports = ({encrypted, secret}) => {
+export default ({encrypted, secret}) => {
   if (!encrypted) {
     throw new Error('ExpectedEncryptedPayloadToDecrypt');
   }
@@ -37,17 +29,17 @@ module.exports = ({encrypted, secret}) => {
     throw new Error('ExpectedDecryptionSecretKeyToDecrypt');
   }
 
-  const [key, payload] = [secret, encrypted].map(Hex.parse);
+  const [key, payload] = [secret, encrypted].map(CryptoJS.enc.Hex.parse);
 
-  const hex = WordArray.create(takeCipherWords(payload.words)).toString(Hex);
-  const iv = WordArray.create(takeIvWords(payload.words));
+  const hex = CryptoJS.lib.WordArray.create(takeCipherWords(payload.words)).toString(CryptoJS.enc.Hex);
+  const iv = CryptoJS.lib.WordArray.create(takeIvWords(payload.words));
 
-  const ciphertext = Hex.parse(trim(hex, hex.length - zeroIndex(hex)));
+  const ciphertext = CryptoJS.enc.Hex.parse(trim(hex, hex.length - zeroIndex(hex)));
 
   try {
-    const clear = decrypt({ciphertext}, key, {iv, padding, mode: mode.CFB});
+    const clear = CryptoJS.AES.decrypt({ciphertext}, key, {iv, padding: CryptoJS.pad.NoPadding, mode: CryptoJS.mode.CFB});
 
-    return {payload: clear.toString(enc.Utf8)};
+    return {payload: clear.toString(CryptoJS.enc.Utf8)};
   } catch {
     throw new Error('FailedToDecryptCipherTextWithSecretKey');
   }

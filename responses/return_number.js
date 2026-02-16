@@ -12,7 +12,7 @@
   @returns
   <Standard Callback Function> (err, res) => {}
 */
-module.exports = ({logger, number, reject, resolve}) => {
+export default ({logger, number, reject, resolve}) => {
   return (err, res) => {
     if (err) {
       logger.error(err);

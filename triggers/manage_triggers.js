@@ -1,11 +1,10 @@
-const asyncAuto = require('async/auto');
-const {cancelHodlInvoice} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
-
-const createConnectivityTrigger = require('./create_connectivity_trigger');
-const createFollowNodeTrigger = require('./create_follow_node_trigger');
-const getTriggers = require('./get_triggers');
-const subscribeToTriggers = require('./subscribe_to_triggers');
+import asyncAuto from 'async/auto.js';
+import { cancelHodlInvoice } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
+import createConnectivityTrigger from './create_connectivity_trigger.js';
+import createFollowNodeTrigger from './create_follow_node_trigger.js';
+import getTriggers from './get_triggers.js';
+import subscribeToTriggers from './subscribe_to_triggers.js';
 
 const actionAddConnectivityTrigger = 'action-add-connectivity-trigger';
 const actionAddFollowTrigger = 'action-add-follow-trigger';
@@ -24,7 +23,7 @@ const isPublicKey = n => !!n && /^0[2-3][0-9A-F]{64}$/i.test(n);
 
   @returns via cbk or Promise
 */
-module.exports = ({ask, lnd, logger}, cbk) => {
+export default ({ask, lnd, logger}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

@@ -1,8 +1,7 @@
-const asyncAuto = require('async/auto');
-const {authenticatedLndGrpc} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
-
-const lndCredentials = require('./lnd_credentials');
+import asyncAuto from 'async/auto.js';
+import { authenticatedLndGrpc } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
+import lndCredentials from './lnd_credentials.js';
 
 /** Authenticated LND
 
@@ -16,7 +15,7 @@ const lndCredentials = require('./lnd_credentials');
     lnd: <Authenticated LND gRPC API Object>
   }
 */
-module.exports = ({logger, node}, cbk) => {
+export default ({logger, node}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Credentials

@@ -1,8 +1,7 @@
-const {equal} = require('node:assert').strict;
-const {rejects} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { equal, rejects } from 'node:assert/strict';
 
-const method = require('../../rocketchat/get_socks_proxy');
+import method from '../../rocketchat/get_socks_proxy.js';
 
 const makeArgs = overrides => {
   const agent = {host: 'host'};

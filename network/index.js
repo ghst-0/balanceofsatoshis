@@ -1,16 +1,18 @@
-const currencyForNetwork = require('./currency_for_network');
-const executeProbe = require('./execute_probe');
-const getForwards = require('./get_forwards');
-const getGraphEntry = require('./get_graph_entry');
-const getPeers = require('./get_peers');
-const multiPathPayment = require('./multi_path_payment');
-const multiPathProbe = require('./multi_path_probe');
-const networks = require('./networks');
-const {peerSortOptions} = require('./constants');
-const probe = require('./probe');
-const probeDestination = require('./probe_destination');
+import currencyForNetwork from './currency_for_network.js';
+import executeProbe from './execute_probe.js';
+import getForwards from './get_forwards.js';
+import getGraphEntry from './get_graph_entry.js';
+import getPeers from './get_peers.js';
+import multiPathPayment from './multi_path_payment.js';
+import multiPathProbe from './multi_path_probe.js';
+import networks from './networks.json' with { type: 'json' };
+import constants from './constants.json' with { type: 'json' };
+import probe from './probe.js';
+import probeDestination from './probe_destination.js';
 
-module.exports = {
+const { peerSortOptions } = constants;
+
+export {
   currencyForNetwork,
   executeProbe,
   getForwards,

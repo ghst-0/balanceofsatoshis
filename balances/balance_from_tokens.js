@@ -15,7 +15,7 @@ const noTokens = 0;
   @returns
   <Balance Number>
 */
-module.exports = args => {
+export default args => {
   if (!isArray(args.tokens)) {
     throw new Error('ExpectedTokensToCalculateBalance');
   }

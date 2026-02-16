@@ -1,5 +1,6 @@
-const {parseErrors} = require('./constants');
+import constants from './constants.json' with { type: 'json' };
 
+const { parseErrors } = constants
 const defaultError = '#ERROR!';
 
 /** Describe a hot formula parser error
@@ -11,6 +12,6 @@ const defaultError = '#ERROR!';
   @returns
   <Display String>
 */
-module.exports = ({error}) => {
+export default ({error}) => {
   return parseErrors[error] || parseErrors[defaultError];
 };

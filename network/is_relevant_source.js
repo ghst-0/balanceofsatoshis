@@ -18,7 +18,7 @@
   @returns
   <Is Relevant Bool>
 */
-module.exports = args => {
+export default args => {
   const inChannel = args.node_channels.find(chan => {
     return args.incoming_channel === chan.id;
   });

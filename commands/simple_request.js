@@ -1,4 +1,4 @@
-const https = require('https');
+import https from 'node:https';
 
 const asQueryString = qs => qs ? `?${qs}` : '';
 const httpsProtocol = 'https:';
@@ -18,7 +18,7 @@ const {parse} = JSON;
   <Response Object>
   <Response Body>
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   if (!args.url) {
     return cbk([400, 'ExpectedUrlToExecuteSimpleRequest']);
   }

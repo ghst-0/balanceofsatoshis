@@ -1,7 +1,7 @@
-const {join} = require('node:path');
-const {readdirSync} = require('node:fs');
-const {run} = require('node:test');
-const {tap} = require('node:test/reporters');
+import { join } from 'node:path';
+import { readdirSync } from 'node:fs';
+import { run } from 'node:test';
+import { tap } from 'node:test/reporters';
 
 const concurrency = 3;
 const timeout = 1000 * 60 * 5;

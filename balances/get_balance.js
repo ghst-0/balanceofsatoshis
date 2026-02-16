@@ -1,11 +1,7 @@
-const asyncAuto = require('async/auto');
-const {getChainBalance} = require('ln-service');
-const {getChannelBalance} = require('ln-service');
-const {getChannels} = require('ln-service');
-const {getPendingChainBalance} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
-
-const balanceFromTokens = require('./balance_from_tokens');
+import asyncAuto from 'async/auto.js';
+import { getChainBalance, getChannelBalance, getChannels, getPendingChainBalance } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
+import balanceFromTokens from './balance_from_tokens.js';
 
 const none = 0;
 
@@ -26,7 +22,7 @@ const none = 0;
     channel_balance: <Channel Balance Minus Commit Fees Tokens Number>
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

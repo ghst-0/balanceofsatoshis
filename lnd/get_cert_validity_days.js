@@ -1,9 +1,7 @@
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
-
-const {certExpiration} = require('./../encryption');
-const {pemAsDer} = require('./../encryption');
-const lndCredentials = require('./lnd_credentials');
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
+import { certExpiration, pemAsDer } from './../encryption/index.js';
+import lndCredentials from './lnd_credentials.js';
 
 const base64AsString = base64 => Buffer.from(base64, 'base64').toString();
 const bufferAsHex = buffer => buffer.toString('hex');
@@ -23,7 +21,7 @@ const {round} = Math;
     days: <Days Valid Number>
   }
 */
-module.exports = ({below, logger, node}, cbk) => {
+export default ({below, logger, node}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Get the cert

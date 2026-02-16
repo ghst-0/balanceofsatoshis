@@ -1,9 +1,8 @@
-const asyncAuto = require('async/auto');
-const asyncUntil = require('async/until');
-const {getInvoices} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
-
-const decodeTrigger = require('./decode_trigger');
+import asyncAuto from 'async/auto.js';
+import asyncUntil from 'async/until.js';
+import { getInvoices } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
+import decodeTrigger from './decode_trigger.js';
 
 const defaultInvoicesLimit = 100;
 
@@ -26,7 +25,7 @@ const defaultInvoicesLimit = 100;
     }]
   }
 */
-module.exports = ({lnd}, cbk) => {
+export default ({lnd}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

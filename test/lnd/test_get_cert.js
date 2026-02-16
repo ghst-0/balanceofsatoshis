@@ -1,13 +1,12 @@
-const {equal} = require('node:assert').strict;
-const {rejects} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { equal, rejects } from 'node:assert/strict';
 
-const getCert = require('./../../lnd/get_cert');
+import getCert from './../../lnd/get_cert.js';
 
 const os = {
   homedir: () => 'homedir',
   platform: () => 'platform',
-  userInfo: () => ({username: 'username'}),
+  userInfo: () => ({username: 'username'})
 };
 
 const tests = [

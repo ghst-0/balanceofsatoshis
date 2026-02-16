@@ -1,13 +1,9 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const asyncUntil = require('async/until');
-const {getChannels} = require('ln-service');
-const {getClosedChannels} = require('ln-service');
-const {getForwards} = require('ln-service');
-const {getNode} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
-
-const forwardsViaPeer = require('./forwards_via_peer');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import asyncUntil from 'async/until.js';
+import { getChannels, getClosedChannels, getForwards, getNode } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
+import forwardsViaPeer from './forwards_via_peer.js';
 
 const flatten = arr => [].concat(...arr);
 const {isArray} = Array;
@@ -36,7 +32,7 @@ const pageLimit = 1e3;
     }]
   }
 */
-module.exports = ({after, before, lnd, via}, cbk) => {
+export default ({after, before, lnd, via}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

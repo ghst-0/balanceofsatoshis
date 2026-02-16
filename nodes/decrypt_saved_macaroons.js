@@ -1,11 +1,10 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const asyncMapSeries = require('async/mapSeries');
-const {returnResult} = require('asyncjs-util');
-
-const {decryptCiphertext} = require('./../encryption');
-const getSavedCredentials = require('./get_saved_credentials');
-const putSavedCredentials = require('./put_saved_credentials');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import asyncMapSeries from 'async/mapSeries.js';
+import { returnResult } from 'asyncjs-util';
+import { decryptCiphertext } from './../encryption/index.js';
+import getSavedCredentials from './get_saved_credentials.js';
+import putSavedCredentials from './put_saved_credentials.js';
 
 const {isArray} = Array;
 
@@ -23,7 +22,7 @@ const {isArray} = Array;
 
   @returns via cbk or Promise
 */
-module.exports = ({fs, logger, nodes, spawn}, cbk) => {
+export default ({fs, logger, nodes, spawn}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

@@ -26,7 +26,7 @@ const valueTypes = [1, 2, 5, 7, 12, 130];
     }]
   }
 */
-module.exports = args => {
+export default args => {
   if (!isBuffer(args.data)) {
     throw new Error('ExpectedCertificateDataBufferObject');
   }

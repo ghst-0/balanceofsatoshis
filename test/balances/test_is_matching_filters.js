@@ -1,8 +1,7 @@
-const {deepEqual} = require('node:assert').strict;
-const test = require('node:test');
-const {throws} = require('node:assert').strict;
+import test from 'node:test';
+import { throws, deepEqual } from 'node:assert/strict';
 
-const method = require('./../../display/is_matching_filters');
+import method from './../../display/is_matching_filters.js';
 
 const tests = [
   {

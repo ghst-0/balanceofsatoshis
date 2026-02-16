@@ -1,7 +1,7 @@
-const {deepEqual} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { deepEqual } from 'node:assert/strict';
 
-const {segmentMeasure} = require('./../../display');
+import { segmentMeasure } from './../../display/index.js';
 
 const tests = [
   {

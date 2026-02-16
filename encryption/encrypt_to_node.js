@@ -1,9 +1,7 @@
-const asyncAuto = require('async/auto');
-const {diffieHellmanComputeSecret} = require('ln-service');
-const {getIdentity} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
-
-const encryptToSecret = require('./encrypt_to_secret');
+import asyncAuto from 'async/auto.js';
+import { diffieHellmanComputeSecret, getIdentity } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
+import encryptToSecret from './encrypt_to_secret.js';
 
 /** Encrypt data to a node
 
@@ -19,7 +17,7 @@ const encryptToSecret = require('./encrypt_to_secret');
     to: <Encrypted To Node Hex String>
   }
 */
-module.exports = ({lnd, message, to}, cbk) => {
+export default ({lnd, message, to}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

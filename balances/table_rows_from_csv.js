@@ -1,5 +1,5 @@
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
 
 /** Get rows for table output from CSV
 
@@ -12,7 +12,7 @@ const {returnResult} = require('asyncjs-util');
     rows: [[<Column String>]]
   }
 */
-module.exports = ({csv}, cbk) => {
+export default ({csv}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Get the parse function

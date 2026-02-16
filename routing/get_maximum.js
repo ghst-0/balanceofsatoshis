@@ -1,6 +1,6 @@
-const asyncAuto = require('async/auto');
-const asyncWhilst = require('async/whilst');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncWhilst from 'async/whilst.js';
+import { returnResult } from 'asyncjs-util';
 
 /** Get maximum value
 
@@ -17,7 +17,7 @@ const {returnResult} = require('asyncjs-util');
     maximum: <Maximum Number>
   }
 */
-module.exports = ({accuracy, from, to}, test, cbk) => {
+export default ({accuracy, from, to}, test, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

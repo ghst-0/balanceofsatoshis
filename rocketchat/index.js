@@ -1,3 +1,3 @@
-const connectToRocketChat = require('./connect_to_rocketchat');
+import connectToRocketChat from './connect_to_rocketchat.js';
 
-module.exports = {connectToRocketChat};
+export { connectToRocketChat };

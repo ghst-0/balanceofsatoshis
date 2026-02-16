@@ -1,6 +1,5 @@
-const {routeFromChannels} = require('ln-service');
-
-const {sortBy} = require('./../arrays');
+import { routeFromChannels } from 'ln-service';
+import { sortBy } from './../arrays/index.js';
 
 const cltvDeltaBuffer = 3;
 const {floor} = Math;
@@ -65,7 +64,7 @@ const tokensAsMtokens = tokens => BigInt(tokens) * BigInt(1e3);
     }]
   }
 */
-module.exports = args => {
+export default args => {
   const amounts = args.probes.map(probe => {
     return floor(mtokAsTok(args.mtokens) * probe.liquidity / args.max);
   });

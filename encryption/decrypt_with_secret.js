@@ -1,8 +1,6 @@
-const {createDecipheriv} = require('crypto');
-const {scrypt} = require('crypto');
-
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
+import { createDecipheriv, scrypt } from 'crypto';
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
 
 const algorithm = 'aes-256-gcm';
 const bufAsHex = n => n.toString('hex');
@@ -32,7 +30,7 @@ const keyLength = 32;
     plain: <Decrypted Data Hex String>
   }
 */
-module.exports = ({encrypted, iv, salt, secret, settings, tag}, cbk) => {
+export default ({encrypted, iv, salt, secret, settings, tag}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

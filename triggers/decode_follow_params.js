@@ -1,4 +1,4 @@
-const {decodeTlvStream} = require('bolt01');
+import { decodeTlvStream } from 'bolt01';
 
 const findRecord = (records, type) => records.find(n => n.type === type);
 const isPublicKey = n => !!n && /^0[2-3][0-9A-F]{64}$/i.test(n);
@@ -19,7 +19,7 @@ const typeVersion = '0';
     id: <Node Id Hex String>
   }
 */
-module.exports = ({parameters}) => {
+export default ({parameters}) => {
   if (!parameters) {
     throw new Error('ExpectedEncodedParametersToDecodeFollowParameters');
   }

@@ -1,4 +1,4 @@
-const {Transaction} = require('bitcoinjs-lib');
+import { Transaction } from 'bitcoinjs-lib';
 
 const {fromHex} = Transaction;
 const sumOf = arr => arr.reduce((sum, n) => sum + n, Number());
@@ -21,7 +21,7 @@ const sumOf = arr => arr.reduce((sum, n) => sum + n, Number());
     fees: <Closing Fees Paid Number>
   }
 */
-module.exports = args => {
+export default args => {
   const closer = args.transactions
     .filter(n => !!n.transaction)
     .find(n => n.id === args.close_transaction_id);

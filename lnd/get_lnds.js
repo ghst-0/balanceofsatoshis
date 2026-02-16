@@ -1,8 +1,7 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const {returnResult} = require('asyncjs-util');
-
-const authenticatedLnd = require('./authenticated_lnd');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import { returnResult } from 'asyncjs-util';
+import authenticatedLnd from './authenticated_lnd.js';
 
 const flatten = arr => [].concat(...arr);
 const uniq = arr => Array.from(new Set(arr));
@@ -19,7 +18,7 @@ const uniq = arr => Array.from(new Set(arr));
     lnds: [<Authenticated LND API Object>]
   }
 */
-module.exports = ({logger, nodes}, cbk) => {
+export default ({logger, nodes}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Default lnd

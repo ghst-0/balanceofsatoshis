@@ -1,23 +1,15 @@
 #!/usr/bin/env node
-const {lstat} = require('fs');
-const {mkdir} = require('fs');
-const {readdir} = require('fs');
-const {readFile} = require('fs');
-const {rmdir} = require('fs');
-const {spawn} = require('child_process');
-const {statSync} = require('fs');
-const {unlink} = require('fs');
-const {writeFile} = require('fs');
+import { lstat, mkdir, readdir, readFile, rmdir, statSync, unlink, writeFile } from 'fs';
+import { spawn } from 'child_process';
+import prog from '@alexbosworth/caporal';
+import commandConstants from './commands/constants.json' with { type: 'json' };
+import importLazy from 'import-lazy'
 
-const importLazy = require('import-lazy')(require);
+importLazy(require)
 
 const fetch = importLazy('@alexbosworth/node-fetch');
 const lnService = importLazy('ln-service');
 const lnSync = importLazy('ln-sync');
-const prog = require('@alexbosworth/caporal');
-
-const commandConstants = require('./commands/constants');
-
 const {accountingCategories} = commandConstants;
 const balances = importLazy('./balances');
 const chain = importLazy('./chain');

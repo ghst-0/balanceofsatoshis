@@ -1,13 +1,10 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const {findKey} = require('ln-sync');
-const {getChannel} = require('ln-service');
-const {getHeight} = require('ln-service');
-const {getNode} = require('ln-service');
-const {Parser} = require('hot-formula-parser');
-const {returnResult} = require('asyncjs-util');
-
-const {describeParseError} = require('./../display');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import { findKey } from 'ln-sync';
+import { getChannel, getHeight, getNode } from 'ln-service';
+import { Parser } from 'hot-formula-parser';
+import { returnResult } from 'asyncjs-util';
+import { describeParseError } from './../display/index.js';
 
 const amountVariables = {btc: 1e8, k: 1e3, m: 1e6, mm: 1e6};
 const asFormula = n => ({formula: n.slice(0, n.length-67), key: n.slice(-66)});
@@ -55,7 +52,7 @@ const uniq = arr => Array.from(new Set(arr));
     }]
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

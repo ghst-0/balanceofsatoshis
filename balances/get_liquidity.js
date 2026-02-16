@@ -1,9 +1,8 @@
-const asyncAuto = require('async/auto');
-const {getLiquidity} = require('ln-sync');
-const {returnResult} = require('asyncjs-util');
-
-const balanceFromTokens = require('./balance_from_tokens');
-const {getTags} = require('./../tags');
+import asyncAuto from 'async/auto.js';
+import { getLiquidity } from 'ln-sync';
+import { returnResult } from 'asyncjs-util';
+import balanceFromTokens from './balance_from_tokens.js';
+import { getTags } from './../tags/index.js';
 
 
 /** Get the channel available liquidity
@@ -29,7 +28,7 @@ const {getTags} = require('./../tags');
     balance: <Liquid Tokens Number>
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

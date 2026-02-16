@@ -1,13 +1,13 @@
-const returnChart = require('./return_chart');
-const returnJson = require('./return_json');
-const returnNumber = require('./return_number');
-const returnObject = require('./return_object');
-const returnOutput = require('./return_output');
+import returnChart from './return_chart.js';
+import returnJson from './return_json.js';
+import returnNumber from './return_number.js';
+import returnObject from './return_object.js';
+import returnOutput from './return_output.js';
 
-module.exports = {
+export {
   returnChart,
   returnJson,
   returnNumber,
   returnObject,
-  returnOutput,
+  returnOutput
 };

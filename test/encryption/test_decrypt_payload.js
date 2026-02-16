@@ -1,11 +1,11 @@
-const {equal} = require('node:assert').strict;
-const test = require('node:test');
-const {throws} = require('node:assert').strict;
+import test from 'node:test';
+import { equal, throws } from 'node:assert/strict';
 
-const {decryptPayload} = require('./../../encryption');
-const {encrypted} = require('./fixtures');
-const {secret} = require('./fixtures');
+import { decryptPayload } from './../../encryption/index.js';
+import fixtures from './fixtures.json' with { type: 'json' };
 
+const encrypted = fixtures.encrypted
+const secret = fixtures.secret
 const {parse} = JSON;
 
 const tests = [

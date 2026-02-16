@@ -1,6 +1,6 @@
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
-const {SocksProxyAgent} = require('socks-proxy-agent');
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
+import { SocksProxyAgent } from 'socks-proxy-agent';
 
 const {parse} = JSON;
 
@@ -18,7 +18,7 @@ const {parse} = JSON;
     agent: <Socks Proxy Agent Object>
   }
 */
-module.exports = ({fs, path}, cbk) => {
+export default ({fs, path}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

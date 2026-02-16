@@ -1,7 +1,7 @@
-const {deepEqual} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { deepEqual } from 'node:assert/strict';
 
-const {describeRoute} = require('./../../display');
+import { describeRoute } from './../../display/index.js';
 
 const makeArgs = overrides => {
   const args = {

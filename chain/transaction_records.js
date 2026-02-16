@@ -1,4 +1,4 @@
-const {Transaction} = require('bitcoinjs-lib');
+import { Transaction } from 'bitcoinjs-lib';
 
 const {fromHex} = Transaction;
 const idFromHash = hash => hash.reverse().toString('hex');
@@ -65,7 +65,7 @@ const idFromHash = hash => hash.reverse().toString('hex');
     }]
   }
 */
-module.exports = ({ended, id, original, pending, txs, vout}) => {
+export default ({ended, id, original, pending, txs, vout}) => {
   const records = [];
   const spendClosing = pending.find(n => n.close_transaction_id === id);
   const spendTx = txs.find(tx => tx.id === id);

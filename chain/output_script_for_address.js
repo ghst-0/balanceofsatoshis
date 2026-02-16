@@ -1,5 +1,4 @@
-const {address} = require('bitcoinjs-lib');
-const {networks} = require('bitcoinjs-lib');
+import { address, networks } from 'bitcoinjs-lib';
 
 const bufferAsHex = buffer => buffer.toString('hex');
 const byteLengthForP2tr = 32;
@@ -24,7 +23,7 @@ const versionTaproot = 1;
     script: <Output Script Hex String>
   }
 */
-module.exports = ({address, network}) => {
+export default ({address, network}) => {
   try {
     return {
       script: bufferAsHex(toOutputScript(address, networks[names[network]])),

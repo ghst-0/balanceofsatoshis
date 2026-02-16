@@ -1,7 +1,7 @@
-const {equal} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { equal } from 'node:assert/strict';
 
-const {returnOutput} = require('./../../responses');
+import { returnOutput } from './../../responses/index.js';
 
 const tests = [
   {

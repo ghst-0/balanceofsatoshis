@@ -1,18 +1,12 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const {findKey} = require('ln-sync');
-const {getNode} = require('ln-service');
-const {getNodeAlias} = require('ln-sync');
-const {getChannels} = require('ln-service');
-const {getPayments} = require('ln-sync');
-const {getRebalancePayments} = require('ln-sync');
-const moment = require('moment');
-const {returnResult} = require('asyncjs-util');
-
-const {chartAliasForPeer} = require('./../display');
-const feesForSegment = require('./fees_for_segment');
-const {getIcons} = require('./../display');
-const {sortBy} = require('./../arrays');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import { findKey, getNodeAlias, getPayments, getRebalancePayments } from 'ln-sync';
+import { getNode, getChannels } from 'ln-service';
+import moment from 'moment';
+import { returnResult } from 'asyncjs-util';
+import { chartAliasForPeer, getIcons } from './../display/index.js';
+import feesForSegment from './fees_for_segment.js';
+import { sortBy } from './../arrays/index.js';
 
 const by = 'confirmed_at';
 const daysBetween = (a, b) => moment(a).diff(b, 'days') + 1;
@@ -63,7 +57,7 @@ const uniq = arr => Array.from(new Set(arr));
     title: <Chart Title String>
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

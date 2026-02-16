@@ -1,8 +1,7 @@
-const {equal} = require('node:assert').strict;
-const {rejects} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { equal, rejects } from 'node:assert/strict';
 
-const {getUtxos} = require('./../../chain');
+import { getUtxos } from './../../chain/index.js';
 
 const utxo = {
   address: 'address',
@@ -10,7 +9,7 @@ const utxo = {
   amount_sat: '1',
   confirmations: '1',
   outpoint: {bytes: Buffer.alloc(1), output_index: 0, txid_str: '00'},
-  pk_script: '00',
+  pk_script: '00'
 };
 
 const makeLnd = ({listUnspent}) => {

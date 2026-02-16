@@ -9,7 +9,7 @@
     der: <DER Binary Buffer>
   }
 */
-module.exports = ({pem}) => {
+export default ({pem}) => {
   const lines = pem.split('\n');
 
   lines.pop();

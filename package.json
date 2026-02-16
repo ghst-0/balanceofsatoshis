@@ -9,6 +9,7 @@
   "bugs": {
     "url": "https://github.com/alexbosworth/balanceofsatoshis/issues"
   },
+  "type": "module",
   "dependencies": {
     "@alexbosworth/blockchain": "3.2.0",
     "@alexbosworth/caporal": "2.0.0",

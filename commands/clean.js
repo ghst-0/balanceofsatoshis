@@ -1,7 +1,7 @@
-const asyncAuto = require('async/auto');
-const asyncFilter = require('async/filter');
-const {getChannel} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncFilter from 'async/filter.js';
+import { getChannel } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
 
 const channelForEdge = edge => edge.slice(0, -2);
 const codeMissingChannel = 404;
@@ -22,7 +22,7 @@ const tokenize = command => command.split(' ');
     cleaned: <Cleaned Command String>
   }
 */
-module.exports = ({command, lnd}, cbk) => {
+export default ({command, lnd}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

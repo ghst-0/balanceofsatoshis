@@ -1,5 +1,5 @@
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
 
 const paddingLength = '  '.length;
 const {stringify} = JSON;
@@ -14,7 +14,7 @@ const {stringify} = JSON;
 
   @returns via cbk or Promise
 */
-module.exports = ({file, json, write}, cbk) => {
+export default ({file, json, write}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

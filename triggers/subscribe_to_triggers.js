@@ -1,15 +1,13 @@
-const EventEmitter = require('events');
-
-const asyncUntil = require('async/until');
-const {decodeChanId} = require('bolt07');
-const {getHeight} = require('ln-service');
-const {getInvoices} = require('ln-service');
-const {subscribeToGraph} = require('ln-service');
-const {subscribeToInvoice} = require('ln-service');
-const {subscribeToInvoices} = require('ln-service');
-const {subscribeToPeers} = require('ln-service');
-
-const decodeTrigger = require('./decode_trigger');
+import EventEmitter from 'events';
+import asyncUntil from 'async/until.js';
+import { decodeChanId } from 'bolt07';
+import { getHeight } from 'ln-service';
+import { getInvoices } from 'ln-service';
+import { subscribeToGraph } from 'ln-service';
+import { subscribeToInvoice } from 'ln-service';
+import { subscribeToInvoices } from 'ln-service';
+import { subscribeToPeers } from 'ln-service';
+import decodeTrigger from './decode_trigger.js';
 
 const defaultInvoicesLimit = 100;
 const {keys} = Object;
@@ -40,7 +38,7 @@ const {keys} = Object;
   @returns
   <Event Emitter Object>
 */
-module.exports = ({lnds}) => {
+export default ({lnds}) => {
   const channels = new Set();
   const emitter = new EventEmitter();
   const subs = [];

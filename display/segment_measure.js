@@ -1,4 +1,4 @@
-const moment = require('moment');
+import moment from 'moment';
 
 const daysPerWeek = 7;
 const {floor} = Math;
@@ -21,7 +21,7 @@ const maxChartDays = 90;
     segments: <Count of Segments In Window Number>
   }
 */
-module.exports = ({days, end, start}) => {
+export default ({days, end, start}) => {
   // A chart with a lot of days should be seen as weeks
   if (days > maxChartDays) {
     return {measure: 'week', segments: floor(days / daysPerWeek)};

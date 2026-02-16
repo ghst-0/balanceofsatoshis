@@ -1,30 +1,26 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const asyncReflect = require('async/reflect');
-const asyncUntil = require('async/until');
-const {bold} = require('colorette');
-const {decodeChanId} = require('bolt07');
-const {formatTokens} = require('ln-sync');
-const {getChannel} = require('ln-service');
-const {getChannels} = require('ln-service');
-const {getClosedChannels} = require('ln-service');
-const {getHeight} = require('ln-service');
-const {getInvoices} = require('ln-service');
-const {getNetwork} = require('ln-sync');
-const {getNode} = require('ln-service');
-const {getPayments} = require('ln-sync');
-const {getPeers} = require('ln-service');
-const {getPendingChannels} = require('ln-service');
-const moment = require('moment');
-const {returnResult} = require('asyncjs-util');
-const size = require('window-size');
-
-const {chartAliasForPeer} = require('./../display');
-const {formatFeeRate} = require('./../display');
-const {getIcons} = require('./../display');
-const {getPastForwards} = require('./../routing');
-const {isMatchingFilters} = require('./../display');
-const {sortBy} = require('./../arrays');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import asyncReflect from 'async/reflect.js';
+import asyncUntil from 'async/until.js';
+import { bold } from 'colorette';
+import { decodeChanId } from 'bolt07';
+import { formatTokens, getNetwork, getPayments } from 'ln-sync';
+import {
+  getChannel,
+  getChannels,
+  getClosedChannels,
+  getHeight,
+  getInvoices,
+  getNode,
+  getPeers,
+  getPendingChannels
+} from 'ln-service';
+import moment from 'moment';
+import { returnResult } from 'asyncjs-util';
+import size from 'window-size';
+import { chartAliasForPeer, formatFeeRate, getIcons, isMatchingFilters } from './../display/index.js';
+import { getPastForwards } from './../routing/index.js';
+import { sortBy } from './../arrays/index.js';
 
 const closedSorts = ['fee_earnings', 'first_connected'];
 const defaultInvoicesLimit = 200;
@@ -83,7 +79,7 @@ const maxPaySize = 4294967;
     }]
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

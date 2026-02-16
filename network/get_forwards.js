@@ -1,20 +1,19 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const {bold} = require('colorette');
-const {formatTokens} = require('ln-sync');
-const {getChannels} = require('ln-service');
-const {getClosedChannels} = require('ln-service');
-const {getForwards} = require('ln-service');
-const {getHeight} = require('ln-service');
-const {getPendingChannels} = require('ln-service');
-const {getNodeAlias} = require('ln-sync');
-const {returnResult} = require('asyncjs-util');
-const size = require('window-size');
-
-const {chartAliasForPeer} = require('./../display');
-const {getIcons} = require('./../display');
-const isRelevantForward = require('./is_relevant_forward');
-const isRelevantSource = require('./is_relevant_source');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import { bold } from 'colorette';
+import { formatTokens, getNodeAlias } from 'ln-sync';
+import {
+  getChannels,
+  getClosedChannels,
+  getForwards,
+  getHeight,
+  getPendingChannels
+} from 'ln-service';
+import { returnResult } from 'asyncjs-util';
+import size from 'window-size';
+import { chartAliasForPeer, getIcons } from './../display/index.js';
+import isRelevantForward from './is_relevant_forward.js';
+import isRelevantSource from './is_relevant_source.js';
 
 const {isArray} = Array;
 const lastTime = times => !times.length ? null : new Date(max(...times));
@@ -59,7 +58,7 @@ const wideSizeCols = 155;
     }]
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

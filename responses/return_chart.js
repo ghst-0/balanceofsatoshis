@@ -1,4 +1,4 @@
-const {plot} = require('asciichart');
+import { plot } from 'asciichart';
 
 const height = 15;
 const newLine = '\n';
@@ -18,7 +18,7 @@ const padLen = (lineLen, desc) => (Math.max(0, lineLen - desc.length) + 3) / 2;
   @returns
   <Standard Callback Function> (err, res) => {}
 */
-module.exports = ({data, logger, reject, resolve}) => {
+export default ({data, logger, reject, resolve}) => {
   return (err, res) => {
     if (err) {
       logger.error({err});

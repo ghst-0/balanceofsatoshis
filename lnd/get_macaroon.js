@@ -1,10 +1,8 @@
-const {join} = require('path');
-
-const asyncAuto = require('async/auto');
-const asyncDetectSeries = require('async/detectSeries');
-const {returnResult} = require('asyncjs-util');
-
-const lndDirectory = require('./lnd_directory');
+import { join } from 'node:path';
+import asyncAuto from 'async/auto.js';
+import asyncDetectSeries from 'async/detectSeries.js';
+import { returnResult } from 'asyncjs-util';
+import lndDirectory from './lnd_directory.js';
 
 const defaults = [['bitcoin', 'litecoin'], ['mainnet', 'testnet']];
 const flatten = arr => [].concat(...arr);
@@ -31,7 +29,7 @@ const macName = 'admin.macaroon';
     [macaroon]: <Base64 Encoded Macaroon String>
   }
 */
-module.exports = ({fs, node, os, path}, cbk) => {
+export default ({fs, node, os, path}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

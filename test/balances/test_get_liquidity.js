@@ -1,10 +1,8 @@
-const {equal} = require('node:assert').strict;
-const {rejects} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { equal, rejects } from 'node:assert/strict';
 
-const {getInfoResponse} = require('./../fixtures');
-const {getLiquidity} = require('./../../balances');
-const {listChannelsResponse} = require('./../fixtures');
+import { getInfoResponse, listChannelsResponse } from './../fixtures/index.js';
+import { getLiquidity } from './../../balances/index.js';
 
 const fs = {getFile: ({}, cbk) => cbk('err')};
 

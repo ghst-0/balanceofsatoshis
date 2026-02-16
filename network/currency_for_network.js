@@ -1,6 +1,6 @@
-const {chains} = require('./networks');
-const {currencySymbols} = require('./networks');
+import constants from './networks.json' with { type: 'json' };
 
+const { chains, currencySymbols } = constants;
 const {isArray} = Array;
 const {keys} = Object;
 const reversedBytes = hex => Buffer.from(hex, 'hex').reverse().toString('hex');
@@ -19,7 +19,7 @@ const reversedBytes = hex => Buffer.from(hex, 'hex').reverse().toString('hex');
     currency: <Currency String>
   }
 */
-module.exports = args => {
+export default args => {
   if (!isArray(args.chains)) {
     throw new Error('ExpectedArrayOfChainsToDetermineCurrencyForNetwork');
   }

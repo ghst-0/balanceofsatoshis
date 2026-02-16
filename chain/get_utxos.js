@@ -1,16 +1,17 @@
-const asyncAuto = require('async/auto');
-const asyncMapSeries = require('async/mapSeries');
-const {formatTokens} = require('ln-sync');
-const {getChainTransactions} = require('ln-service');
-const {getChannels} = require('ln-service');
-const {getClosedChannels} = require('ln-service');
-const {getLockedUtxos} = require('ln-service');
-const {getPendingChannels} = require('ln-service');
-const {getTransactionRecord} = require('ln-sync');
-const {getUtxos} = require('ln-service');
-const moment = require('moment');
-const {returnResult} = require('asyncjs-util');
-const {Transaction} = require('bitcoinjs-lib');
+import asyncAuto from 'async/auto.js';
+import asyncMapSeries from 'async/mapSeries.js';
+import { formatTokens, getTransactionRecord } from 'ln-sync';
+import {
+  getChainTransactions,
+  getChannels,
+  getClosedChannels,
+  getLockedUtxos,
+  getPendingChannels,
+  getUtxos
+} from 'ln-service';
+import moment from 'moment';
+import { returnResult } from 'asyncjs-util';
+import { Transaction } from 'bitcoinjs-lib';
 
 const describeChan = n => `${n.action} with ${(n.node || '' + n.with).trim()}`;
 const expiresAt = n => n ? moment(n).calendar() : undefined;
@@ -49,7 +50,7 @@ const uniq = arr => Array.from(new Set(arr));
   @returns via cbk or Promise
   <Count Number>
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

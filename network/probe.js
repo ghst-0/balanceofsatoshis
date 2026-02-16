@@ -1,23 +1,14 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const {findKey} = require('ln-sync');
-const {formatTokens} = require('ln-sync');
-const {getChannels} = require('ln-service');
-const {getIdentity} = require('ln-service');
-const {getNode} = require('ln-service');
-const {getSyntheticOutIgnores} = require('probing');
-const {getWalletVersion} = require('ln-service');
-const {parseAmount} = require('ln-accounting');
-const {parsePaymentRequest} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
-const {subscribeToMultiPathProbe} = require('probing');
-
-const {describeRoute} = require('./../display');
-const {describeRoutingFailure} = require('./../display');
-const {getIcons} = require('./../display');
-const {getIgnores} = require('./../routing');
-const {getTags} = require('./../tags');
-const probeDestination = require('./probe_destination');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import { findKey, formatTokens } from 'ln-sync';
+import { getIdentity, getChannels, getNode, getWalletVersion, parsePaymentRequest } from 'ln-service';
+import { getSyntheticOutIgnores, subscribeToMultiPathProbe } from 'probing';
+import { parseAmount } from 'ln-accounting';
+import { returnResult } from 'asyncjs-util';
+import { describeRoute, describeRoutingFailure, getIcons } from './../display/index.js';
+import { getIgnores } from './../routing/index.js';
+import { getTags } from './../tags/index.js';
+import probeDestination from './probe_destination.js';
 
 const defaultFinalCltvDelta = 144;
 const effectiveFeeRate = (n, m) => Number(BigInt(1e6) * BigInt(n) / BigInt(m));
@@ -55,7 +46,7 @@ const unsupported = 501;
     [routes_maximum]: <Maximum Sendable Tokens on Paths Number>
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

@@ -1,9 +1,7 @@
-const asyncAuto = require('async/auto');
-const asyncTimesSeries = require('async/timesSeries');
-const {getChainFeeRate} = require('ln-service');
-const {getHeight} = require('ln-service');
-const {getMinimumRelayFee} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncTimesSeries from 'async/timesSeries.js';
+import { getChainFeeRate, getHeight, getMinimumRelayFee } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
 
 const bytesPerKb = 1e3;
 const {ceil} = Math;
@@ -29,7 +27,7 @@ const start = 2;
     min_relay_feerate: <Chain Backend Minimum KVbyte Fee Rate Number>
   }
 */
-module.exports = ({blocks, lnd}, cbk) => {
+export default ({blocks, lnd}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

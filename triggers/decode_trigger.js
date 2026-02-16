@@ -1,7 +1,6 @@
-const {decodeTlvStream} = require('bolt01');
-
-const decodeConnectivityParams = require('./decode_connectivity_params');
-const decodeFollowParams = require('./decode_follow_params');
+import { decodeTlvStream } from 'bolt01';
+import decodeConnectivityParams from './decode_connectivity_params.js';
+import decodeFollowParams from './decode_follow_params.js';
 
 const base64AsHex = base64 => Buffer.from(base64, 'base64').toString('hex');
 const defaultMethodRecord = {value: '00'};
@@ -33,7 +32,7 @@ const typeVersion = '0';
     }
   }
 */
-module.exports = ({encoded}) => {
+export default ({encoded}) => {
   if (!encoded) {
     throw new Error('ExpectedEncodedTriggerToDecode');
   }

@@ -1,9 +1,8 @@
-const asyncAuto = require('async/auto');
-const asyncRetry = require('async/retry');
-const {returnResult} = require('asyncjs-util');
-const {Transaction} = require('bitcoinjs-lib');
-
-const {endpoints} = require('./blockstream');
+import asyncAuto from 'async/auto.js';
+import asyncRetry from 'async/retry.js';
+import { returnResult } from 'asyncjs-util';
+import { Transaction } from 'bitcoinjs-lib';
+import { endpoints } from './blockstream.json' with { type: 'json' };
 
 const defaultInterval = n => 50 * Math.pow(2, n);
 const isHash = n => !!n && /^[0-9A-F]{64}$/i.test(n);
@@ -24,7 +23,7 @@ const isHex = n => !!n && !(n.length % 2) && /^[0-9A-F]*$/i.test(n);
     transaction: <Transaction Hex String>
   }
 */
-module.exports = ({id, interval, network, request, retries}, cbk) => {
+export default ({id, interval, network, request, retries}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

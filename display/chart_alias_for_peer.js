@@ -34,7 +34,7 @@ const unreliableEmoji = '🤢';
     display: <Chart Alias String>
   }
 */
-module.exports = args => {
+export default args => {
   const downtime = args.downtime_percentage;
   const forwarding = args.is_forwarding ? forwardingEmoji : String();
   const inactive = args.is_inactive ?  inactiveEmoji : String();

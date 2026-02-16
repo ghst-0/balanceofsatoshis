@@ -1,14 +1,13 @@
-const asyncAuto = require('async/auto');
-const {getAccountingReport} = require('ln-accounting');
-const {getNetwork} = require('ln-sync');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { getAccountingReport } from 'ln-accounting';
+import { getNetwork } from 'ln-sync';
+import { returnResult } from 'asyncjs-util';
+import categories from './accounting_categories.json' with { type: 'json' };
+import constants from './constants.json' with { type: 'json' };
+import rangeForDate from './range_for_date.js';
+import tableRowsFromCsv from './table_rows_from_csv.js';
 
-const categories = require('./accounting_categories');
-const {defaultCurrency} = require('./constants');
-const {defaultFiat} = require('./constants');
-const rangeForDate = require('./range_for_date');
-const tableRowsFromCsv = require('./table_rows_from_csv');
-
+const { defaultCurrency, defaultFiat } = constants
 const assetType = 'BTC';
 const currentDate = new Date().toISOString();
 const empty = '';
@@ -39,7 +38,7 @@ const summaryHeadings = ['Total', 'Asset', 'Report Date', 'Total Fiat'];
     [rows_summary]: [[<Column String>]]
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Validate

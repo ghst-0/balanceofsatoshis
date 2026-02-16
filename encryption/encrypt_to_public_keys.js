@@ -1,5 +1,5 @@
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
 
 const flatten = arr => [].concat(...arr);
 const {isArray} = Array;
@@ -17,7 +17,7 @@ const {isArray} = Array;
     cipher: <Armored Encrypted Text String>
   }
 */
-module.exports = ({plain, spawn, to}, cbk) => {
+export default ({plain, spawn, to}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

@@ -1,9 +1,7 @@
-const {randomBytes} = require('crypto');
-
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
-
-const {homePath} = require('../storage');
+import { randomBytes } from 'node:crypto';
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
+import { homePath } from '../storage/index.js';
 
 const defaultTagsFile = {tags: []};
 const {isArray} = Array;
@@ -46,7 +44,7 @@ const uniq = arr => Array.from(new Set(arr));
     }]
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

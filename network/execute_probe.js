@@ -1,9 +1,7 @@
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
-const {subscribeToProbeForRoute} = require('ln-service');
-
-const {describeRoute} = require('./../display');
-const {describeRoutingFailure} = require('./../display');
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
+import { subscribeToProbeForRoute } from 'ln-service';
+import { describeRoute, describeRoutingFailure } from './../display/index.js';
 
 const {now} = Date;
 const minutesAsMs = minutes => 1000 * 60 * minutes;
@@ -75,7 +73,7 @@ const tokensAsMillitokens = tok => (BigInt(tok) * BigInt(1e3)).toString();
     }
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

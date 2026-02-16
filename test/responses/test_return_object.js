@@ -1,8 +1,7 @@
-const {deepEqual} = require('node:assert').strict;
-const {equal} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { equal, deepEqual } from 'node:assert/strict';
 
-const {returnObject} = require('./../../responses');
+import { returnObject } from './../../responses/index.js';
 
 const {nextTick} = process;
 

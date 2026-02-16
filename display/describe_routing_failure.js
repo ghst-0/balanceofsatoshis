@@ -1,8 +1,7 @@
-const asyncAuto = require('async/auto');
-const {getNodeAlias} = require('ln-sync');
-const {returnResult} = require('asyncjs-util');
-
-const chartAliasForPeer = require('./chart_alias_for_peer');
+import asyncAuto from 'async/auto.js';
+import { getNodeAlias } from 'ln-sync';
+import { returnResult } from 'asyncjs-util';
+import chartAliasForPeer from './chart_alias_for_peer.js';
 
 const {isArray} = Array;
 
@@ -29,7 +28,7 @@ const {isArray} = Array;
     description: <Failure Description String>
   }
 */
-module.exports = ({index, lnd, reason, route, tagged}, cbk) => {
+export default ({index, lnd, reason, route, tagged}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

@@ -1,9 +1,9 @@
-const asyncAuto = require('async/auto');
-const asyncDoUntil = require('async/doUntil');
-const asyncRetry = require('async/retry');
-const {getForwards} = require('ln-service');
-const moment = require('moment');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncDoUntil from 'async/doUntil.js';
+import asyncRetry from 'async/retry.js';
+import { getForwards } from 'ln-service';
+import moment from 'moment';
+import { returnResult } from 'asyncjs-util';
 
 const flatten = arr => [].concat(...arr);
 
@@ -27,7 +27,7 @@ const flatten = arr => [].concat(...arr);
     }]
   }
 */
-module.exports = ({days, lnd}, cbk) => {
+export default ({days, lnd}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

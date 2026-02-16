@@ -1,4 +1,4 @@
-const moment = require('moment');
+import moment from 'moment';
 
 /** Sums for segment for a chart
 
@@ -18,7 +18,7 @@ const moment = require('moment');
     sum: [<Sum In Segment Number>]
   }
 */
-module.exports = ({end, measure, records, segments}) => {
+export default ({end, measure, records, segments}) => {
   const sums = [...Array(segments)].map((_, i) => {
     const segment = moment(end).subtract(i, measure);
 

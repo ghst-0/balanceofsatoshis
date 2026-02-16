@@ -1,9 +1,7 @@
-const {deepEqual} = require('node:assert').strict;
-const {equal} = require('node:assert').strict;
-const test = require('node:test');
-const {throws} = require('node:assert').strict;
+import test from 'node:test';
+import { equal, throws, deepEqual } from 'node:assert/strict';
 
-const rangeForDate = require('./../../balances/range_for_date');
+import rangeForDate from './../../balances/range_for_date.js';
 
 const tests = [
   {

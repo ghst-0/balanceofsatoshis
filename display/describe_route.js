@@ -1,13 +1,10 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const {getNode} = require('ln-service');
-const {gray} = require('colorette');
-const {greenBright} = require('colorette');
-const {redBright} = require('colorette');
-const {returnResult} = require('asyncjs-util');
-
-const describeConfidence = require('./describe_confidence');
-const formatFeeRate = require('./format_fee_rate');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import { getNode } from 'ln-service';
+import { gray, greenBright, redBright } from 'colorette';
+import { returnResult } from 'asyncjs-util';
+import describeConfidence from './describe_confidence.js';
+import formatFeeRate from './format_fee_rate.js';
 
 const aliasColor = n => n ? greenBright(n) : '';
 const effectiveFeeRate = (n, m) => Number(BigInt(1e6) * BigInt(n) / BigInt(m));
@@ -56,7 +53,7 @@ const pairEdgeIndex = (pair, key) => `x${Number(!pair.indexOf(key))}`;
     description: [<Hop Description String>]
   }
 */
-module.exports = ({lnd, route, tagged}, cbk) => {
+export default ({lnd, route, tagged}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

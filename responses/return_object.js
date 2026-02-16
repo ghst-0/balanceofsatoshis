@@ -1,7 +1,5 @@
-const {getBorderCharacters} = require('table');
-const renderTable = require('table').table;
-
-const writeJsonFile = require('./write_json_file');
+import { getBorderCharacters, table as renderTable } from 'table';
+import writeJsonFile from './write_json_file.js';
 
 const border = getBorderCharacters('norc');
 const emptyCell = ' ';
@@ -27,7 +25,7 @@ const summary = n => `${n}_summary`;
   @returns
   <Standard Callback Function> (err, res) => {}
 */
-module.exports = ({exit, file, logger, reject, resolve, table, write}) => {
+export default ({exit, file, logger, reject, resolve, table, write}) => {
   return (err, res) => {
     if (err) {
       logger.error({err});

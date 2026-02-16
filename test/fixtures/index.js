@@ -1,15 +1,15 @@
-const chanInfoResponse = require('./chan_info_response');
-const describeGraphResponse = require('./describe_graph_response');
-const getInfoResponse = require('./get_info_response');
-const getNodeInfoResponse = require('./get_node_info_response');
-const liquidityChannelsResponse = require('./liquidity_channels_response');
-const listChannelsResponse = require('./list_channels_response');
-const listPeersResponse = require('./list_peers_response');
-const pendingChannelsResponse = require('./pending_channels_response');
-const queryRoutesResponse = require('./query_routes_response');
-const versionInfoResponse = require('./version_info_response');
+import chanInfoResponse from './chan_info_response.json' with { type: 'json' };
+import describeGraphResponse from './describe_graph_response.json' with { type: 'json' };
+import getInfoResponse from './get_info_response.json' with { type: 'json' };
+import getNodeInfoResponse from './get_node_info_response.json' with { type: 'json' };
+import liquidityChannelsResponse from './liquidity_channels_response.json' with { type: 'json' };
+import listChannelsResponse from './list_channels_response.json' with { type: 'json' };
+import listPeersResponse from './list_peers_response.json' with { type: 'json' };
+import pendingChannelsResponse from './pending_channels_response.json' with { type: 'json' };
+import queryRoutesResponse from './query_routes_response.json' with { type: 'json' };
+import versionInfoResponse from './version_info_response.json' with { type: 'json' };
 
-module.exports = {
+export {
   chanInfoResponse,
   describeGraphResponse,
   getInfoResponse,
@@ -19,5 +19,5 @@ module.exports = {
   listPeersResponse,
   pendingChannelsResponse,
   queryRoutesResponse,
-  versionInfoResponse,
+  versionInfoResponse
 };

@@ -1,10 +1,9 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const {getIdentity} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
-
-const {getLnds} = require('./../lnd');
-const startTelegramBot = require('./start_rocketchat_bot');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import { getIdentity } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
+import { getLnds } from './../lnd/index.js';
+import startTelegramBot from './start_rocketchat_bot.js';
 
 const {isArray} = Array;
 
@@ -39,7 +38,7 @@ const {isArray} = Array;
     }]
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

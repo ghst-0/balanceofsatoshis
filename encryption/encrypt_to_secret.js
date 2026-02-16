@@ -1,11 +1,9 @@
-const {createCipheriv} = require('crypto');
-const {randomBytes} = require('crypto');
-const {scrypt} = require('crypto');
+import { createCipheriv, randomBytes, scrypt } from 'crypto';
+import asyncAuto from 'async/auto.js';
+import cbor_ from 'cbor';
+import { returnResult } from 'asyncjs-util';
 
-const asyncAuto = require('async/auto');
-const {encode} = require('cbor');
-const {returnResult} = require('asyncjs-util');
-
+const { encode } = cbor_;
 const algorithm = 'aes-256-gcm';
 const cbor = n => encode(n).toString('hex');
 const derivation = 'scrypt';
@@ -31,7 +29,7 @@ const uniq = arr => Array.from(new Set(arr));
     cipher: <CBOR Encoded Encrypted Hex String>
   }
 */
-module.exports = ({encoding, from, plain, secret, to}, cbk) => {
+export default ({encoding, from, plain, secret, to}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments
