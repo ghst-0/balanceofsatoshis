@@ -32,11 +32,11 @@
     "hot-formula-parser": "4.0.0",
     "import-lazy": "4.0.0",
     "ini": "6.0.0",
-    "inquirer": "13.2.2",
-    "ln-accounting": "../ln-accounting",
-    "ln-service": "58.0.0",
-    "ln-sync": "6.5.2",
-    "ln-telegram": "../ln-telegram",
+    "inquirer": "13.2.5",
+    "ln-accounting": "workspace:*",
+    "ln-service": "workspace:*",
+    "ln-sync": "workspace:*",
+    "ln-telegram": "workspace:*",
     "minimist": "1.2.8",
     "moment": "2.30.1",
     "sanitize-filename": "1.6.3",
@@ -47,7 +47,7 @@
   },
   "description": "Lightning balance CLI",
   "devDependencies": {
-    "oxlint": "^1.47.0"
+    "oxlint": "^1.48.0"
   },
   "engines": {
     "node": ">=20"
@@ -73,34 +73,24 @@
   "version": "20.0.2",
   "pnpm": {
     "overrides": {
-      "ansi-regexp": "6.2.2",
-      "ansi-styles": "6.2.3",
-      "async": "3.2.6",
-      "base-x": "5.0.1",
-      "bip174": "3.0.0",
-      "bitcoinjs-lib": "7.0.1",
-      "bolt09": "2.2.0",
-      "bs58": "6.0.0",
-      "bs58check": "4.0.0",
-      "color-convert": "3.1.3",
-      "color-name": "2.1.0",
-      "colorette": "2.0.20",
-      "colors": "1.4.0",
-      "ecpair": "3.0.1",
-      "emoji-regex": "10.6.0",
-      "invoices": "5.0.0",
-      "isarray": "2.0.5",
-      "minimist": "1.2.8",
-      "readable-stream": "3.6.2",
-      "bn.js": "5.2.2",
-      "ln-sync": "6.5.2",
-      "ln-service": "58.0.0",
-      "uint8array-tools": "0.0.9",
-      "string-width": "7.2.0",
-      "strip-ansi": "7.1.2",
-      "varuint-bitcoin": "2.0.0",
-      "wrap-ansi": "9.0.2",
-      "@alexbosworth/blockchain": "3.2.0"
+      "@oxlint/binding-android-arm-eabi": "-",
+      "@oxlint/binding-linux-arm-gnueabihf": "-",
+      "@oxlint/binding-linux-arm64-musl": "-",
+      "@oxlint/binding-linux-arm64-gnu": "-",
+      "@oxlint/binding-win32-arm64-msvc": "-",
+      "@oxlint/binding-darwin-arm64": "-",
+      "@oxlint/binding-android-arm64": "-",
+      "@oxlint/binding-openharmony-arm64": "-",
+      "@oxlint/binding-linux-riscv64-musl": "-",
+      "@oxlint/binding-linux-ppc64-gnu": "-",
+      "@oxlint/binding-win32-ia32-msvc": "-",
+      "@oxlint/binding-win32-x64-msvc": "-",
+      "@oxlint/binding-linux-arm-musleabihf": "-",
+      "@oxlint/binding-linux-x64-musl": "-",
+      "@oxlint/binding-linux-riscv64-gnu": "-",
+      "@oxlint/binding-darwin-x64": "-",
+      "@oxlint/binding-linux-s390x-gnu": "-",
+      "@oxlint/binding-freebsd-x64": "-"
     }
   }
 }

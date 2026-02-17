@@ -1,0 +1,11 @@
+packages:
+  - 'packages/*'
+
+linkWorkspacePackages: true
+sharedWorkspaceLockfile: true
+
+minimumReleaseAgeExclude:
+- oxlint
+- "@oxlint/binding-linux-x64-gnu"
+- inquirer
+- "@inquirer/core"
