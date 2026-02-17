@@ -53,8 +53,8 @@ importers:
         specifier: 1.2.12
         version: 1.2.12
       bitcoinjs-lib:
-        specifier: 7.0.1
-        version: 7.0.1
+        specifier: 6.1.7
+        version: 6.1.7
       bolt01:
         specifier: 2.0.0
         version: 2.0.0
@@ -112,9 +112,6 @@ importers:
       moment:
         specifier: 2.30.1
         version: 2.30.1
-      probing:
-        specifier: 5.0.4
-        version: 5.0.4
       sanitize-filename:
         specifier: 1.6.3
         version: 1.6.3
@@ -147,8 +144,8 @@ importers:
         specifier: 1.2.12
         version: 1.2.12
       bitcoinjs-lib:
-        specifier: 7.0.1
-        version: 7.0.1
+        specifier: 6.1.7
+        version: 6.1.7
       goldengate:
         specifier: 14.0.11
         version: 14.0.11
@@ -197,8 +194,8 @@ importers:
         specifier: 2.0.0
         version: 2.0.0
       bitcoinjs-lib:
-        specifier: 7.0.1
-        version: 7.0.1
+        specifier: 6.1.7
+        version: 6.1.7
       bn.js:
         specifier: 5.2.2
         version: 5.2.2
@@ -248,8 +245,8 @@ importers:
         specifier: 2.0.0
         version: 2.0.0
       bitcoinjs-lib:
-        specifier: 7.0.1
-        version: 7.0.1
+        specifier: 6.1.7
+        version: 6.1.7
       bolt07:
         specifier: 1.9.4
         version: 1.9.4
@@ -259,6 +256,9 @@ importers:
       ecpair:
         specifier: 3.0.1
         version: 3.0.1
+      lightning:
+        specifier: 11.0.1
+        version: 11.0.1
       ln-service:
         specifier: workspace:*
         version: link:../ln-service
@@ -382,10 +382,6 @@ packages:
 
   '@grpc/grpc-js@1.11.1':
     resolution: {integrity: sha512-gyt/WayZrVPH2w/UTLansS7F9Nwld472JxxaETamrM8HNlsa+jSLNyKAZmhxI2Me4c3mQHFiS1wWHDY1g1Kthw==}
-    engines: {node: '>=12.10.0'}
-
-  '@grpc/grpc-js@1.12.2':
-    resolution: {integrity: sha512-bgxdZmgTrJZX50OjyVwz3+mNEnCTNkh3cIqGPWVNeW9jX6bn1ZkU80uPd+67/ZpIJIjRQ9qaHCjhavyoWYxumg==}
     engines: {node: '>=12.10.0'}
 
   '@grpc/grpc-js@1.12.5':
@@ -618,9 +614,6 @@ packages:
   '@types/node@22.5.0':
     resolution: {integrity: sha512-DkFrJOe+rfdHTqqMg0bSNlGlQ85hSoh2TPzZyhHsXnMtligRWpxUySiyw8FY14ITt24HVCiQPWxS3KO/QlGmWg==}
 
-  '@types/node@22.7.5':
-    resolution: {integrity: sha512-jML7s2NAzMWc//QSJ1a3prpk78cOPchGvXJsC3C6R6PSMoooztvRVQEz89gmBTBY1SPMaqo5teB4uNHPdetShQ==}
-
   '@types/node@25.0.0':
     resolution: {integrity: sha512-rl78HwuZlaDIUSeUKkmogkhebA+8K1Hy7tddZuJ3D0xV8pZSfsYGTsliGUol1JPzu9EKnTxPC4L1fiWouStRew==}
 
@@ -749,10 +742,6 @@ packages:
     resolution: {integrity: sha512-mdFV5+/v0XyNYXjBS6CQPLo9ekCx4gtKZFnJm5PMto7Fs9hTTDpkkzOB7/FtluRI6JbUUAu+snTYfJRgHLZbZQ==}
     engines: {node: '>=8.0.0'}
 
-  bip174@3.0.0:
-    resolution: {integrity: sha512-N3vz3rqikLEu0d6yQL8GTrSkpYb35NQKWMR7Hlza0lOj6ZOlvQ3Xr7N9Y+JPebaCVoEUHdBeBSuLxcHr71r+Lw==}
-    engines: {node: '>=18.0.0'}
-
   bip32@5.0.0:
     resolution: {integrity: sha512-h043yQ9n3iU4WZ8KLRpEECMl3j1yx2DQ1kcPlzWg8VZC0PtukbDiyLDKbe6Jm79mL6Tfg+WFuZMYxnzVyr/Hyw==}
     engines: {node: '>=18.0.0'}
@@ -785,10 +774,6 @@ packages:
   bitcoinjs-lib@6.1.7:
     resolution: {integrity: sha512-tlf/r2DGMbF7ky1MgUqXHzypYHakkEnm0SZP23CJKIqNY/5uNAnMbFhMJdhjrL/7anfb/U8+AlpdjPWjPnAalg==}
     engines: {node: '>=8.0.0'}
-
-  bitcoinjs-lib@7.0.1:
-    resolution: {integrity: sha512-vwEmpL5Tpj0I0RBdNkcDMXePoaYSTeKY6mL6/l5esbnTs+jGdPDuLp4NY1hSh6Zk5wSgePygZ4Wx5JJao30Pww==}
-    engines: {node: '>=18.0.0'}
 
   bl@4.1.0:
     resolution: {integrity: sha512-1W07cM9gS6DcLperZfFSj+bWLtaPGSOHWhPiGzXmvVJbRLdG82sH/Kn8EtW1VqWVA54AKf2h5k5BbnIbwF3h6w==}
@@ -1308,10 +1293,6 @@ packages:
     resolution: {integrity: sha512-U4rWnhw/ShynBRg8ei6mjFOug0N4whBh9jYxv/B0z6ZWKtFvz5Wr04iF84ODP9W3LqNfDstZzpQ04CrCrOKHLw==}
     engines: {node: '>=18'}
 
-  lightning@10.22.1:
-    resolution: {integrity: sha512-pECBAo8r0lD49EHJwJ+ahwgqFLGs8IXyYtRIZkdXcDVsaj2boNO1ua8Ut7NvMPV4T4csF1Dk7sbvRWlRZ5bgCg==}
-    engines: {node: '>=18'}
-
   lightning@10.27.4:
     resolution: {integrity: sha512-QhbGDzZiFe5Gh3WSrojRJjZWDoiZ5bPhEc7SCRmEO1mx/T4dmb4NsF+bNfbQWmqhu70yEGHfWs6ecoVxMOfi8A==}
     engines: {node: '>=18'}
@@ -1330,10 +1311,6 @@ packages:
 
   ln-service@57.19.0:
     resolution: {integrity: sha512-qt6CpQ+krCaKPKwgubY0jubTZtWXCKgOktJ48tyrTc3nno5T7Yzuwm8edASSxdbF48CvnQRh4UnxvIb/sPJHjQ==}
-    engines: {node: '>=18'}
-
-  ln-service@57.22.2:
-    resolution: {integrity: sha512-ARaln/VK9uvi5xjhvGVgku0dR1KIgLv6jGF7KsjfnKRLJLMCkNZPmbIg2Sr5hOivGngQ2dk0NwGrabIaYE5N0w==}
     engines: {node: '>=18'}
 
   ln-service@57.27.3:
@@ -1516,10 +1493,6 @@ packages:
   possible-typed-array-names@1.1.0:
     resolution: {integrity: sha512-/+5VFTchJDoVj3bhoqi6UeymcD00DAwb1nJwamzPvHEszJ4FpF6SNNbUbOS8yI56qHzdV8eK0qEfOSiodkTdxg==}
     engines: {node: '>= 0.4'}
-
-  probing@5.0.4:
-    resolution: {integrity: sha512-+7eHbqxbIPpwmj3Qb51Bome8/f/IUfOgdakf0wR4koVkpM0mWDbT4P7F7MtXb6MYXOG3KNL0c4KZC8rskiduww==}
-    engines: {node: '>=18'}
 
   process-nextick-args@2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
@@ -1775,10 +1748,6 @@ packages:
     resolution: {integrity: sha512-bRkIGlXsnGBRBQRAY56UXBm//9qH4bmJfFvq83gSz41N282df+fjy8ofcEgc1sM8geNt5cl6mC2g9Fht1cs8Aw==}
     engines: {node: '>=16'}
 
-  type-fest@4.26.1:
-    resolution: {integrity: sha512-yOGpmOAL7CkKe/91I5O3gPICmJNLJ1G4zFYVAsRHg7M64biSnPtRj0WNQt++bRkjYOqjWXrhnUw1utzmVErAdg==}
-    engines: {node: '>=16'}
-
   type-fest@5.3.1:
     resolution: {integrity: sha512-VCn+LMHbd4t6sF3wfU/+HKT63C9OoyrSIf4b+vtWHpt2U7/4InZG467YDNMFMR70DdHjAdpPWmw2lzRdg0Xqqg==}
     engines: {node: '>=20'}
@@ -1804,10 +1773,6 @@ packages:
 
   uint8array-tools@0.0.8:
     resolution: {integrity: sha512-xS6+s8e0Xbx++5/0L+yyexukU7pz//Yg6IHg3BKhXotg1JcYtgxVcUctQ0HxLByiJzpAkNFawz1Nz5Xadzo82g==}
-    engines: {node: '>=14.0.0'}
-
-  uint8array-tools@0.0.9:
-    resolution: {integrity: sha512-9vqDWmoSXOoi+K14zNaf6LBV51Q8MayF0/IiQs3GlygIKUYtog603e6virExkjjFosfJUBI4LhbQK1iq8IG11A==}
     engines: {node: '>=14.0.0'}
 
   undici-types@6.19.8:
@@ -1973,12 +1938,7 @@ snapshots:
 
   '@grpc/grpc-js@1.11.1':
     dependencies:
-      '@grpc/proto-loader': 0.7.13
-      '@js-sdsl/ordered-map': 4.4.2
-
-  '@grpc/grpc-js@1.12.2':
-    dependencies:
-      '@grpc/proto-loader': 0.7.13
+      '@grpc/proto-loader': 0.7.15
       '@js-sdsl/ordered-map': 4.4.2
 
   '@grpc/grpc-js@1.12.5':
@@ -2190,10 +2150,6 @@ snapshots:
     dependencies:
       undici-types: 6.19.8
 
-  '@types/node@22.7.5':
-    dependencies:
-      undici-types: 6.19.8
-
   '@types/node@25.0.0':
     dependencies:
       undici-types: 7.16.0
@@ -2209,7 +2165,7 @@ snapshots:
   '@types/request@2.48.12':
     dependencies:
       '@types/caseless': 0.12.5
-      '@types/node': 22.7.5
+      '@types/node': 25.2.3
       '@types/tough-cookie': 4.0.5
       form-data: 2.5.5
 
@@ -2230,7 +2186,7 @@ snapshots:
 
   '@types/ws@8.5.12':
     dependencies:
-      '@types/node': 22.7.5
+      '@types/node': 25.2.3
 
   abort-controller@3.0.0:
     dependencies:
@@ -2310,11 +2266,6 @@ snapshots:
 
   bip174@2.1.1: {}
 
-  bip174@3.0.0:
-    dependencies:
-      uint8array-tools: 0.0.9
-      varuint-bitcoin: 2.0.0
-
   bip32@5.0.0:
     dependencies:
       '@noble/hashes': 1.8.0
@@ -2363,18 +2314,6 @@ snapshots:
       bs58check: 3.0.1
       typeforce: 1.18.0
       varuint-bitcoin: 1.1.2
-
-  bitcoinjs-lib@7.0.1:
-    dependencies:
-      '@noble/hashes': 1.8.0
-      bech32: 2.0.0
-      bip174: 3.0.0
-      bs58check: 4.0.0
-      uint8array-tools: 0.0.9
-      valibot: 1.2.0
-      varuint-bitcoin: 2.0.0
-    transitivePeerDependencies:
-      - typescript
 
   bl@4.1.0:
     dependencies:
@@ -3002,25 +2941,6 @@ snapshots:
       tiny-secp256k1: 2.2.3
       type-fest: 4.25.0
 
-  lightning@10.22.1:
-    dependencies:
-      '@grpc/grpc-js': 1.12.2
-      '@grpc/proto-loader': 0.7.13
-      '@types/node': 22.7.5
-      '@types/request': 2.48.12
-      '@types/ws': 8.5.12
-      async: 3.2.6
-      asyncjs-util: 1.2.12
-      bitcoinjs-lib: 6.1.6
-      bn.js: 5.2.1
-      bolt07: 1.9.4
-      bolt09: 2.1.0
-      ecpair: 2.1.0
-      invoices: 3.0.0
-      psbt: 3.0.0
-      tiny-secp256k1: 2.2.3
-      type-fest: 4.26.1
-
   lightning@10.27.4:
     dependencies:
       '@grpc/grpc-js': 1.14.3
@@ -3091,13 +3011,6 @@ snapshots:
       bolt07: 1.9.4
       invoices: 3.0.0
       lightning: 10.19.0
-      macaroon: 3.0.4
-
-  ln-service@57.22.2:
-    dependencies:
-      bolt07: 1.9.4
-      invoices: 3.0.0
-      lightning: 10.22.1
       macaroon: 3.0.4
 
   ln-service@57.27.3:
@@ -3282,12 +3195,6 @@ snapshots:
       - supports-color
 
   possible-typed-array-names@1.1.0: {}
-
-  probing@5.0.4:
-    dependencies:
-      async: 3.2.6
-      asyncjs-util: 1.2.12
-      ln-service: 57.22.2
 
   process-nextick-args@2.0.1: {}
 
@@ -3629,8 +3536,6 @@ snapshots:
 
   type-fest@4.25.0: {}
 
-  type-fest@4.26.1: {}
-
   type-fest@5.3.1:
     dependencies:
       tagged-tag: 1.0.0
@@ -3655,8 +3560,6 @@ snapshots:
   uint8array-tools@0.0.7: {}
 
   uint8array-tools@0.0.8: {}
-
-  uint8array-tools@0.0.9: {}
 
   undici-types@6.19.8: {}
 
