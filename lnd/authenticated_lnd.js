@@ -17,7 +17,7 @@ import lndCredentials from './lnd_credentials.js';
 */
 export default ({logger, node}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Credentials
       credentials: cbk => lndCredentials({logger, node}, cbk),
 

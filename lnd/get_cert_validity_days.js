@@ -23,7 +23,7 @@ const {round} = Math;
 */
 export default ({below, logger, node}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Get the cert
       getCredentials: cbk => lndCredentials({logger, node}, cbk),
 

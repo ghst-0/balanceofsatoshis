@@ -90,7 +90,7 @@ export default (args, cbk) => {
   const subscriptions = [];
 
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!args.ask) {

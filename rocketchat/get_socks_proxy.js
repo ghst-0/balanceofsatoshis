@@ -20,7 +20,7 @@ const {parse} = JSON;
 */
 export default ({fs, path}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!fs) {

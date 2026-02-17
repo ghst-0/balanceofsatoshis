@@ -39,7 +39,7 @@ const parseDate = n => Date.parse(n);
 */
 export default (args, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!isArray(args.lnds)) {

@@ -60,7 +60,7 @@ const standardIdHexLength = Buffer.alloc(32).toString('hex').length;
 */
 export default ({lnd, query}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!lnd) {

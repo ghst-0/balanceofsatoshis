@@ -24,7 +24,7 @@ const {isArray} = Array;
 */
 export default ({fs, logger, nodes, spawn}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!fs) {

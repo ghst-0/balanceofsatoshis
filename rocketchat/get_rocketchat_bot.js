@@ -28,7 +28,7 @@ const botKeyFile = 'telegram_bot_api_key';
 */
 export default ({fs, proxy}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Import inquirer
       inquirer: async () => (await import('inquirer')).default,
 

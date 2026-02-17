@@ -26,7 +26,7 @@ const umbrelV1Path = '/home/umbrel/umbrel/app-data/lightning/data/lnd';
 */
 export default ({fs, os}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!fs) {

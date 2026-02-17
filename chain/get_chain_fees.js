@@ -29,7 +29,7 @@ const start = 2;
 */
 export default ({blocks, lnd}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!lnd) {

@@ -55,7 +55,7 @@ const pairEdgeIndex = (pair, key) => `x${Number(!pair.indexOf(key))}`;
 */
 export default ({lnd, route, tagged}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!lnd) {

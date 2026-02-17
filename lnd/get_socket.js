@@ -33,7 +33,7 @@ const scheme = 'rpc://';
 */
 export default ({fs, node, os, path}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!fs) {

@@ -25,7 +25,7 @@ const isHex = n => !!n && !(n.length % 2) && /^[0-9A-F]*$/i.test(n);
 */
 export default ({id, interval, network, request, retries}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!isHash(id)) {

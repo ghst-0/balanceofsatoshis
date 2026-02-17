@@ -28,7 +28,7 @@ const {isArray} = Array;
 */
 export default ({logger, names, nodes}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!logger) {

@@ -40,7 +40,7 @@ const summaryHeadings = ['Total', 'Asset', 'Report Date', 'Total Fiat'];
 */
 export default (args, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Validate
       validate: cbk => {
         if (!args.category || !categories[args.category]) {

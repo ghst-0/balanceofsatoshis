@@ -48,7 +48,7 @@ const styled = 'styled';
   {}
 */
 export default ({fs, node, request, style}, cbk) => {
-  return asyncAuto({
+  asyncAuto({
     // Get authenticated lnd connection
     getLnd: cbk => authenticatedLnd({node}, cbk),
 

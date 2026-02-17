@@ -27,7 +27,7 @@ const uniq = arr => Array.from(new Set(arr));
 */
 export default ({fs}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!fs) {

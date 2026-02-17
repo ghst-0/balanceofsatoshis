@@ -29,7 +29,7 @@ const tokensAsMtokens = tokens => BigInt(tokens) * BigInt(1e3);
 */
 export default ({destination, identity, lnd, through, tokens}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!destination) {

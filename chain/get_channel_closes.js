@@ -40,7 +40,7 @@ const defaultLimit = 20;
 */
 export default ({limit, lnd, request}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!lnd) {

@@ -19,7 +19,7 @@ import { returnResult } from 'asyncjs-util';
 */
 export default ({accuracy, from, to}, test, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (from === undefined) {

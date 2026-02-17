@@ -20,7 +20,7 @@ const uniq = arr => Array.from(new Set(arr));
 */
 export default ({logger, nodes}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Default lnd
       getLnd: cbk => {
         if (!!nodes && !!nodes.length) {

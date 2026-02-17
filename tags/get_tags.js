@@ -27,7 +27,7 @@ const tagFilePath = () => homePath({file: 'tags.json'}).path;
 */
 export default ({fs}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!fs) {

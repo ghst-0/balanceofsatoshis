@@ -28,7 +28,7 @@ const notFoundIndex = -1;
 */
 export default ({fs, logger, nodes, spawn, to}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!fs || !fs.getFile || !fs.writeFile) {

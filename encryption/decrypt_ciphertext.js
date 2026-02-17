@@ -15,7 +15,7 @@ import { returnResult } from 'asyncjs-util';
 */
 export default ({cipher, spawn}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!cipher) {

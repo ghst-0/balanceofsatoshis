@@ -34,7 +34,7 @@ const getTxDelayMs = 2000;
 */
 export default (args, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!args.close_transaction_id) {

@@ -18,7 +18,7 @@ const futureDate = ms => new Date(Date.now() + ms).toISOString();
 */
 export default ({id, lnd}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!id) {

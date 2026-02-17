@@ -14,7 +14,7 @@ import { returnResult } from 'asyncjs-util';
 */
 export default ({csv}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Get the parse function
       parse: async () => (await import('csv-parse')).parse,
 

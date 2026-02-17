@@ -23,7 +23,7 @@ const newArrayOfSize = n => Array.from(Array(n));
   }
 */
 export default (args, cbk) => {
-  return asyncAuto({
+  asyncAuto({
     // Check arguments
     validate: cbk => {
       if (!args.count) {

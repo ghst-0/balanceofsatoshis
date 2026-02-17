@@ -32,7 +32,7 @@ const keyLength = 32;
 */
 export default ({encrypted, iv, salt, secret, settings, tag}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!Buffer.isBuffer(encrypted)) {

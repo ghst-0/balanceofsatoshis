@@ -34,7 +34,7 @@ const pageLimit = 1e3;
 */
 export default ({after, before, lnd, via}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!after) {

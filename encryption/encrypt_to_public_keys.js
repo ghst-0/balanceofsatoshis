@@ -19,7 +19,7 @@ const {isArray} = Array;
 */
 export default ({plain, spawn, to}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!plain) {

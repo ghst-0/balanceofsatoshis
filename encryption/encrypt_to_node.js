@@ -19,7 +19,7 @@ import encryptToSecret from './encrypt_to_secret.js';
 */
 export default ({lnd, message, to}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!lnd) {

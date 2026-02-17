@@ -24,7 +24,7 @@ const tokenize = command => command.split(' ');
 */
 export default ({command, lnd}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!command) {

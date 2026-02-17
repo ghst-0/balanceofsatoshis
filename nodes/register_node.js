@@ -33,7 +33,7 @@ const publicKeyEncoding = {format: 'der', type: 'spki'};
 */
 export default ({ask, cryptography, fs, logger, node}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!ask) {

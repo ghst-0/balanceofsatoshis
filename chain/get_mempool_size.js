@@ -20,7 +20,7 @@ const isNumber = n => !isNaN(n);
 */
 export default ({network, request, retries}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!network) {

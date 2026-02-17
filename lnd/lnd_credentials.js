@@ -45,7 +45,7 @@ const socket = 'localhost:10009';
 */
 export default (args, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Figure out which node the credentials are for
       forNode: cbk => {
         if (args.node) {

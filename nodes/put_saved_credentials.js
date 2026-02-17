@@ -26,7 +26,7 @@ const stringify = obj => JSON.stringify(obj, null, 2);
 */
 export default (args, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!!args.encrypted_macaroon && !isArray(args.encrypted_to)) {

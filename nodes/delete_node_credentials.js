@@ -19,7 +19,7 @@ const credentialsFileName = 'credentials.json';
 */
 export default ({fs, node}, cbk) => {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!fs) {
