@@ -678,49 +678,6 @@ prog
     });
   })
 
-  // Determine if a payment request is sendable
-  .command('probe', 'Check if a payment request is sendable')
-  .help('Simulate paying a payment request without actually paying it')
-  .argument('<to>', 'Payment request or node public key')
-  .argument('[amount]', 'Amount to probe, default: request amount')
-  .option('--avoid <avoid>', 'Avoid forwarding via node/chan/tag', REPEATABLE)
-  .option('--avoid-high-fee-routes', 'Avoid evaluating too-high fee routes')
-  .option('--find-max', 'Find the maximum routeable amount on success route')
-  .option('--in <public_key>', 'Route through specific peer of destination')
-  .option('--max-fee <max_fee>', 'Max expected fee for route', INT, 1337)
-  .option('--max-paths <max>', 'Maximum paths to use for find-max', INT, 1)
-  .option('--no-color', 'Mute all colors')
-  .option('--node <node_name>', 'Node to use for payment request check')
-  .option('--out <public_key>', 'Make first hop through peer', REPEATABLE)
-  .action((args, options, logger) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const {lnd} = await lndForNode(logger, options.node);
-
-        const inThrough = await lnSync.findKey({lnd, query: options.in});
-
-        return network.probe({
-          lnd,
-          logger,
-          avoid: flatten([options.avoid].filter(n => !!n)),
-          destination: args.to.length === 66 ? args.to : undefined,
-          find_max: !!options.findMax ? 16777215 : undefined,
-          fs: {getFile: readFile},
-          in_through: inThrough.public_key,
-          is_strict_max_fee: !!options.avoidHighFeeRoutes,
-          max_fee: options.maxFee,
-          max_paths: options.maxPaths,
-          out: flatten([options.out].filter(n => !!n)),
-          request: args.to.length !== 66 ? args.to : undefined,
-          tokens: args.amount || undefined,
-        },
-        responses.returnObject({exit, logger, reject, resolve}));
-      } catch (err) {
-        return logger.error({err}) && reject();
-      }
-    });
-  })
-
   // See a general report about the node
   .command('report', 'Report about the node')
   .option('--node <node_name>', 'Node to get report for')
