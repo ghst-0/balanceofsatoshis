@@ -187,9 +187,6 @@ importers:
       bip32:
         specifier: 5.0.0
         version: 5.0.0
-      bip66:
-        specifier: 2.0.0
-        version: 2.0.0
       bitcoinjs-lib:
         specifier: 6.1.7
         version: 6.1.7
