@@ -12,7 +12,6 @@ const {round} = Math;
 
   {
     [below]: <Days Above Watermark Number>
-    [logger]: <Winston Logger Object>
     [node]: <Saved Node Name String>
   }
 
@@ -21,11 +20,11 @@ const {round} = Math;
     days: <Days Valid Number>
   }
 */
-export default ({below, logger, node}, cbk) => {
+export default ({below, node}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Get the cert
-      getCredentials: cbk => lndCredentials({logger, node}, cbk),
+      getCredentials: cbk => lndCredentials({node}, cbk),
 
       // Determine the number of days remaining for the cert to be valid
       certValidity: ['getCredentials', ({getCredentials}, cbk) => {

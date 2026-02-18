@@ -8,9 +8,6 @@ const padLen = (lineLen, desc) => (Math.max(0, lineLen - desc.length) + 3) / 2;
 
   {
     data: <Chart Data Attribute String>
-    logger: {
-      info: <Info Function>
-    }
     reject: <Reject Function>
     resolve: <Resolve Function>
   }
@@ -18,10 +15,10 @@ const padLen = (lineLen, desc) => (Math.max(0, lineLen - desc.length) + 3) / 2;
   @returns
   <Standard Callback Function> (err, res) => {}
 */
-export default ({data, logger, reject, resolve}) => {
+export default ({data, reject, resolve}) => {
   return (err, res) => {
     if (err) {
-      logger.error({err});
+      console.error({err});
 
       return reject();
     }
@@ -33,19 +30,19 @@ export default ({data, logger, reject, resolve}) => {
     if (res.title) {
       const padding = ' '.repeat(padLen(line.length, res.title));
 
-      logger.info(`${newLine}${padding}${res.title}`);
+      console.info(`${newLine}${padding}${res.title}`);
     }
 
-    logger.info(String());
-    logger.info(plot(res[data], {height}));
+    console.info(String());
+    console.info(plot(res[data], {height}));
 
     if (res.description) {
       const padding = ' '.repeat(padLen(line.length, res.description));
 
-      logger.info(`${newLine}${padding}${res.description}`);
+      console.info(`${newLine}${padding}${res.description}`);
     }
 
-    logger.info(String());
+    console.info(String());
 
     return resolve();
   };

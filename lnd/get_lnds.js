@@ -9,7 +9,6 @@ const uniq = arr => Array.from(new Set(arr));
 /** Get LNDs for specified nodes
 
   {
-    [logger]: <Winston Logger Object>
     [nodes]: <Node Name String> || [<Node Name String>]
   }
 
@@ -18,7 +17,7 @@ const uniq = arr => Array.from(new Set(arr));
     lnds: [<Authenticated LND API Object>]
   }
 */
-export default ({logger, nodes}, cbk) => {
+export default ({nodes}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Default lnd
@@ -27,7 +26,7 @@ export default ({logger, nodes}, cbk) => {
           return cbk();
         }
 
-        return authenticatedLnd({logger}, cbk);
+        return authenticatedLnd({}, cbk);
       },
 
       // Authenticated LND Objects
@@ -39,7 +38,7 @@ export default ({logger, nodes}, cbk) => {
         const nodesList = uniq(flatten([nodes].filter(n => !!n)));
 
         return asyncMap(nodesList, (node, cbk) => {
-          return authenticatedLnd({logger, node}, cbk);
+          return authenticatedLnd({node}, cbk);
         },
         cbk);
       },

@@ -2,6 +2,7 @@ import asyncAuto from 'async/auto.js';
 import asyncMap from 'async/map.js';
 import { getIdentity } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
+
 import { getLnds } from './../lnd/index.js';
 import startTelegramBot from './start_rocketchat_bot.js';
 
@@ -22,7 +23,6 @@ const {isArray} = Array;
     key: <Telegram Bot API Key String>
     [min_forward_tokens]: <Minimum Forward Tokens To Notify Number>
     [min_rebalance_tokens]: <Minimum Rebalance Tokens To Notify Number>
-    logger: <Winston Logger Object>
     nodes: [<Node Name String>]
     payments_limit: <Total Spendable Budget Tokens Limit Number>
     request: <Request Function>
@@ -58,10 +58,6 @@ export default (args, cbk) => {
           return cbk([400, 'ExpectedApiKeyToRunTelegramBot']);
         }
 
-        if (!args.logger) {
-          return cbk([400, 'ExpectedWinstonLoggerToRunTelegramBot']);
-        }
-
         if (!isArray(args.nodes)) {
           return cbk([400, 'ExpectedArrayOfSavedNodesToRunTelegramBot']);
         }
@@ -79,12 +75,12 @@ export default (args, cbk) => {
 
       // Get associated LNDs
       getLnds: ['validate', ({}, cbk) => {
-        return getLnds({logger: args.logger, nodes: args.nodes}, cbk);
+        return getLnds({nodes: args.nodes}, cbk);
       }],
 
       // Start the bot going
       startBot: ['getLnds', ({getLnds}, cbk) => {
-        args.logger.info({connecting_to_telegram: args.nodes});
+        console.info({connecting_to_telegram: args.nodes});
 
         return startTelegramBot({
           ask: args.ask,
@@ -95,7 +91,6 @@ export default (args, cbk) => {
           min_forward_tokens: args.min_forward_tokens,
           min_rebalance_tokens: args.min_rebalance_tokens,
           lnds: getLnds.lnds,
-          logger: args.logger,
           nodes: args.nodes,
           payments_limit: args.payments_limit,
           request: args.request,
@@ -122,7 +117,7 @@ export default (args, cbk) => {
       online: ['getConnected', 'startBot', ({getConnected, startBot}, cbk) => {
         // Report the failure that killed the bot
         if (startBot.failure) {
-          args.logger.error({err: startBot.failure});
+          console.error({err: startBot.failure});
         }
 
         return cbk(null, {

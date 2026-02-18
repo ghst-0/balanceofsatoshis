@@ -6,7 +6,6 @@ import lndCredentials from './lnd_credentials.js';
 /** Authenticated LND
 
   {
-    [logger]: <Winston Logger Object>
     [node]: <Node Name String>
   }
 
@@ -15,11 +14,11 @@ import lndCredentials from './lnd_credentials.js';
     lnd: <Authenticated LND gRPC API Object>
   }
 */
-export default ({logger, node}, cbk) => {
+export default ({node}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Credentials
-      credentials: cbk => lndCredentials({logger, node}, cbk),
+      credentials: cbk => lndCredentials({node}, cbk),
 
       // Lnd
       lnd: ['credentials', ({credentials}, cbk) => {

@@ -33,7 +33,6 @@ const uniq = arr => Array.from(new Set(arr));
     }
     [inbound_rate_discount]: <Discount Fee Rate Number>
     lnd: <Authenticated LND API Object>
-    logger: <Winstone Logger Object>
     to: [<Adjust Routing Fee To Peer Alias or Public Key or Tag String>]
   }
 
@@ -53,10 +52,6 @@ export default (args, cbk) => {
 
         if (!args.lnd) {
           return cbk([400, 'ExpectedLndToAdjustFeeRates']);
-        }
-
-        if (!args.logger) {
-          return cbk([400, 'ExpectedLoggerToAdjustFeeRates']);
         }
 
         if (!isArray(args.to)) {

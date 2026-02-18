@@ -39,7 +39,7 @@ const tests = [
 ];
 
 tests.forEach(({args, description, error, expected}) => {
-  return test(description, (t, end) => {
+  test(description, (t, end) => {
     let loggedErr;
     let loggedInfo;
 
@@ -49,7 +49,7 @@ tests.forEach(({args, description, error, expected}) => {
     };
 
     if (args.table) {
-      return returnObject({logger, table: 'table', resolve: n => {
+      return returnObject({table: 'table', resolve: n => {
         equal(loggedInfo, expected, 'Got expected table output');
 
         return end();
@@ -81,7 +81,7 @@ tests.forEach(({args, description, error, expected}) => {
     }
 
     if (error) {
-      return returnObject({logger, reject: err => {
+      return returnObject({reject: err => {
         equal(loggedErr, error, 'Error was logged');
 
         return end();
@@ -89,13 +89,13 @@ tests.forEach(({args, description, error, expected}) => {
     }
 
     if (args.exit) {
-      return returnObject({logger, resolve: () => {}, exit: () => end()})(
+      return returnObject({resolve: () => {}, exit: () => end()})(
         null,
         args.res
       );
     }
 
-    return returnObject({logger, resolve: () => {
+    return returnObject({resolve: () => {
       equal(loggedInfo, expected);
 
       return end();

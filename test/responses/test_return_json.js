@@ -16,12 +16,11 @@ const tests = [
 ];
 
 tests.forEach(({args, description, error, expected}) => {
-  return test(description, (t, end) => {
+  test(description, (t, end) => {
     if (error) {
       let err;
 
       return returnJson({
-        logger: {error: n => err = n},
         reject: () => {
           equal(err, error, 'Error as expected');
 
@@ -33,7 +32,6 @@ tests.forEach(({args, description, error, expected}) => {
     let output;
 
     return returnJson({
-      logger: {info: n => output = n},
       resolve: () => {
         equal(output, expected, 'Got expected output');
 

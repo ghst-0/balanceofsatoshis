@@ -1,13 +1,13 @@
 import asyncAuto from 'async/auto.js';
 import asyncReflect from 'async/reflect.js';
-import { Bot } from 'grammy';
+import { Bot } from './rocket_bot.js';
 import { returnResult } from 'asyncjs-util';
 import { homePath } from '../storage/index.js';
 import interaction from './interaction.json' with { type: 'json' };
 
 const botKeyFile = 'telegram_bot_api_key';
 
-/** Get the Telegram Bot object
+/** Get the RocketChat Bot object
 
   {
     fs: {

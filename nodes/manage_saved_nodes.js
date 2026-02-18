@@ -29,7 +29,6 @@ const {isArray} = Array;
     [is_removing]: <Remove Node Credentials Bool>
     [is_unlocking]: <Change Credentials To Decrypted Copy Bool>
     lock_credentials_to: [<Encrypt Macaroon to GPG Key With Id String>]
-    logger: <Winston Logger Object>
     [network]: <Return Nodes On Specified Network String>
     [node]: <Node Name String>
     spawn: <Spawn Function>
@@ -78,10 +77,6 @@ export default (args, cbk) => {
           return cbk([400, 'CannotBothUnlockAndLockNodeCredentials']);
         }
 
-        if (!args.logger) {
-          return cbk([400, 'ExpectedLoggerFunctionForSavedNodes']);
-        }
-
         if (!args.spawn) {
           return cbk([400, 'ExpectedSpawnFunctionToAdjustSavedNodes']);
         }
@@ -107,7 +102,6 @@ export default (args, cbk) => {
           ask: args.ask,
           cryptography: {generateKeyPair, privateDecrypt},
           fs: args.fs,
-          logger: args.logger,
           node: args.node,
         },
         cbk);
@@ -162,7 +156,6 @@ export default (args, cbk) => {
 
         return encryptSavedMacaroons({
           fs: args.fs,
-          logger: args.logger,
           nodes: !args.node ? nodes.map(n => n.node_name) : [args.node],
           spawn: args.spawn,
           to: args.lock_credentials_to,
@@ -181,7 +174,6 @@ export default (args, cbk) => {
 
         return decryptSavedMacaroons({
           fs: args.fs,
-          logger: args.logger,
           nodes: !args.node ? nodes.map(n => n.node_name) : [args.node],
           spawn: args.spawn,
         },

@@ -27,7 +27,6 @@ const smallUnitsType = 'full';
     [id]: <Authorized User Id Number>
     [is_rounded_units]: <Formatting Should Use Rounded Units Bool>
     [is_small_units]: <Formatting Should Use Small Units Bool>
-    logger: <Winston Logger Object>
     [min_forward_tokens]: <Minimum Forward Tokens Number>
     [min_rebalance_tokens]: <Minimum Rebalance Tokens Number>
     [nodes]: [<Node Name String>]
@@ -60,10 +59,6 @@ export default (args, cbk) => {
           return cbk([400, 'ExpectedNumericConnectCodeToConnectToTelegram']);
         }
 
-        if (!args.logger) {
-          return cbk([400, 'ExpectedLoggerToConnectToTelegram']);
-        }
-
         if (!args.payments) {
           return cbk([400, 'ExpectedPaymentInstructionsToConnectToTelegram']);
         }
@@ -79,7 +74,7 @@ export default (args, cbk) => {
       getNodes: ['validate', async () => {
         const {nodes} = args;
 
-        const {lnds} = await getLnds({nodes, logger: args.logger});
+        const {lnds} = await getLnds({nodes});
 
         const withName = lnds.map((lnd, i) => ({lnd, node: (nodes || [])[i]}));
 
@@ -89,7 +84,7 @@ export default (args, cbk) => {
 
             return {node, alias: wallet.alias, id: wallet.public_key};
           } catch (err) {
-            args.logger.error({node, err: 'failed_to_connect'});
+            console.error({node, err: 'failed_to_connect'});
 
             throw err;
           }
@@ -130,7 +125,6 @@ export default (args, cbk) => {
             key: getBot.key,
             min_forward_tokens: args.min_forward_tokens,
             min_rebalance_tokens: args.min_rebalance_tokens,
-            logger: args.logger,
             nodes: args.nodes,
             payments_limit: limit || defaultPaymentsBudget,
             request: args.request,
@@ -155,7 +149,7 @@ export default (args, cbk) => {
             },
             err => {
               if (err) {
-                args.logger.error({post_nodes_offline_error: err});
+                console.error({post_nodes_offline_error: err});
               }
 
               return setTimeout(cbk, restartDelayMs);

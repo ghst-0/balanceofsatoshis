@@ -32,17 +32,12 @@ const tests = [
 ];
 
 tests.forEach(({args, description, error, expected, res}) => {
-  return test(description, (t, end) => {
+  test(description, (t, end) => {
     const loggedErrors = [];
     const loggedInfo = [];
 
-    const logger = {
-      error: err => loggedErrors.push(err),
-      info: n => loggedInfo.push(n),
-    };
-
     if (error) {
-      return returnChart({logger ,reject: () => {
+      return returnChart({reject: () => {
         deepEqual(loggedErrors, [{err: error}], 'Error logged as expected');
 
         return end();
@@ -50,7 +45,6 @@ tests.forEach(({args, description, error, expected, res}) => {
     }
 
     return returnChart({
-      logger,
       data: args.data,
       resolve: () => {
         deepEqual(

@@ -1,31 +1,28 @@
 #!/usr/bin/env node
-import { lstat, mkdir, readdir, readFile, rmdir, statSync, unlink, writeFile } from 'fs';
+import { lstat, mkdir, readdir, readFile, rmdir, statSync, unlink, writeFile } from 'node:fs';
 import { spawn } from 'child_process';
 import prog from '@alexbosworth/caporal';
+import fetch from '@alexbosworth/node-fetch'
+import * as lnService from 'ln-service';
+import * as lnSync from 'ln-sync';
+import * as balances from './balances/index.js';
+import * as chain from './chain/index.js';
+import * as commands from './commands/index.js';
+import * as encryption from './encryption/index.js';
+import * as lnd from './lnd/index.js';
+import * as nodes from './nodes/index.js';
+import * as responses from './responses/index.js';
+import * as routing from './routing/index.js';
+import * as rocketchat from './rocketchat/index.js';
+import * as triggers from './triggers/index.js';
+import * as wallets from './wallets/index.js';
+
+import PACKAGE_JSON from './package.json' with { type: 'json' };
 import commandConstants from './commands/constants.json' with { type: 'json' };
-import importLazy from 'import-lazy'
 
-importLazy(require)
+const {version} = PACKAGE_JSON;
+const {accountingCategories, peerSortOptions} = commandConstants;
 
-const fetch = importLazy('@alexbosworth/node-fetch');
-const lnService = importLazy('ln-service');
-const lnSync = importLazy('ln-sync');
-const {accountingCategories} = commandConstants;
-const balances = importLazy('./balances');
-const chain = importLazy('./chain');
-const commands = importLazy('./commands');
-const encryption = importLazy('./encryption');
-const lnd = importLazy('./lnd');
-const network = importLazy('./network');
-const nodes = importLazy('./nodes');
-const {peerSortOptions} = commandConstants;
-const {rateProviders} = commandConstants;
-const responses = importLazy('./responses');
-const routing = importLazy('./routing');
-const rocketchat = importLazy('./rocketchat');
-const triggers = importLazy('./triggers');
-const wallets = importLazy('./wallets');
-const {version} = importLazy('./package');
 
 const {BOOL} = prog;
 const collect = arr => [].concat(...[arr]).filter(n => !!n);
@@ -33,7 +30,7 @@ const {exit} = process;
 const flatten = arr => [].concat(...arr);
 const {INT} = prog;
 const {keys} = Object;
-const lndForNode = (logger, node) => lnd.authenticatedLnd({logger, node});
+const lndForNode = (node) => lnd.authenticatedLnd({node});
 const months = [...Array(12).keys()].map(n => ++n);
 const {REPEATABLE} = prog;
 const {STRING} = prog;
@@ -46,16 +43,14 @@ prog
   .command('accounting', 'Get an accounting rundown')
   .argument('<category>', 'Report category', keys(accountingCategories))
   .help(`Categories: ${keys(accountingCategories).join(', ')}`)
-  .help(`Rate providers: ${rateProviders.join(', ')}`)
   .help('Privacy note: this requests tx related data from third parties')
   .option('--csv', 'Output a CSV')
   .option('--date <day>', 'Show only records for specific date')
   .option('--disable-fiat', 'Avoid looking up fiat conversions for records')
   .option('--month <month>', 'Show only records for specific month', months)
   .option('--node <node_name>', 'Get details from named node')
-  .option('--rate-provider <rate_provider>', 'Rate provider', rateProviders)
   .option('--year <year>', 'Show only records for specified year', yearMatch)
-  .action((args, options, logger) => {
+  .action((args, options) => {
     const table = !!options.csv ? null : 'rows';
 
     return new Promise(async (resolve, reject) => {
@@ -65,16 +60,15 @@ prog
           date: options.date,
           is_csv: !!options.csv,
           is_fiat_disabled: options.disableFiat,
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
+          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
           month: options.month,
           node: options.node,
-          rate_provider: options.rateProvider,
           request: commands.simpleRequest,
           year: options.year,
         },
-        responses.returnObject({logger, reject, resolve, table}));
+        responses.returnObject({reject, resolve, table}));
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -90,16 +84,16 @@ prog
   .option('--node <node_name>', 'Node to get balance for', REPEATABLE)
   .option('--offchain', 'List only off-chain tokens')
   .option('--onchain', 'List only on-chain tokens')
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
         // Exit early when detailed balance details are requested
         if (!!options.detailed) {
           return balances.getDetailedBalance({
-            lnds: (await lnd.getLnds({logger, nodes: options.node})).lnds,
+            lnds: (await lnd.getLnds({nodes: options.node})).lnds,
             is_confirmed: options.confirmed,
           },
-          responses.returnObject({logger, reject, resolve}));
+          responses.returnObject({reject, resolve}));
         }
 
         return balances.getBalance({
@@ -108,11 +102,11 @@ prog
           is_confirmed: !!options.confirmed,
           is_offchain_only: !!options.offchain,
           is_onchain_only: !!options.onchain,
-          lnd: (await lndForNode(logger, options.node)).lnd,
+          lnd: (await lndForNode(options.node)).lnd,
         },
-        responses.returnNumber({logger, reject, resolve, number: 'balance'}));
+        responses.returnNumber({reject, resolve, number: 'balance'}));
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -121,14 +115,13 @@ prog
   .command('cert-validity-days', 'Number of days until the cert is invalid')
   .option('--below <number_of_days>', 'Return number of days below mark', INT)
   .option('--node <node_name>', 'Node to check cert on')
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       return lnd.getCertValidityDays({
-        logger,
         below: options.below,
         node: options.node,
       },
-      responses.returnNumber({logger, reject, resolve, number: 'days'}));
+      responses.returnNumber({reject, resolve, number: 'days'}));
     });
   })
 
@@ -139,22 +132,21 @@ prog
   .option('--file <path>', 'Write the output to a JSON file at desired path')
   .option('--no-color', 'Mute all colors')
   .option('--node <node_name>', 'Node to get chain fees view from')
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
         return chain.getChainFees({
           blocks: options.blocks,
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
+          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
         },
         responses.returnObject({
-          logger,
           reject,
           resolve,
           file: options.file,
           write: writeFile,
         }));
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -168,20 +160,20 @@ prog
   .option('--no-color', 'Disable colors')
   .option('--node <node_name>', 'Chain fees from saved node(s)', REPEATABLE)
   .option('--start <start_date>', 'Start date for chart as YYYY-MM-DD', STRING)
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
         return routing.getChainFeesChart({
           days: options.days,
           end_date: options.end,
           is_monochrome: !!options.noColor,
-          lnds: (await lnd.getLnds({logger, nodes: options.node})).lnds,
+          lnds: (await lnd.getLnds({nodes: options.node})).lnds,
           request: commands.simpleRequest,
           start_date: options.start,
         },
-        responses.returnChart({logger, reject, resolve, data: 'data'}));
+        responses.returnChart({reject, resolve, data: 'data'}));
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -196,7 +188,7 @@ prog
   .option('--forwarded', 'Show amount forwarded instead of fees earned')
   .option('--node <node_name>', 'Get saved node fees earned', REPEATABLE)
   .option('--start <start_date>', 'Start date for chart as YYYY-MM-DD', STRING)
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
         return routing.getFeesChart({
@@ -205,13 +197,13 @@ prog
           fs: {getFile: readFile},
           is_count: options.count,
           is_forwarded: options.forwarded,
-          lnds: (await lnd.getLnds({logger, nodes: options.node})).lnds,
+          lnds: (await lnd.getLnds({nodes: options.node})).lnds,
           start_date: options.start,
           via: args.via || undefined,
         },
-        responses.returnChart({logger, reject, resolve, data: 'data'}));
+        responses.returnChart({reject, resolve, data: 'data'}));
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -231,13 +223,13 @@ prog
   .option('--peers', 'Show only peers in table view')
   .option('--rebalances', 'Only consider fees paid in self-to-self transfers')
   .option('--start <start_date>', 'Start date for chart as YYYY-MM-DD', STRING)
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       const data = 'data';
       const table = 'rows';
 
-      const asTable = responses.returnObject({logger, reject, resolve, table});
-      const chart = responses.returnChart({data, logger, reject, resolve});
+      const asTable = responses.returnObject({reject, resolve, table});
+      const chart = responses.returnChart({data, reject, resolve});
 
       try {
         return routing.getFeesPaid({
@@ -250,13 +242,13 @@ prog
           is_network: options.network,
           is_peer: options.peers,
           is_rebalances_only: options.rebalances,
-          lnds: (await lnd.getLnds({logger, nodes: options.node})).lnds,
+          lnds: (await lnd.getLnds({nodes: options.node})).lnds,
           out: options.out,
           start_date: options.start,
         },
         (options.mostFees || options.mostForwarded) ? asTable : chart);
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -270,20 +262,20 @@ prog
   .option('--for <query>', 'Only consider payments including a specific query')
   .option('--node <node_name>', 'Get payments from saved node(s)', REPEATABLE)
   .option('--start <start_date>', 'Start date for chart as YYYY-MM-DD', STRING)
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
         return wallets.getReceivedChart({
           days: options.days,
           end_date: options.end,
           is_count: options.count,
-          lnds: (await lnd.getLnds({logger, nodes: options.node})).lnds,
+          lnds: (await lnd.getLnds({nodes: options.node})).lnds,
           query: options.for,
           start_date: options.start,
         },
-        responses.returnChart({logger, reject, resolve, data: 'data'}));
+        responses.returnChart({reject, resolve, data: 'data'}));
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -293,16 +285,16 @@ prog
   .visible(false)
   .argument('<command>', 'Escaped command to cleanup')
   .option('--node <node_name>', 'Saved node to use for lookups')
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
         return commands.clean({
-          lnd: (await lndForNode(logger, options.node)).lnd,
+          lnd: (await lndForNode(options.node)).lnd,
           command: args.command,
         },
-        responses.returnOutput({logger, reject, resolve}));
+        responses.returnOutput({reject, resolve}));
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -314,17 +306,17 @@ prog
   .option('--limit [limit]', 'Limit of closings to get', INT, 20)
   .option('--no-color', 'Mute all colors')
   .option('--node <node_name>', 'Get channel closes from saved node')
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
         return chain.getChannelCloses({
           limit: options.limit,
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
+          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
           request: commands.simpleRequest,
         },
-        responses.returnObject({logger, reject, resolve}));
+        responses.returnObject({reject, resolve}));
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -335,16 +327,16 @@ prog
   .argument('<encrypted>', 'Encrypted message')
   .help('Decrypt a message encrypted to the node key or to another node key')
   .option('--node <node_name>', 'Node to decrypt with')
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
         return encryption.decryptWithNode({
           encrypted: args.encrypted,
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
+          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
         },
-        responses.returnObject({logger, reject, resolve}));
+        responses.returnObject({reject, resolve}));
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -353,15 +345,15 @@ prog
   .command('delete-payments-history', 'Delete all records of past payments')
   .visible(false)
   .option('--node <node_name>', 'Node to delete all past payments on')
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
         return lnService.deletePayments({
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
+          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
         },
-        responses.returnObject({logger, reject, resolve}));
+        responses.returnObject({reject, resolve}));
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -373,17 +365,17 @@ prog
   .option('--node <node_name>', 'Node to encrypt with')
   .option('--message <message>', 'Text message to encrypt')
   .option('--to <to>', 'Encrypt message to another node')
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
         return encryption.encryptToNode({
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
+          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
           message: options.message,
           to: options.to,
         },
-        responses.returnObject({logger, reject, resolve}));
+        responses.returnObject({reject, resolve}));
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -399,20 +391,20 @@ prog
   .option('--feerate <feerate>', 'Feerate in per vbyte rate', INT)
   .option('--no-color', 'Mute all colors')
   .option('--node <node_name>', 'Node to do fan out for')
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
         return chain.splitUtxos({
           count: args.count,
           is_confirmed: !!options.confirmed,
           is_dry_run: !!options.dryrun,
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
+          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
           size: args.size,
           tokens_per_vbyte: options.feerate,
         },
-        responses.returnObject({logger, reject, resolve}));
+        responses.returnObject({reject, resolve}));
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -433,21 +425,20 @@ prog
   .option('--set-fee-rate <rate>', 'Fee in parts per million or use a formula')
   .option('--set-inbound-rate-discount <rate>', 'Source discount rate in PPM')
   .option('--to <peer>', 'Peer key/alias/tag to set fees', REPEATABLE)
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
         return routing.adjustFees({
-          logger,
           cltv_delta: options.setCltvDelta,
           fee_rate: options.setFeeRate,
           fs: {getFile: readFile},
           inbound_rate_discount: options.setInboundRateDiscount,
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
+          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
           to: flatten([options.to].filter(n => !!n)),
         },
-        responses.returnObject({logger, reject, resolve, table: 'rows'}));
+        responses.returnObject({reject, resolve, table: 'rows'}));
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -458,16 +449,16 @@ prog
   .argument('<query>', 'Query for a record')
   .option('--no-color', 'Mute all colors')
   .option('--node <node_name>', 'Node to find record on')
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
         return lnd.findRecord({
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
+          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
           query: args.query,
         },
-        responses.returnObject({logger, reject, resolve}));
+        responses.returnObject({reject, resolve}));
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -484,10 +475,10 @@ prog
   .option('--out <to>', 'Forwards that sent out to a specified peer')
   .option('--sort <type>', 'Sort forward-active peers by earnings/liquidity')
   .option('--tag <tag_name>', 'Only show peers in a tag', REPEATABLE)
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const {lnd} = await lndForNode(logger, options.node);
+        const {lnd} = await lndForNode(options.node);
         const table = !!options.complete ? undefined : 'rows';
 
         return network.getForwards({
@@ -501,9 +492,9 @@ prog
           tags: collect(options.tag),
           to: (await lnSync.findKey({lnd, query: options.out})).public_key,
         },
-        responses.returnObject({logger, reject, resolve, table}));
+        responses.returnObject({reject, resolve, table}));
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -517,22 +508,21 @@ prog
   .option('--filter <formula>', 'Filter formula to apply', REPEATABLE)
   .option('--node <node_name>', 'Node to use for lookup')
   .option('--sort <sort_connections_by', 'Sort peers by field')
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const {lnd} = await lndForNode(logger, options.node);
+        const {lnd} = await lndForNode(options.node);
 
         return network.getGraphEntry({
           lnd,
-          logger,
           filters: flatten([options.filter].filter(n => !!n)),
           fs: {getFile: readFile},
           query: args.aliasOrPublicKey.trim(),
           sort: options.sort,
         },
-        responses.returnObject({logger, reject, resolve, table: 'rows'}));
+        responses.returnObject({reject, resolve, table: 'rows'}));
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -545,7 +535,7 @@ prog
   .option('--node <node_name>', 'Node to get inbound liquidity')
   .option('--top', 'Top percentile inbound liquidity in an individual channel')
   .option('--with <node_key_or_tag>', 'Liquidity with a specific node/tag')
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
         return balances.getLiquidity({
@@ -553,14 +543,14 @@ prog
           below: options.below || undefined,
           fs: {getFile: readFile},
           is_top: options.top || undefined,
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
+          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
           max_fee_rate: options.maxFeeRate || undefined,
           request: commands.simpleRequest,
           with: options.with,
         },
-        responses.returnNumber({logger, reject, resolve, number: 'balance'}));
+        responses.returnNumber({reject, resolve, number: 'balance'}));
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -573,10 +563,9 @@ prog
   .option('--lock <id>', 'Encrypt node authentication to GPG key', REPEATABLE)
   .option('--remove', 'Remove saved node')
   .option('--unlock', 'Remove encryption from auth macaroon')
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       return nodes.manageSavedNodes({
-        logger,
         spawn,
         ask: await commands.interrogate({}),
         fs: {
@@ -594,7 +583,7 @@ prog
         lock_credentials_to: flatten([options.lock].filter(n => !!n)),
         node: args.node || undefined,
       },
-      responses.returnObject({logger, reject, resolve}));
+      responses.returnObject({reject, resolve}));
     });
   })
 
@@ -605,7 +594,7 @@ prog
   .option('--node <node_name>', 'Node to get outbound liquidity amount')
   .option('--top', 'Top percentile inbound liquidity in an individual channel')
   .option('--with <public_key_or_tag>', 'Liquidity with a specific node/tag')
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
         return balances.getLiquidity({
@@ -614,12 +603,12 @@ prog
           fs: {getFile: readFile},
           is_outbound: true,
           is_top: options.top || undefined,
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
+          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
           with: options.with,
         },
-        responses.returnNumber({logger, reject, resolve, number: 'balance'}));
+        responses.returnNumber({reject, resolve, number: 'balance'}));
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -650,7 +639,7 @@ prog
   .option('--public', 'Only peers with public channels')
   .option('--sort <by>', 'Sort results by peer attribute', peerSortOptions)
   .option('--tag <tag_name>', 'Only show peers in a tag', REPEATABLE)
-  .action((args, options, logger) => {
+  .action((args, options) => {
     const table = !!options.complete ? undefined : 'rows';
 
     return new Promise(async (resolve, reject) => {
@@ -666,14 +655,14 @@ prog
           is_private: !!options.private,
           is_public: !!options.public,
           is_table: !options.complete,
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
+          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
           omit: flatten([options.omit].filter(n => !!n)),
           sort_by: options.sort,
           tags: flatten([options.tag].filter(n => !!n)),
         },
-        responses.returnObject({logger, reject, resolve, table}));
+        responses.returnObject({reject, resolve, table}));
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -682,7 +671,7 @@ prog
   .command('report', 'Report about the node')
   .option('--node <node_name>', 'Node to get report for')
   .option('--styled', 'Add unicode styling to report')
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise((resolve, reject) => {
       return wallets.getReport({
         fs: {getFile: readFile},
@@ -690,7 +679,7 @@ prog
         request: commands.simpleRequest,
         style: !!options.styled ? 'styled' : undefined,
       },
-      responses.returnOutput({logger, reject, resolve}));
+      responses.returnOutput({reject, resolve}));
     });
   })
 
@@ -702,7 +691,7 @@ prog
   .option('--avoid', 'Mark to globally avoid all tagged nodes', BOOL, true)
   .option('--icon <icon>', 'Icon to use for the tag')
   .option('--remove <public_key>', 'Remove a public key from a tag', REPEATABLE)
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
         return await nodes.adjustTags({
@@ -713,9 +702,9 @@ prog
           remove: flatten([options.remove].filter(n => !!n)),
           tag: !!args.tag ? args.tag.toLowerCase() : undefined,
         },
-        responses.returnObject({logger, reject, resolve}));
+        responses.returnObject({reject, resolve}));
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -734,11 +723,10 @@ prog
   .option('--reset-api-key', 'Reset the RocketChat API key')
   .option('--use-rounded-units', 'No leading zeros or fractions on amounts')
   .option('--use-small-units', 'Avoid showing leading zeros on amounts')
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
         return await rocketchat.connectToRocketChat({
-          logger,
           ask: await commands.interrogate({}),
           fs: {
             writeFile,
@@ -757,7 +745,7 @@ prog
           request: commands.fetchRequest({fetch}),
         });
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -766,17 +754,16 @@ prog
   .command('triggers', 'Manage event triggers')
   .option('--node <name>', 'Node to manage triggers on')
   .visible(false)
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
         return triggers.manageTriggers({
-          logger,
           ask: await commands.interrogate({}),
-          lnd: (await lndForNode(logger, options.node)).lnd,
+          lnd: (await lndForNode(options.node)).lnd,
         },
-        responses.returnObject({exit, logger, reject, resolve}));
+        responses.returnObject({exit, reject, resolve}));
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   })
@@ -789,20 +776,20 @@ prog
   .option('--no-color', 'Mute all colors')
   .option('--node <node_name>', 'Node to get utxos for')
   .option('--size', 'UTXOs of size greater than or equal to specified amount')
-  .action((args, options, logger) => {
+  .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
         return chain.getUtxos({
           count_below: options.countBelow,
           is_confirmed: !!options.confirmed,
           is_count: !!options.count,
-          lnd: (await lnd.authenticatedLnd({logger, node: options.node})).lnd,
+          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
           min_tokens: options.size || undefined,
           node: options.node,
         },
-        responses.returnObject({logger, reject, resolve}));
+        responses.returnObject({reject, resolve}));
       } catch (err) {
-        return logger.error({err}) && reject();
+        console.error({err}) && reject();
       }
     });
   });

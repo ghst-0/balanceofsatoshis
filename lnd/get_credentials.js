@@ -14,7 +14,6 @@ const { encode } = cbor;
     is_cleartext: <Export Clear Credential Components Bool>
     is_nospend: <Restrict Credentials To Non-Spending Permissions Bool>
     is_readonly: <Restrict Credentials To Read-Only Permissions Bool>
-    logger: <Winston Logger Object> ({info}) => ()
     [methods]: [<Allow Specific Method String>]
     [node]: <Node Name String>
   }
@@ -36,10 +35,6 @@ export default (args, cbk) => {
       validate: cbk => {
         if (!args.ask) {
           return cbk([400, 'ExpectedPromptFunctionToGetCredentials']);
-        }
-
-        if (!args.logger) {
-          return cbk([400, 'ExpectedLoggerToGetCredentials']);
         }
 
         return cbk();
@@ -80,7 +75,6 @@ export default (args, cbk) => {
           key,
           is_nospend: args.is_nospend,
           is_readonly: args.is_readonly,
-          logger: args.logger,
           methods: args.methods,
           node: args.node,
         },

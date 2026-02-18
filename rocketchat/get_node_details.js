@@ -7,7 +7,6 @@ const {isArray} = Array;
 /** Get node details for telegram commands
 
   {
-    logger: <Winston Logger Object>
     names: [{
       alias: <Node Alias String>
       from: <Node Name String>
@@ -26,14 +25,11 @@ const {isArray} = Array;
     }]
   }
 */
-export default ({logger, names, nodes}, cbk) => {
+export default ({names, nodes}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
       validate: cbk => {
-        if (!logger) {
-          return cbk([400, 'ExpectedWinstonLoggerGetGetTelegramNodeDetails']);
-        }
 
         if (!isArray(nodes)) {
           return cbk([400, 'ExpectedArrayOfSavedNodesToGetNodeDetailsFor']);
@@ -43,7 +39,7 @@ export default ({logger, names, nodes}, cbk) => {
       },
 
       // Get associated LNDs
-      getLnds: ['validate', ({}, cbk) => getLnds({logger, nodes}, cbk)],
+      getLnds: ['validate', ({}, cbk) => getLnds({nodes}, cbk)],
 
       // Merge node info for the nodes
       nodes: ['getLnds', ({getLnds}, cbk) => {

@@ -18,7 +18,6 @@ const notFoundIndex = -1;
       getFile: <Read File Contents Function> (path, cbk) => {}
       writeFile: <Write File Contents Function> (path, contents, cbk) => {}
     }
-    logger: <Winston Logger Object>
     nodes: [<Node Name String>]
     spawn: <Spawn Function>
     to: [<Encrypt to GPG Key Id String>]
@@ -26,7 +25,7 @@ const notFoundIndex = -1;
 
   @returns via cbk or Promise
 */
-export default ({fs, logger, nodes, spawn, to}, cbk) => {
+export default ({fs, nodes, spawn, to}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -73,7 +72,7 @@ export default ({fs, logger, nodes, spawn, to}, cbk) => {
           return cbk();
         }
 
-        return decryptSavedMacaroons({fs, logger, nodes, spawn}, cbk);
+        return decryptSavedMacaroons({fs, nodes, spawn}, cbk);
       }],
 
       // Get the credentials

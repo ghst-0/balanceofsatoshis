@@ -15,24 +15,19 @@ const {isArray} = Array;
       getFile: <Read File Contents Function> (path, cbk) => {}
       writeFile: <Write File Contents Function> (path, contents, cbk) => {}
     }
-    logger: <Winston Logger Object>
     nodes: [<Node Name String>]
     spawn: <Spawn Function>
   }
 
   @returns via cbk or Promise
 */
-export default ({fs, logger, nodes, spawn}, cbk) => {
+export default ({fs, nodes, spawn}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!fs) {
           return cbk([400, 'ExpectedFileMethodsToDecryptSavedMacaroons']);
-        }
-
-        if (!logger) {
-          return cbk([400, 'ExpectedLoggerToDecryptSavedMacaroons']);
         }
 
         if (!isArray(nodes)) {
@@ -62,7 +57,7 @@ export default ({fs, logger, nodes, spawn}, cbk) => {
         return asyncMapSeries(encrypted, ({credentials, node}, cbk) => {
           const cipher = credentials.encrypted_macaroon;
 
-          logger.info({decrypt_credentials_for: node});
+          console.info({decrypt_credentials_for: node});
 
           return decryptCiphertext({cipher, spawn}, (err, res) => {
             if (err) {

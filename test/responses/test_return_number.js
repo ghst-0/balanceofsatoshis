@@ -16,12 +16,11 @@ const tests = [
 ];
 
 tests.forEach(({args, description, error, expected}) => {
-  return test(description, (t, end) => {
+  test(description, (t, end) => {
     if (error) {
       let err;
 
       return returnNumber({
-        logger: {error: n => err = n},
         reject: () => {
           equal(err, error, 'Error as expected');
 
@@ -33,7 +32,6 @@ tests.forEach(({args, description, error, expected}) => {
     let number;
 
     return returnNumber({
-      logger: {info: n => number = n},
       number: 'number',
       resolve: () => {
         equal(number, expected.number, 'Got expected number');

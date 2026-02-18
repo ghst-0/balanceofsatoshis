@@ -18,12 +18,11 @@ const isPublicKey = n => !!n && /^0[2-3][0-9A-F]{64}$/i.test(n);
   {
     ask: <Ask Function>
     lnd: <Authenticated LND API Object>
-    logger: <Winston Logger Object>
   }
 
   @returns via cbk or Promise
 */
-export default ({ask, lnd, logger}, cbk) => {
+export default ({ask, lnd}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -34,10 +33,6 @@ export default ({ask, lnd, logger}, cbk) => {
 
         if (!lnd) {
           return cbk([400, 'ExpectedAuthenticatedLndToManageTriggers']);
-        }
-
-        if (!logger) {
-          return cbk([400, 'ExpectedWinstonLoggerToManageTriggers']);
         }
 
         return cbk();
@@ -130,7 +125,7 @@ export default ({ask, lnd, logger}, cbk) => {
           return cbk();
         }
 
-        logger.info({finding_triggers: true});
+        console.info({finding_triggers: true});
 
         return getTriggers({lnd}, cbk);
       }],
@@ -144,12 +139,12 @@ export default ({ask, lnd, logger}, cbk) => {
 
         const sub = subscribeToTriggers({lnds: [lnd]});
 
-        sub.on('channel_opened', opened => logger.info({opened}));
-        sub.on('peer_connected', connected => logger.info({connected}));
-        sub.on('peer_disconnected', disconnect => logger.info({disconnect}));
+        sub.on('channel_opened', opened => console.info({opened}));
+        sub.on('peer_connected', connected => console.info({connected}));
+        sub.on('peer_disconnected', disconnect => console.info({disconnect}));
         sub.on('error', err => cbk(err));
 
-        return logger.info({listening_for_trigger_events: true});
+        console.info({listening_for_trigger_events: true});
       }],
 
       // Create a new connectivity trigger

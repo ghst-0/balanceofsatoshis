@@ -25,13 +25,12 @@ const publicKeyEncoding = {format: 'der', type: 'spki'};
       makeDirectory: <Make Directory Function>
       writeFile: <Write File Function>
     }
-    logger: <Winston Logger Object>
     [node]: <Node Name String>
   }
 
   @returns via cbk or Promise
 */
-export default ({ask, cryptography, fs, logger, node}, cbk) => {
+export default ({ask, cryptography, fs, node}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -46,10 +45,6 @@ export default ({ask, cryptography, fs, logger, node}, cbk) => {
 
         if (!fs) {
           return cbk([400, 'ExpectedFileSystemMethodsToRegisterSavedNode']);
-        }
-
-        if (!logger) {
-          return cbk([400, 'ExpectedLoggerToRegisterSavedNode']);
         }
 
         return cbk();
@@ -102,7 +97,7 @@ export default ({ask, cryptography, fs, logger, node}, cbk) => {
       copyKey: ['startImport', 'transferKey', ({transferKey}, cbk) => {
         const key = Buffer.from(transferKey.public_key).toString('hex');
 
-        logger.info({credentials_transfer_public_key: key});
+        console.info({credentials_transfer_public_key: key});
 
         const copyPrompt = {
           message: `Step 2. Enter the transfer key on target node. Continue?"`,

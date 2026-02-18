@@ -29,7 +29,6 @@ const socket = 'localhost:10009';
     [is_nospend]: <Restrict Credentials To Non-Spending Permissions Bool>
     [is_readonly]: <Restrict Credentials To Read-Only Permissions Bool>
     [key]: <Encrypt to Public Key DER Hex String>
-    [logger]: <Winston Logger Object>
     [methods]: [<Allow Specific Method String>]
     [node]: <Node Name String> // Defaults to default local mainnet node creds
   }
@@ -146,9 +145,7 @@ export default (args, cbk) => {
 
         const cipher = credentials.encrypted_macaroon;
 
-        if (args.logger) {
-          args.logger.info({decrypt_credentials_for: forNode});
-        }
+        console.info({decrypt_credentials_for: forNode});
 
         return decryptCiphertext({cipher, spawn}, (err, res) => {
           if (err) {

@@ -44,13 +44,16 @@ import { getTransactionRecord, subscribeToPendingChannels } from 'ln-sync';
 import { InputFile } from 'grammy';
 import { noLocktimeIdForTransaction } from '@alexbosworth/blockchain';
 import { returnResult } from 'asyncjs-util';
+
 import getNodeDetails from './get_node_details.js';
 import interaction from './interaction.json' with { type: 'json' };
-import { name as named, version } from './../package.json' with { type: 'json' };
+import PACKAGE_JSON from './../package.json' with { type: 'json' };
+
+const { name: named, version } = PACKAGE_JSON ;
 
 const fileAsDoc = file => new InputFile(file.source, file.filename);
 const fromName = node => `${node.alias} ${node.public_key.substring(0, 8)}`;
-const getLnds = (x, y, z) => getNodeDetails({logger: x, names: y, nodes: z});
+const getLnds = (y, z) => getNodeDetails({names: y, nodes: z});
 const hexAsBuffer = hex => Buffer.from(hex, 'hex');
 const {isArray} = Array;
 const isHash = n => /^[0-9A-F]{64}$/i.test(n);
@@ -72,7 +75,6 @@ const sanitize = n => (n || '').replace(/_/g, '\\_').replace(/[*~`]/g, '');
     [min_rebalance_tokens]: <Minimum Rebalance Tokens To Notify Number>
     lnds: [<Authenticated LND API Object>]
     nodes: [<Saved Nodes String>]
-    logger: <Winston Logger Object>
     payments_limit: <Total Spendable Budget Tokens Limit Number>
     request: <Request Function>
   }
@@ -106,10 +108,6 @@ export default (args, cbk) => {
 
         if (!!args.id && args.key.startsWith(`${args.id}:`)){
           return cbk([400, 'ExpectedConnectCodeFromConnectCommandNotBotId']);
-        }
-
-        if (!args.logger) {
-          return cbk([400, 'ExpectedLoggerToStartTelegramBot']);
         }
 
         if (!isArray(args.nodes)) {
@@ -164,14 +162,14 @@ export default (args, cbk) => {
           public_key: node.public_key,
         }));
 
-        args.bot.catch(err => args.logger.error({telegram_error: err}));
+        args.bot.catch(err => console.error({telegram_error: err}));
 
         // Catch message editing
         args.bot.use(async (ctx, next) => {
           try {
             await handleEditedMessage({ctx});
           } catch (err) {
-            args.logger.error({err});
+            console.error({err});
           }
 
           return next();
@@ -183,12 +181,12 @@ export default (args, cbk) => {
             await handleBackupCommand({
               from: ctx.message.from.id,
               id: connectedId,
-              nodes: (await getLnds(args.logger, names, args.nodes)).nodes,
+              nodes: (await getLnds(names, args.nodes)).nodes,
               reply: ctx.reply,
               send: (n, opts) => ctx.replyWithDocument(fileAsDoc(n), opts),
             });
           } catch (err) {
-            args.logger.error({err});
+            console.error({err});
           }
         });
 
@@ -198,12 +196,12 @@ export default (args, cbk) => {
             await handleBalanceCommand({
               from: ctx.message.from.id,
               id: connectedId,
-              nodes: (await getLnds(args.logger, names, args.nodes)).nodes,
+              nodes: (await getLnds(names, args.nodes)).nodes,
               reply: (n, opt) => ctx.reply(n, opt),
               working: () => ctx.replyWithChatAction('typing'),
             });
           } catch (err) {
-            args.logger.error({err});
+            console.error({err});
           }
         });
 
@@ -222,13 +220,13 @@ export default (args, cbk) => {
             await handleCostsCommand({
               from: ctx.message.from.id,
               id: connectedId,
-              nodes: (await getLnds(args.logger, names, args.nodes)).nodes,
+              nodes: (await getLnds(names, args.nodes)).nodes,
               reply: n => ctx.reply(n, markdown),
               request: args.request,
               working: () => ctx.replyWithChatAction('typing'),
             });
           } catch (err) {
-            args.logger.error({err});
+            console.error({err});
           }
         });
 
@@ -238,12 +236,12 @@ export default (args, cbk) => {
             await handleEarningsCommand({
               from: ctx.message.from.id,
               id: connectedId,
-              nodes: (await getLnds(args.logger, names, args.nodes)).nodes,
+              nodes: (await getLnds(names, args.nodes)).nodes,
               reply: n => ctx.reply(n, markdown),
               working: () => ctx.replyWithChatAction('typing'),
             });
           } catch (err) {
-            args.logger.error({err});
+            console.error({err});
           }
         });
 
@@ -253,14 +251,14 @@ export default (args, cbk) => {
             await handleGraphCommand({
               from: ctx.message.from.id,
               id: connectedId,
-              nodes: (await getLnds(args.logger, names, args.nodes)).nodes,
+              nodes: (await getLnds(names, args.nodes)).nodes,
               remove: () => ctx.deleteMessage(),
               reply: (message, options) => ctx.reply(message, options),
               text: ctx.message.text,
               working: () => ctx.replyWithChatAction('typing'),
             });
           } catch (err) {
-            args.logger.error({err});
+            console.error({err});
           }
         });
 
@@ -270,12 +268,12 @@ export default (args, cbk) => {
             await handleInfoCommand({
               from: ctx.message.from.id,
               id: connectedId,
-              nodes: (await getLnds(args.logger, names, args.nodes)).nodes,
+              nodes: (await getLnds(names, args.nodes)).nodes,
               remove: () => ctx.deleteMessage(),
               reply: (message, options) => ctx.reply(message, options),
             });
           } catch (err) {
-            args.logger.error({err});
+            console.error({err});
           }
         });
 
@@ -289,7 +287,7 @@ export default (args, cbk) => {
               request: args.request,
             });
           } catch (err) {
-            args.logger.error({err});
+            console.error({err});
           }
         });
 
@@ -308,14 +306,14 @@ export default (args, cbk) => {
               await handleLiquidityCommand({
                 from: ctx.message.from.id,
                 id: connectedId,
-                nodes: (await getLnds(args.logger, names, args.nodes)).nodes,
+                nodes: (await getLnds(names, args.nodes)).nodes,
                 reply: (n, opt) => ctx.reply(n, opt),
                 text: ctx.message.text,
                 working: () => ctx.replyWithChatAction('typing'),
               });
             });
           } catch (err) {
-            args.logger.error({err});
+            console.error({err});
           }
         });
 
@@ -325,12 +323,12 @@ export default (args, cbk) => {
             await handlePendingCommand({
               from: ctx.message.from.id,
               id: connectedId,
-              nodes: (await getLnds(args.logger, names, args.nodes)).nodes,
+              nodes: (await getLnds(names, args.nodes)).nodes,
               reply: (message, options) => ctx.reply(message, options),
               working: () => ctx.replyWithChatAction('typing'),
             });
           } catch (err) {
-            args.logger.error({err});
+            console.error({err});
           }
         });
 
@@ -351,7 +349,7 @@ export default (args, cbk) => {
               reply: (msg, mode) => ctx.reply(msg, mode),
             });
           } catch (err) {
-            args.logger.error({err});
+            console.error({err});
           }
         });
 
@@ -367,7 +365,7 @@ export default (args, cbk) => {
               reply: n => ctx.reply(n, markdown),
             });
           } catch (err) {
-            args.logger.error({err});
+            console.error({err});
           }
         });
 
@@ -392,7 +390,7 @@ export default (args, cbk) => {
           try {
             await ctx.reply(`🤖\n${commands.join('\n')}`);
           } catch (err) {
-            args.logger.error({err});
+            console.error({err});
           }
         });
 
@@ -403,10 +401,10 @@ export default (args, cbk) => {
               ctx,
               bot: args.bot,
               id: connectedId,
-              nodes: (await getLnds(args.logger, names, args.nodes)).nodes,
+              nodes: (await getLnds(names, args.nodes)).nodes,
             });
           } catch (err) {
-            args.logger.error({err});
+            console.error({err});
           }
         });
 
@@ -419,11 +417,11 @@ export default (args, cbk) => {
                 ctx,
                 api: args.bot.api,
                 id: connectedId,
-                nodes: (await getLnds(args.logger, names, args.nodes)).nodes,
+                nodes: (await getLnds(names, args.nodes)).nodes,
                 request: args.request,
               });
             } catch (err) {
-              args.logger.error({err});
+              console.error({err});
             }
           },
         );
@@ -519,7 +517,7 @@ export default (args, cbk) => {
                 node: {alias: node.alias, public_key: node.public_key},
                 send: (id, n) => args.bot.api.sendDocument(id, fileAsDoc(n)),
               },
-              err => err ? args.logger.error({post_backup_err: err}) : null);
+              err => err ? console.error({post_backup_err: err}) : null);
             },
             restartSubscriptionTimeMs);
           });
@@ -556,7 +554,7 @@ export default (args, cbk) => {
                 send: (id, msg, opt) => args.bot.api.sendMessage(id, msg, opt),
               });
             } catch (err) {
-              args.logger.error({from, post_closed_message_error: err});
+              console.error({from, post_closed_message_error: err});
             }
           });
 
@@ -573,7 +571,7 @@ export default (args, cbk) => {
                 send: (id, msg, opt) => args.bot.api.sendMessage(id, msg, opt),
               });
             } catch (err) {
-              args.logger.error({from, post_open_message_error: err});
+              console.error({from, post_open_message_error: err});
             }
           });
 
@@ -589,7 +587,7 @@ export default (args, cbk) => {
 
       // Send connected message
       connected: ['getNodes', 'userId', ({getNodes}, cbk) => {
-        args.logger.info({is_connected: true});
+        console.info({is_connected: true});
 
         return postNodesOnline({
           id: connectedId,
@@ -640,7 +638,7 @@ export default (args, cbk) => {
               },
               err => {
                 if (err) {
-                  args.logger.error({forwards_notify_err: err});
+                  console.error({forwards_notify_err: err});
                 }
 
                 return setTimeout(cbk, restartSubscriptionTimeMs);
@@ -692,7 +690,7 @@ export default (args, cbk) => {
               },
               send: (id, msg, opts) => args.bot.api.sendMessage(id, msg, opts),
             },
-            err => err ? args.logger.error({settled_err: err}) : null);
+            err => err ? console.error({settled_err: err}) : null);
           });
 
           sub.on('error', err => {
@@ -700,7 +698,7 @@ export default (args, cbk) => {
 
             sub.removeAllListeners();
 
-            args.logger.error({invoices_err: err});
+            console.error({invoices_err: err});
 
             return cbk([503, 'InvoicesSubscriptionFailed', {err, from}]);
           });
@@ -737,7 +735,7 @@ export default (args, cbk) => {
                 send: (id, m, opts) => args.bot.api.sendMessage(id, m, opts),
               });
             } catch (err) {
-              args.logger.error({post_payment_error: err});
+              console.error({post_payment_error: err});
             }
           });
 
@@ -770,7 +768,7 @@ export default (args, cbk) => {
                 send: (id, msg, opt) => args.bot.api.sendMessage(id, msg, opt),
               });
             } catch (err) {
-              args.logger.error({from, post_closing_message_error: err});
+              console.error({from, post_closing_message_error: err});
             }
           });
 
@@ -785,7 +783,7 @@ export default (args, cbk) => {
                 send: (id, msg, opt) => args.bot.api.sendMessage(id, msg, opt),
               });
             } catch (err) {
-              args.logger.error({from, post_opening_message_error: err});
+              console.error({from, post_opening_message_error: err});
             }
           });
 
@@ -834,7 +832,7 @@ export default (args, cbk) => {
 
                 noLocktimeIds.push(noLocktimeId);
               } catch (err) {
-                args.logger.error({err});
+                console.error({err});
               }
             }
 
@@ -854,7 +852,7 @@ export default (args, cbk) => {
                 transaction: record,
               });
             } catch (err) {
-              args.logger.error({chain_tx_err: err, node: from});
+              console.error({chain_tx_err: err, node: from});
 
               if (isFinished) {
                 return;
@@ -877,7 +875,7 @@ export default (args, cbk) => {
 
             isFinished = true;
 
-            args.logger.error({from, chain_subscription_error: err});
+            console.error({from, chain_subscription_error: err});
 
             return cbk(err);
           });

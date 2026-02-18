@@ -13,9 +13,6 @@ const summary = n => `${n}_summary`;
   {
     [exit]: <Final Exit Function>
     [file]: <Write Result to JSON At Path String>
-    logger: {
-      info: <Info Function>
-    }
     reject: <Reject Function>
     resolve: <Resolve Function>
     [table]: <Show as Table From Result Attribute String>
@@ -25,10 +22,10 @@ const summary = n => `${n}_summary`;
   @returns
   <Standard Callback Function> (err, res) => {}
 */
-export default ({exit, file, logger, reject, resolve, table, write}) => {
+export default ({exit, file, reject, resolve, table, write}) => {
   return (err, res) => {
     if (err) {
-      logger.error({err});
+      console.error({err});
 
       return reject();
     }
@@ -47,26 +44,26 @@ export default ({exit, file, logger, reject, resolve, table, write}) => {
     if (!!table && res[table].length === [table].length) {
       const [header] = res[table];
 
-      logger.info(renderTable([header, header.map(n => emptyCell)], {border}));
+      console.info(renderTable([header, header.map(n => emptyCell)], {border}));
 
       return resolve();
     }
 
     // Exit early when a table output is requested
     if (table) {
-      logger.info(renderTable(res[table], {border}));
+      console.info(renderTable(res[table], {border}));
 
       if (isArray(res[summary(table)])) {
-        logger.info(renderTable(res[summary(table)], {border}));
+        console.info(renderTable(res[summary(table)], {border}));
       }
 
       return resolve();
     }
 
     if (typeof res === 'number') {
-      logger.info(`${res}`);
+      console.info(`${res}`);
     } else {
-      logger.info(res);
+      console.info(res);
     }
 
     if (exit) {
