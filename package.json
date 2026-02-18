@@ -12,7 +12,7 @@
   "type": "module",
   "dependencies": {
     "@alexbosworth/blockchain": "3.2.0",
-    "@alexbosworth/caporal": "2.0.0",
+    "@alexbosworth/caporal": "workspace:*",
     "@alexbosworth/html2unicode": "1.1.5",
     "@alexbosworth/node-fetch": "2.6.2",
     "abort-controller": "3.0.0",
@@ -30,7 +30,6 @@
     "ecpair": "3.0.1",
     "grammy": "1.40.0",
     "hot-formula-parser": "4.0.0",
-    "import-lazy": "4.0.0",
     "ini": "6.0.0",
     "inquirer": "13.2.5",
     "ln-accounting": "workspace:*",
