@@ -9,7 +9,6 @@ import {
   handleEditedMessage,
   handleGraphCommand,
   handleInfoCommand,
-  handleInvoiceCommand,
   handleLiquidityCommand,
   handleMempoolCommand,
   handlePendingCommand,
@@ -280,20 +279,6 @@ export default (args, cbk) => {
           }
         });
 
-        // Handle creation of an invoice
-        args.bot.command('invoice', async ctx => {
-          try {
-            await handleInvoiceCommand({
-              ctx,
-              id: connectedId,
-              nodes: (await getLnds(args.logger, names, args.nodes)).nodes,
-              request: args.request,
-            });
-          } catch (err) {
-            args.logger.error({err});
-          }
-        });
-
         // Handle lookup of the mempool
         args.bot.command('mempool', async ctx => {
           try {
@@ -396,7 +381,6 @@ export default (args, cbk) => {
             '/earnings - View earnings over the past week',
             '/graph <pubkey or peer alias> - Show info about a node',
             '/info - Show wallet info',
-            '/invoice [amount] [memo] - Make an invoice',
             '/liquidity [with] - View node liquidity',
             '/mempool - BTC mempool report',
             '/pay - Pay an invoice',
@@ -504,7 +488,6 @@ export default (args, cbk) => {
           {command: 'graph', description: 'Show info about a node'},
           {command: 'help', description: 'Show the list of commands'},
           {command: 'info', description: 'Show wallet info'},
-          {command: 'invoice', description: 'Create an invoice [amt] [memo]'},
           {command: 'liquidity', description: 'Get liquidity [with-peer]'},
           {command: 'mempool', description: 'Get info about the mempool'},
           {command: 'pending', description: 'Get pending forwards, channels'},
