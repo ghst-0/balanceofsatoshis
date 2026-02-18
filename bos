@@ -726,14 +726,12 @@ prog
   .help('Supported updates: forwards, received payments, etc')
   .help('Multiple nodes are supported by repeating the `--node` flag')
   .help('See README for info on persisting the bot through nohup')
-  .help('--use-proxy requires path to JSON file for host/password/port/userId')
   .option('--budget <amount>', 'Spending amount to allow', INT, Number())
   .option('--connect <connect_code>', 'Connection code from /connect')
   .option('--ignore-forwards-below <amount>', 'Ignore forwards of value', INT)
   .option('--ignore-rebalances-below <amt>', 'Ignore rebalances of value', INT)
   .option('--node <node_name>', 'Node to connect to RocketChat', REPEATABLE)
   .option('--reset-api-key', 'Reset the RocketChat API key')
-  .option('--use-proxy <path>', 'Proxy agent to connect to RocketChat')
   .option('--use-rounded-units', 'No leading zeros or fractions on amounts')
   .option('--use-small-units', 'Avoid showing leading zeros on amounts')
   .action((args, options, logger) => {
@@ -756,7 +754,6 @@ prog
           min_rebalance_tokens: options.ignoreRebalancesBelow || undefined,
           nodes: flatten([options.node].filter(n => !!n)),
           payments: {limit: options.budget},
-          proxy: options.useProxy || undefined,
           request: commands.fetchRequest({fetch}),
         });
       } catch (err) {

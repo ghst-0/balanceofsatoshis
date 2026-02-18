@@ -25,7 +25,6 @@ const {isArray} = Array;
     logger: <Winston Logger Object>
     nodes: [<Node Name String>]
     payments_limit: <Total Spendable Budget Tokens Limit Number>
-    [proxy]: <Socks Proxy Agent Object>
     request: <Request Function>
   }
 
@@ -99,7 +98,6 @@ export default (args, cbk) => {
           logger: args.logger,
           nodes: args.nodes,
           payments_limit: args.payments_limit,
-          proxy: args.proxy,
           request: args.request,
         },
         cbk);

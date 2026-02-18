@@ -2,7 +2,6 @@ import asyncAuto from 'async/auto.js';
 import asyncReflect from 'async/reflect.js';
 import { Bot } from 'grammy';
 import { returnResult } from 'asyncjs-util';
-import getSocksProxy from './get_socks_proxy.js';
 import { homePath } from '../storage/index.js';
 import interaction from './interaction.json' with { type: 'json' };
 
@@ -17,7 +16,6 @@ const botKeyFile = 'telegram_bot_api_key';
       makeDirectory: <Make Directory Function>
       writeFile: <Write File Function>
     }
-    [proxy]: <Proxy Details JSON File Path String>
   }
 
   @returns via cbk or Promise
@@ -26,7 +24,7 @@ const botKeyFile = 'telegram_bot_api_key';
     key: <Telegram API Key String>
   }
 */
-export default ({fs, proxy}, cbk) => {
+export default ({fs}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Import inquirer
@@ -57,31 +55,11 @@ export default ({fs, proxy}, cbk) => {
         });
       }],
 
-      // Get proxy agent
-      getProxy: ['validate', ({}, cbk) => {
-        // Exit early if not using a proxy
-        if (!proxy) {
-          return cbk();
-        }
-
-        return getSocksProxy({fs, path: proxy}, cbk);
-      }],
-
       // Create the bot
-      createBot: ['apiKey', 'getProxy', ({apiKey, getProxy}, cbk) => {
+      createBot: ['apiKey', ({apiKey}, cbk) => {
         const {key} = apiKey;
 
-        // Exit early when there is no SOCKS proxy
-        if (!getProxy) {
-          return cbk(null, {key, bot: new Bot(key)});
-        }
-
-        // Initiate bot using proxy agent when configured
-        const bot = new Bot(key, {
-          client: {baseFetchConfig: {agent: getProxy.agent, compress: true}},
-        });
-
-        return cbk(null, {bot, key});
+        return cbk(null, {key, bot: new Bot(key)});
       }],
 
       // Test the created bot

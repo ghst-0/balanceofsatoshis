@@ -34,7 +34,6 @@ const smallUnitsType = 'full';
     payments: {
       [limit]: <Total Spendable Budget Tokens Limit Number>
     }
-    [proxy]: <Path to Proxy JSON File String>
     request: <Request Function>
   }
 
@@ -99,7 +98,7 @@ export default (args, cbk) => {
 
       // Get the telegram bot
       getBot: ['validate', ({}, cbk) => {
-        return getRocketChatBot({fs: args.fs, proxy: args.proxy}, cbk);
+        return getRocketChatBot({fs: args.fs}, cbk);
       }],
 
       // Set the units formatting
