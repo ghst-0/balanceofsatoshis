@@ -10,7 +10,6 @@ import {
   handleMempoolCommand,
   handlePendingCommand,
   handleStartCommand,
-  handleStopCommand,
   handleVersionCommand,
   notifyOfForwards,
   postChainTransaction,
@@ -316,19 +315,6 @@ export default (args, cbk) => {
           });
         });
 
-        // Terminate the running bot
-        args.bot.command('stop', async ctx => {
-          try {
-            await handleStopCommand({
-              from: ctx.message.from.id,
-              id: connectedId,
-              reply: (msg, mode) => ctx.reply(msg, mode),
-            });
-          } catch (err) {
-            console.error({err});
-          }
-        });
-
         // Handle command to view the current version
         args.bot.command('version', async ctx => {
           try {
@@ -359,7 +345,6 @@ export default (args, cbk) => {
             '/mempool - BTC mempool report',
             '/pay - Pay an invoice',
             '/pending - View pending channels, probes, and forwards',
-            '/stop - Stop bot',
             '/version - View the current bot version',
           ];
 
@@ -433,7 +418,6 @@ export default (args, cbk) => {
           {command: 'liquidity', description: 'Get liquidity [with-peer]'},
           {command: 'mempool', description: 'Get info about the mempool'},
           {command: 'pending', description: 'Get pending forwards, channels'},
-          {command: 'stop', description: 'Stop the bot'},
           {command: 'version', description: 'View current bot version'},
         ]);
       }],
