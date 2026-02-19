@@ -1,12 +1,10 @@
 import {
   handleBackupCommand,
   handleBalanceCommand,
-  handleButtonPush,
   handleConnectCommand,
   handleCostsCommand,
   handleEarningsCommand,
   handleEditedMessage,
-  handleGraphCommand,
   handleInfoCommand,
   handleLiquidityCommand,
   handleMempoolCommand,
@@ -21,7 +19,6 @@ import {
   postOpenMessage,
   postOpeningMessage,
   postNodesOnline,
-  postSettledInvoice,
   postSettledPayment,
   postUpdatedBackup
 } from 'ln-telegram';
@@ -34,7 +31,6 @@ import { getForwards,
   getWalletInfo,
   subscribeToBackups,
   subscribeToChannels,
-  subscribeToInvoices,
   subscribeToPastPayments,
   subscribeToTransactions
 } from 'ln-service';
@@ -54,7 +50,6 @@ const fromName = node => `${node.alias} ${node.public_key.substring(0, 8)}`;
 const getLnds = (y, z) => getNodeDetails({names: y, nodes: z});
 const hexAsBuffer = hex => Buffer.from(hex, 'hex');
 const {isArray} = Array;
-const isHash = n => /^[0-9A-F]{64}$/i.test(n);
 let isBotInit = false;
 const isNumber = n => !isNaN(n);
 const limit = 99999;
@@ -243,23 +238,6 @@ export default (args, cbk) => {
           }
         });
 
-        // Handle command to look up nodes in the graph
-        args.bot.command('graph', async ctx => {
-          try {
-            await handleGraphCommand({
-              from: ctx.message.from.id,
-              id: connectedId,
-              nodes: (await getLnds(names, args.nodes)).nodes,
-              remove: () => ctx.deleteMessage(),
-              reply: (message, options) => ctx.reply(message, options),
-              text: ctx.message.text,
-              working: () => ctx.replyWithChatAction('typing'),
-            });
-          } catch (err) {
-            console.error({err});
-          }
-        });
-
         // Handle command to look up wallet info
         args.bot.command('info', async ctx => {
           try {
@@ -387,20 +365,6 @@ export default (args, cbk) => {
 
           try {
             await ctx.reply(`🤖\n${commands.join('\n')}`);
-          } catch (err) {
-            console.error({err});
-          }
-        });
-
-        // Handle button push type commands
-        args.bot.on('callback_query:data', async ctx => {
-          try {
-            await handleButtonPush({
-              ctx,
-              bot: args.bot,
-              id: connectedId,
-              nodes: (await getLnds(names, args.nodes)).nodes,
-            });
           } catch (err) {
             console.error({err});
           }
@@ -626,62 +590,6 @@ export default (args, cbk) => {
             });
           },
           cbk);
-        },
-        cbk);
-      }],
-
-      // Subscribe to invoices
-      invoices: ['getNodes', 'userId', ({getNodes}, cbk) => {
-        return asyncEach(getNodes, (node, cbk) => {
-          const sub = subscribeToInvoices({lnd: node.lnd});
-
-          subscriptions.push(sub);
-
-          sub.on('invoice_updated', invoice => {
-            // Exit early when an invoice has no associated hash
-            if (!isHash(invoice.id)) {
-              return;
-            }
-
-            return postSettledInvoice({
-              from: node.from,
-              id: connectedId,
-              invoice: {
-                confirmed_at: invoice.confirmed_at,
-                description: invoice.description,
-                id: invoice.id,
-                is_confirmed: invoice.is_confirmed,
-                is_push: invoice.is_push,
-                payments: invoice.payments,
-                received: invoice.received,
-                received_mtokens: invoice.received_mtokens,
-              },
-              key: node.public_key,
-              lnd: node.lnd,
-              min_rebalance_tokens: args.min_rebalance_tokens,
-              nodes: getNodes,
-              quiz: ({answers, correct, question}) => {
-                return args.bot.api.sendQuiz(
-                  connectedId,
-                  question,
-                  answers,
-                  {correct_option_id: correct},
-                );
-              },
-              send: (id, msg, opts) => args.bot.api.sendMessage(id, msg, opts),
-            },
-            err => err ? console.error({settled_err: err}) : null);
-          });
-
-          sub.on('error', err => {
-            const from = node.from;
-
-            sub.removeAllListeners();
-
-            console.error({invoices_err: err});
-
-            return cbk([503, 'InvoicesSubscriptionFailed', {err, from}]);
-          });
         },
         cbk);
       }],

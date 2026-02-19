@@ -1,12 +1,14 @@
-import EventEmitter from 'events';
+import EventEmitter from 'node:events';
 import asyncUntil from 'async/until.js';
 import { decodeChanId } from 'bolt07';
-import { getHeight } from 'ln-service';
-import { getInvoices } from 'ln-service';
-import { subscribeToGraph } from 'ln-service';
-import { subscribeToInvoice } from 'ln-service';
-import { subscribeToInvoices } from 'ln-service';
-import { subscribeToPeers } from 'ln-service';
+import {
+  getHeight,
+  getInvoices,
+  subscribeToGraph,
+  subscribeToInvoice,
+  subscribeToInvoices,
+  subscribeToPeers
+} from 'ln-service';
 import decodeTrigger from './decode_trigger.js';
 
 const defaultInvoicesLimit = 100;
