@@ -1,5 +1,4 @@
 import {
-  actOnMessageReply,
   handleBackupCommand,
   handleBalanceCommand,
   handleButtonPush,
@@ -15,7 +14,6 @@ import {
   handleStartCommand,
   handleStopCommand,
   handleVersionCommand,
-  isMessageReplyAction,
   notifyOfForwards,
   postChainTransaction,
   postClosedMessage,
@@ -407,24 +405,6 @@ export default (args, cbk) => {
             console.error({err});
           }
         });
-
-        // Listen for replies to created invoice messages
-        args.bot.on('message').filter(
-          ctx => isMessageReplyAction({ctx, nodes: getNodes}),
-          async ctx => {
-            try {
-              return await actOnMessageReply({
-                ctx,
-                api: args.bot.api,
-                id: connectedId,
-                nodes: (await getLnds(names, args.nodes)).nodes,
-                request: args.request,
-              });
-            } catch (err) {
-              console.error({err});
-            }
-          },
-        );
 
         args.bot.start();
 
