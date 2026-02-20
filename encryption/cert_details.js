@@ -1,4 +1,4 @@
-const byteArrayAsNumber = n => parseInt(Buffer.from(n).toString('hex'), 16);
+const byteArrayAsNumber = n => Number.parseInt(Buffer.from(n).toString('hex'), 16);
 const bytesCount = len => (128 & len) ? 127 & len : 0;
 const containerTypes = [48, 49, 160, 161];
 const dataStartIndex = 2;

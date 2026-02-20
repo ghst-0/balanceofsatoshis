@@ -1,7 +1,7 @@
 import moment from 'moment';
 
 const formatAsBigUnit = tokens => (tokens / 1e8).toFixed(8);
-const percentFormat = n => isNaN(n) ? '0' : (n * 100).toFixed();
+const percentFormat = n => Number.isNaN(n) ? '0' : (n * 100).toFixed();
 
 /** Derive report overview
 

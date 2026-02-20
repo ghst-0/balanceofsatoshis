@@ -11,7 +11,7 @@ const { defaultCurrency, defaultFiat } = constants
 const assetType = 'BTC';
 const currentDate = new Date().toISOString();
 const empty = '';
-const round = n => parseFloat(n).toFixed(2);
+const round = n => Number.parseFloat(n).toFixed(2);
 const sumOf = arr => arr.reduce((sum, n) => sum + n, 0);
 const summaryHeadings = ['Total', 'Asset', 'Report Date', 'Total Fiat'];
 

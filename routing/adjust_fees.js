@@ -12,7 +12,7 @@ const asTxOut = n => `${n.transaction_id}:${n.transaction_vout}`;
 const flatten = arr => [].concat(...arr);
 const isAllUndefined = arr => arr.findIndex(n => n !== undefined) === -1;
 const {isArray} = Array;
-const isNumber = n => !!n && !isNaN(n);
+const isNumber = n => !!n && !Number.isNaN(n);
 const {max} = Math;
 const {min} = Math;
 const minCltvDelta = 18;

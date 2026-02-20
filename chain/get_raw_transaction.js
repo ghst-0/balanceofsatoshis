@@ -4,7 +4,7 @@ import { returnResult } from 'asyncjs-util';
 import { Transaction } from 'bitcoinjs-lib';
 import { endpoints } from './blockstream.json' with { type: 'json' };
 
-const defaultInterval = n => 50 * Math.pow(2, n);
+const defaultInterval = n => 50 * 2 ** n;
 const isHash = n => !!n && /^[0-9A-F]{64}$/i.test(n);
 const isHex = n => !!n && !(n.length % 2) && /^[0-9A-F]*$/i.test(n);
 

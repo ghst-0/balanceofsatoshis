@@ -45,16 +45,16 @@ import PACKAGE_JSON from './../package.json' with { type: 'json' };
 const { name: named, version } = PACKAGE_JSON ;
 
 const fileAsDoc = file => new InputFile(file.source, file.filename);
-const fromName = node => `${node.alias} ${node.public_key.substring(0, 8)}`;
+const fromName = node => `${node.alias} ${node.public_key.slice(0, 8)}`;
 const getLnds = (y, z) => getNodeDetails({names: y, nodes: z});
 const hexAsBuffer = hex => Buffer.from(hex, 'hex');
 const {isArray} = Array;
 let isBotInit = false;
-const isNumber = n => !isNaN(n);
+const isNumber = n => !Number.isNaN(n);
 const limit = 99999;
 const markdown = {parse_mode: 'Markdown'};
 const restartSubscriptionTimeMs = 1000 * 30;
-const sanitize = n => (n || '').replace(/_/g, '\\_').replace(/[*~`]/g, '');
+const sanitize = n => (n || '').replaceAll('_', '\\_').replaceAll(/[*~`]/g, '');
 
 /** Start a Telegram bot
 
@@ -90,7 +90,7 @@ export default (args, cbk) => {
           return cbk([400, 'ExpectedAskFunctionToStartTelegramBot']);
         }
 
-        if (!isArray(args.lnds) || !args.lnds.length) {
+        if (!isArray(args.lnds) || args.lnds.length === 0) {
           return cbk([400, 'ExpectedLndsToStartTelegramBot']);
         }
 
@@ -760,7 +760,9 @@ export default (args, cbk) => {
       isStopped = true;
 
       // Cancel all open subscriptions
-      subscriptions.forEach(n => n.removeAllListeners());
+      for (const n of subscriptions) {
+        n.removeAllListeners()
+      }
 
       const result = {result: {connected: connectedId, failure: err}};
 

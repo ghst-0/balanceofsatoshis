@@ -2,8 +2,8 @@ import asyncAuto from 'async/auto.js';
 import asyncRetry from 'async/retry.js';
 import { returnResult } from 'asyncjs-util';
 
-const interval = n => 50 * Math.pow(2, n);
-const isNumber = n => !isNaN(n);
+const interval = n => 50 * 2 ** n;
+const isNumber = n => !Number.isNaN(n);
 
 /** Get mempool size
 
