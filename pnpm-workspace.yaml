@@ -9,3 +9,5 @@ minimumReleaseAgeExclude:
 - "@oxlint/binding-linux-x64-gnu"
 - inquirer
 - "@inquirer/core"
+- "@types/node"
+- bn.js
