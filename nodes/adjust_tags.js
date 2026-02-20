@@ -88,7 +88,7 @@ export default (args, cbk) => {
       getTags: ['registerHomeDir', ({}, cbk) => {
         return args.fs.getFile(tagFilePath(), (err, res) => {
           // Potentially there's no tag file yet
-          if (!!err || !res) {
+          if (err || !res) {
             return cbk(null, Buffer.from(stringify(defaultTagsFile)));
           }
 

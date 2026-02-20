@@ -60,7 +60,7 @@ export default (args, cbk) => {
 
         return fs.getFile(path, (err, res) => {
           // Exit early on errors, there is no config found
-          if (!!err || !res) {
+          if (err || !res) {
             return cbk();
           }
 

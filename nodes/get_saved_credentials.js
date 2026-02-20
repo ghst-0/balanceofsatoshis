@@ -54,7 +54,7 @@ export default ({fs, node}, cbk) => {
 
         return fs.getFile(path, (err, res) => {
           // Exit early on errors, there is no credential found
-          if (!!err || !res) {
+          if (err || !res) {
             return cbk(null, {node});
           }
 

@@ -41,7 +41,7 @@ export default ({fs}, cbk) => {
       getTags: ['validate', ({}, cbk) => {
         return fs.getFile(tagFilePath(), (err, res) => {
           // Fail back to no tags when there is an error
-          if (!!err || !res) {
+          if (err || !res) {
             return cbk(null, defaultTags);
           }
 

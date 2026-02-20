@@ -169,7 +169,7 @@ export default (args, cbk) => {
         return asyncMap(args.lnds, (lnd, cbk) => {
           return findKey({lnd, query: args.in}, (err, res) => {
             // Exit for ambiguous queries
-            if (!!err && isAmbiguous(err)) {
+            if (err && isAmbiguous(err)) {
               return cbk(err);
             }
 
@@ -210,7 +210,7 @@ export default (args, cbk) => {
         return asyncMap(args.lnds, (lnd, cbk) => {
           return findKey({lnd, query: args.out}, (err, res) => {
             // Exit for ambiguous queries
-            if (!!err && isAmbiguous(err)) {
+            if (err && isAmbiguous(err)) {
               return cbk(err);
             }
 

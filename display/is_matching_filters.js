@@ -53,7 +53,7 @@ export default ({filters, variables}) => {
   const [errored] = filtered.filter(n => !!n.error);
 
   // Exit early when a filter resulted in an error
-  if (!!errored && !!errored.error) {
+  if (errored && errored.error) {
     return {failure: {error: errored.error, formula: errored.formula}};
   }
 

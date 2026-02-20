@@ -41,7 +41,7 @@ export default ({fs}, cbk) => {
       getIcons: ['validate', ({}, cbk) => {
         return fs.getFile(tagFilePath(), (err, res) => {
           // Exit early when there is no tag file
-          if (!!err || !res) {
+          if (err || !res) {
             return cbk(null, {nodes: []});
           }
 

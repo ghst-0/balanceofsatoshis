@@ -135,7 +135,7 @@ export default ({after, before, lnd, via}, cbk) => {
           return getNode({lnd, public_key: key}, cbk);
         },
         (err, res) => {
-          if (!!err && err.slice().shift() === 404) {
+          if (err && err.slice().shift() === 404) {
             return cbk(null, {channels: []});
           }
 

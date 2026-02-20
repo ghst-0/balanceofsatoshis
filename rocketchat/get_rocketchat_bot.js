@@ -43,7 +43,7 @@ export default ({fs}, cbk) => {
       apiKey: ['inquirer', 'validate', ({inquirer}, cbk) => {
         return fs.getFile(homePath({file: botKeyFile}).path, (err, res) => {
           // Exit early when resetting the API key
-          if (!!err || !res || !res.toString() || !!fs.is_reset_state) {
+          if (err || !res || !res.toString() || !!fs.is_reset_state) {
             const token = interaction.api_token_prompt;
 
             inquirer.prompt([token]).then(({key}) => cbk(null, {key}));
