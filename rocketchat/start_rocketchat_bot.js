@@ -3,7 +3,6 @@ import {
   handleConnectCommand,
   handleCostsCommand,
   handleEarningsCommand,
-  handleEditedMessage,
   handleInfoCommand,
   handleLiquidityCommand,
   handleMempoolCommand,
@@ -150,17 +149,6 @@ export default (args, cbk) => {
         }));
 
         args.bot.catch(err => console.error({telegram_error: err}));
-
-        // Catch message editing
-        args.bot.use(async (ctx, next) => {
-          try {
-            await handleEditedMessage({ctx});
-          } catch (err) {
-            console.error({err});
-          }
-
-          return next();
-        });
 
         // Handle lookup of total funds
         args.bot.command('balance', async ctx => {
