@@ -36,7 +36,7 @@ export default args => {
   parser.setVariable('INBOUND_FEE_RATE', args.inbound_fee_rate);
   parser.setVariable('OUTBOUND', args.outbound_liquidity);
 
-  args.node_rates.forEach(({key, rate}) => parser.setVariable(key, rate));
+  args.node_rates.forEach(({key, rate}) => {parser.setVariable(key, rate)});
 
   const parsedRate = parser.parse(args.fee_rate.toUpperCase());
 

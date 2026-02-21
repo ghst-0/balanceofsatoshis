@@ -50,7 +50,7 @@ const getLnds = (y, z) => getNodeDetails({names: y, nodes: z});
 const hexAsBuffer = hex => Buffer.from(hex, 'hex');
 const {isArray} = Array;
 let isBotInit = false;
-const isNumber = n => !Number.isNaN(n);
+const isNumber = n => !isNaN(n);
 const limit = 99999;
 const markdown = {parse_mode: 'Markdown'};
 const restartSubscriptionTimeMs = 1000 * 30;

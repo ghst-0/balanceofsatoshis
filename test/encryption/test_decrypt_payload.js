@@ -29,7 +29,7 @@ const tests = [
       secret,
       encrypted: Buffer.from(encrypted, 'base64').toString('hex'),
     },
-    description: 'Paylaod is decrypted',
+    description: 'Payload is decrypted',
     expected: {
       pair: 'BTCUSD',
       price: 4004.14,
@@ -38,18 +38,18 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected}) => {
-  return test(description, (t, end) => {
+for (const { args, description, error, expected } of tests) {
+  test(description, (t, end) => {
     if (error) {
       throws(() => decryptPayload(args), new Error(error), 'Got error');
     } else {
       const [{pair, price, timestamp}] = parse(decryptPayload(args).payload);
 
       equal(pair, expected.pair, 'Got expected pair');
-      equal(price, expected.price, 'Got expectd price');
+      equal(price, expected.price, 'Got expected price');
       equal(timestamp, expected.timestamp, 'Got expected timestamp');
     }
 
     return end();
   });
-});
+}

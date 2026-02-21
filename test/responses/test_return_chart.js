@@ -31,7 +31,7 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected, res}) => {
+for (const { args, description, error, expected, res } of tests) {
   test(description, (t, end) => {
     const loggedErrors = [];
     const loggedInfo = [];
@@ -57,4 +57,4 @@ tests.forEach(({args, description, error, expected, res}) => {
       },
     })(null, res);
   });
-});
+}

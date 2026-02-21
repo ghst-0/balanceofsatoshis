@@ -262,22 +262,23 @@ export default ({fs, node, request, style}, cbk) => {
         nodes: getGraph.nodes,
       });
 
-      channelsActivity.activity.forEach(n => activity.push(n));
+      for (const n of channelsActivity.activity) {
+        activity.push(n)
+      }
 
-      getInvoices.invoices.slice().reverse()
+      for (const invoice1 of getInvoices.invoices.slice().reverse()
         .filter(invoice => !!invoice.confirmed_at)
         .filter(invoice => now() - Date.parse(invoice.confirmed_at) < afterMs)
         .filter(invoice => {
           const isToSelf = getPayments.payments.find(n => n.id === invoice.id);
 
           return !isToSelf;
-        })
-        .forEach(invoice => {
+        })) {
           const elements = [];
-          const received = invoice.received;
+          const received = invoice1.received;
 
           elements.push({
-            subtitle: moment(invoice.confirmed_at).fromNow(),
+            subtitle: moment(invoice1.confirmed_at).fromNow(),
             title: getInfo.alias || getInfo.public_key,
           });
 
@@ -286,18 +287,18 @@ export default ({fs, node, request, style}, cbk) => {
           });
 
           elements.push({
-            is_hidden: !invoice.description,
-            details: `"${invoice.description}"`,
+            is_hidden: !invoice1.description,
+            details: `"${invoice1.description}"`,
           });
 
           elements.push({
             details: `Received: ${formatAsBigUnit(received)} ${currency}`,
           });
 
-          return activity.push({elements, date: invoice.confirmed_at});
-        });
+          activity.push({ elements, date: invoice1.confirmed_at })
+        }
 
-      getRebalances.forEach(rebalance => {
+      for (const rebalance of getRebalances) {
           const elements = [];
           const {fee} = rebalance;
           const {tokens} = rebalance;
@@ -334,53 +335,51 @@ export default ({fs, node, request, style}, cbk) => {
             details: `Fee: ${formatAsBigUnit(fee)} ${currency}`,
           });
 
-          return activity.push({elements, date: rebalance.created_at});
-        });
+          activity.push({ elements, date: rebalance.created_at })
+        }
 
-      getPayments.payments.slice().reverse()
+      for (const payment1 of getPayments.payments.slice().reverse()
         .filter(payment => now() - Date.parse(payment.created_at) < afterMs)
-        .filter(payment => payment.destination !== getInfo.public_key)
-        .forEach(payment => {
+        .filter(payment => payment.destination !== getInfo.public_key)) {
           const elements = [];
-          const node = findNode(payment.destination);
-          const {request} = payment;
+          const node = findNode(payment1.destination);
+          const {request} = payment1;
 
           elements.push({
-            subtitle: moment(payment.created_at).fromNow(),
-            title: node.alias || payment.destination,
+            subtitle: moment(payment1.created_at).fromNow(),
+            title: node.alias || payment1.destination,
           });
 
           elements.push({action: 'Sent payment'});
 
-          if (payment.request) {
+          if (payment1.request) {
             elements.push({
               details: `"${parsePaymentRequest({request}).description}"`,
             });
           }
 
           elements.push({
-            details: `Sent: ${formatAsBigUnit(payment.tokens)} ${currency}`,
+            details: `Sent: ${formatAsBigUnit(payment1.tokens)} ${currency}`,
           });
 
-          if (payment.fee) {
+          if (payment1.fee) {
             elements.push({
-              details: `Fee: ${formatAsBigUnit(payment.fee)} ${currency}`,
+              details: `Fee: ${formatAsBigUnit(payment1.fee)} ${currency}`,
             });
           }
 
-          return activity.push({elements, date: payment.created_at});
-        });
+          activity.push({ elements, date: payment1.created_at })
+        }
 
-      getClosed.channels
-        .filter(channel => currentHeight - channel.close_confirm_height < 160)
-        .forEach(channel => {
-          const closeHeight = channel.close_confirm_height;
-          const node = findNode(channel.partner_public_key);
+      for (const channel1 of getClosed.channels
+        .filter(channel => currentHeight - channel.close_confirm_height < 160)) {
+          const closeHeight = channel1.close_confirm_height;
+          const node = findNode(channel1.partner_public_key);
 
           const msSinceClose = (currentHeight - closeHeight) * msPerBlock;
 
           const channels = getChannels.channels
-            .filter(n => n.partner_public_key === channel.partner_public_key);
+            .filter(n => n.partner_public_key === channel1.partner_public_key);
 
           const elements = [];
 
@@ -388,7 +387,7 @@ export default ({fs, node, request, style}, cbk) => {
 
           elements.push({
             subtitle: date.fromNow(),
-            title: node.alias || channel.partner_public_key,
+            title: node.alias || channel1.partner_public_key,
           });
 
           elements.push({
@@ -408,10 +407,10 @@ export default ({fs, node, request, style}, cbk) => {
             details: `Liquidity now ${inboundLiquidity}, ${outboundLiquidity}`,
           });
 
-          return activity.push({elements, date: date.toISOString()});
-        });
+          activity.push({ elements, date: date.toISOString() })
+        }
 
-      getForwards.peers.slice().reverse().forEach(peer => {
+      for (const peer of getForwards.peers.slice().reverse()) {
         const lastActivity = [peer.last_inbound_at, peer.last_outbound_at];
         const elements = [];
 
@@ -452,21 +451,23 @@ export default ({fs, node, request, style}, cbk) => {
           details: `Outbound liquidity: ${outbound} ${currency}`,
         });
 
-        return activity.push({elements, date: last});
-      });
+        activity.push({ elements, date: last })
+      }
 
-      if (activity.length) {
+      if (activity.length > 0) {
         report.push({});
         report.push({title: 'Recent Activity:'});
       }
 
       activity.sort((a, b) => a.date > b.date ? -1 : 1);
 
-      activity.forEach(({elements}) => {
+      for (const { elements } of activity) {
         report.push({});
 
-        return elements.forEach(element => report.push(element))
-      });
+        for (const element of elements) {
+          report.push(element)
+        }
+      }
 
       const renderReport = (lines) => {
         return lines

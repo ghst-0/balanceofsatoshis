@@ -24,7 +24,7 @@ const umbrelUser = 'umbrel';
 */
 export default ({os}) => {
   if (!os) {
-    throw new Error('ExpectedOperatingSytemMethodsToDetermineLndDirectory');
+    throw new Error('isNaNExpectedOperatingSystemMethodsToDetermineLndDirectory');
   }
 
   if (!os.homedir) {

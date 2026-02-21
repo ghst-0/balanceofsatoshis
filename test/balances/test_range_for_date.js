@@ -39,8 +39,8 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected}) => {
-  return test(description, (t, end) => {
+for (const { args, description, error, expected } of tests) {
+  test(description, (t, end) => {
     if (error) {
       throws(() => rangeForDate(args), new Error(error), 'Got expected error');
     } else if (!args.year && !!args.month) {
@@ -52,4 +52,4 @@ tests.forEach(({args, description, error, expected}) => {
 
     return end();
   });
-});
+}

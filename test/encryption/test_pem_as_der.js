@@ -11,12 +11,12 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected}) => {
-  return test(description, (t, end) => {
+for (const { args, description, error, expected } of tests) {
+  test(description, (t, end) => {
     const {der} = pemAsDer(args);
 
     equal(der.toString('hex'), expected.der, 'Got expected der encoded pem');
 
     return end();
   });
-});
+}

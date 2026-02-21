@@ -9,7 +9,7 @@ const tests = [
   {
     args: {},
     description: 'Operating system methods are required',
-    error: 'ExpectedOperatingSytemMethodsToDetermineLndDirectory',
+    error: 'isNaNExpectedOperatingSystemMethodsToDetermineLndDirectory',
   },
   {
     args: {os: {userInfo}},
@@ -65,8 +65,8 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected}) => {
-  return test(description, async () => {
+for (const { args, description, error, expected } of tests) {
+  test(description, async () => {
     if (error) {
       throws(() => lndDirectory(args), new Error(error), 'Got expected error');
     } else {
@@ -75,4 +75,4 @@ tests.forEach(({args, description, error, expected}) => {
       equal(path, expected.path, 'Got expected path');
     }
   });
-});
+}

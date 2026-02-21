@@ -21,10 +21,10 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, expected}) => {
-  return test(description, (t, end) => {
+for (const { args, description, expected } of tests) {
+  test(description, (t, end) => {
     deepEqual(segmentMeasure(args), expected, 'Got expected result');
 
     return end();
   });
-});
+}

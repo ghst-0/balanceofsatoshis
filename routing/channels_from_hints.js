@@ -44,11 +44,12 @@ export default ({request}) => {
     return {channels};
   }
 
-  routes.forEach(route => {
-    return route.forEach((hop, i) => {
+  for (const route of routes) {
+    for (const hop of route) {
+      let i = route.indexOf(hop)
       // Skip the first hop which is just an anchor
       if (!i) {
-        return;
+        continue
       }
 
       channels.push({
@@ -67,8 +68,8 @@ export default ({request}) => {
           },
         ],
       });
-    });
-  });
+    }
+  }
 
   return {channels};
 };

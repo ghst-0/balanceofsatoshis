@@ -59,19 +59,19 @@ export default ({lnd}, cbk) => {
 
               token = res.next || false;
 
-              res.invoices.forEach(({description, id}) => {
+              for (const { description, id } of res.invoices) {
                 try {
                   const trigger = decodeTrigger({encoded: description});
 
-                  return triggers.push({
+                  triggers.push({
                     id,
                     connectivity: trigger.connectivity,
                     follow: trigger.follow,
-                  });
+                  })
                 } catch {
                   // Ignore invoices that are not triggers
                 }
-              });
+              }
 
               return cbk();
             });

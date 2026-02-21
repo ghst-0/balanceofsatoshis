@@ -46,14 +46,15 @@ export default ({command, lnd}, cbk) => {
         const edges = new Set();
 
         // Look for elements to lookup
-        tokens.forEach((token, i) => {
+        for (const token of tokens) {
+          const i = tokens.indexOf(token)
           const next = tokens[i + 1];
 
           // Avoid edges can be evaluated for removal based on missing channels
           if (token === '--avoid' && isEdge(next)) {
             edges.add(channelForEdge(next));
           }
-        });
+        }
 
         return cbk(null, {ids: setAsArray(edges)});
       }],
@@ -74,23 +75,24 @@ export default ({command, lnd}, cbk) => {
       revised: ['getMissing', 'tokens', ({getMissing, tokens}, cbk) => {
         const skips = new Set();
 
-        tokens.forEach((token, i) => {
+        for (const token of tokens) {
+          const i = tokens.indexOf(token)
           const next = tokens[i + 1];
 
           // Exit early when not an avoid edge
           if (token !== '--avoid' || !isEdge(next)) {
-            return;
+            continue
           }
 
           // Exit early when avoid edge channel is still present
           if (!getMissing.includes(channelForEdge(next))) {
-            return;
+            continue
           }
 
           // Mark the avoid edge where channel is missing as a skip
           skips.add(i);
           skips.add(i + 1);
-        });
+        }
 
         return cbk(null, detokenize(tokens.filter((_, i) => !skips.has(i))));
       }],

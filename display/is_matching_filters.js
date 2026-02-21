@@ -25,21 +25,23 @@ const {keys} = Object;
 */
 export default ({filters, variables}) => {
   // Exit early when there is nothing to match on
-  if (!filters.length) {
+  if (filters.length === 0) {
     return {is_matching: true};
   }
 
   const vars = {};
 
-  [defaultVariables, variables].forEach(n => assign(vars, n));
+  for (const n of [defaultVariables, variables]) {
+    assign(vars, n)
+  }
 
   const filtered = filters.map(formula => {
     const parser = new Parser();
 
-    keys(vars).forEach(key => {
+    for (const key of keys(vars)) {
       parser.setVariable(key.toLowerCase(), vars[key]);
       parser.setVariable(key.toUpperCase(), vars[key]);
-    });
+    }
 
     const parsed = parser.parse(formula);
 
@@ -58,7 +60,7 @@ export default ({filters, variables}) => {
   }
 
   // Exit early when there is a filter hit
-  if (filtered.filter(n => n !== false).length) {
+  if (filtered.some(n => n !== false)) {
     return {is_matching: false};
   }
 

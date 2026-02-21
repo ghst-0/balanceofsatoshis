@@ -49,11 +49,10 @@ export default ({backups, chain, channels, days, nodes, now}) => {
   const blocks = minutesPerDay / minutesPerBlock(chain.network) * days;
   const msPerBlock = msPerMinute * minutesPerBlock(chain.network);
 
-  channels
-    .filter(({id}) => {
-      return chain.height - decodeChanId({channel: id}).block_height < blocks;
-    })
-    .forEach(channel => {
+  for (const channel of channels
+    .filter(({ id }) => {
+      return chain.height - decodeChanId({ channel: id }).block_height < blocks;
+    })) {
       const chanId = channel.id;
       const elements = [];
       const pubKey = channel.partner_public_key;
@@ -98,8 +97,8 @@ export default ({backups, chain, channels, days, nodes, now}) => {
 
       elements.push({details: `Backup: ${utxo} ${backup}`});
 
-      return activity.push({elements, date: date.toISOString()});
-    });
+      activity.push({ elements, date: date.toISOString() })
+    }
 
   return {activity};
 };

@@ -74,17 +74,16 @@ export default ({ended, id, original, pending, txs, vout}) => {
     return chan.transaction_id === id && chan.transaction_vout === vout;
   });
 
-  if (spendPending.length) {
-    spendPending
-      .filter(pending => !!pending.is_closing)
-      .forEach(pending => {
-        return records.push({
+  if (spendPending.length > 0) {
+    for (const pending1 of spendPending
+      .filter(pending => !!pending.is_closing)) {
+        records.push({
           action: 'channel_closing',
-          balance: pending.pending_balance,
-          timelock: pending.timelock_expiration,
-          with: pending.partner_public_key,
-        });
-      });
+          balance: pending1.pending_balance,
+          timelock: pending1.timelock_expiration,
+          with: pending1.partner_public_key,
+        })
+      }
   }
 
   if (!!spendClosing && spendClosing.is_partner_initiated) {
@@ -97,21 +96,21 @@ export default ({ended, id, original, pending, txs, vout}) => {
   }
 
   if (spendTx) {
-    fromHex(spendTx.transaction).ins.forEach(input => {
+    for (const input of fromHex(spendTx.transaction).ins) {
       const grandParentTx = txs.find(n => n.id === original);
 
       if (!grandParentTx) {
-        return;
+        continue
       }
 
-      return fromHex(grandParentTx.transaction).ins.forEach(grandIn => {
+      for (const grandIn of fromHex(grandParentTx.transaction).ins) {
         const grandTx = txs.find(n => n.id === idFromHash(grandIn.hash));
 
         if (!grandTx) {
-          return;
+          continue
         }
 
-        return fromHex(grandTx.transaction).ins.forEach(greatIn => {
+        for (const greatIn of fromHex(grandTx.transaction).ins) {
 
           const closingTime = ended.find(chan => {
             return chan.close_transaction_id === idFromHash(greatIn.hash);
@@ -128,9 +127,9 @@ export default ({ended, id, original, pending, txs, vout}) => {
               with: closingTime.partner_public_key,
             });
           }
-        });
-      });
-    });
+        }
+      }
+    }
   }
 
   const spendClose = ended.find(n => n.close_transaction_id === id);

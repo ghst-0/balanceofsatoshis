@@ -31,8 +31,8 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected}) => {
-  return test(description, async () => {
+for (const { args, description, error, expected } of tests) {
+  test(description, async () => {
     if (error) {
       await rejects(tableRowsFromCsv(args), error, 'Got expected error');
     } else {
@@ -41,4 +41,4 @@ tests.forEach(({args, description, error, expected}) => {
       deepEqual(rows, expected.rows, 'Got expected table rows');
     }
   });
-});
+}

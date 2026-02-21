@@ -38,8 +38,8 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected}) => {
-  return test(description, async () => {
+for (const { args, description, error, expected } of tests) {
+  test(description, async () => {
     if (error) {
       await rejects(writeJsonFile(args), error, 'Got expected err');
     } else {
@@ -53,4 +53,4 @@ tests.forEach(({args, description, error, expected}) => {
       await writeJsonFile(args);
     }
   });
-});
+}

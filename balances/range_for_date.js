@@ -40,13 +40,19 @@ export default ({date, month, year}) => {
   const end = after.clone();
 
   if (!!month && monthNumbers.indexOf(month) !== notFoundIndex) {
-    [after, end].forEach(n => n.month(Number(month) - monthOffset));
+    for (const n of [after, end]) {
+      n.month(Number(month) - monthOffset)
+    }
   } else if (month) {
-    [after, end].forEach(n => n.month(month));
+    for (const n of [after, end]) {
+      n.month(month)
+    }
   }
 
   if (date) {
-    [after, end].forEach(n => n.date(date));
+    for (const n of [after, end]) {
+      n.date(date)
+    }
   }
 
   if (date) {

@@ -36,12 +36,12 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, expected}) => {
-  return test(description, (t, end) => {
+for (const { args, description, expected } of tests) {
+  test(description, (t, end) => {
     const {fees} = feesForSegment(args);
 
     deepEqual(fees, expected.fees, 'Got expected fees');
 
     return end();
   });
-});
+}

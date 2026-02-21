@@ -3,7 +3,7 @@ import asyncRetry from 'async/retry.js';
 import { returnResult } from 'asyncjs-util';
 
 const interval = n => 50 * 2 ** n;
-const isNumber = n => !Number.isNaN(n);
+const isNumber = n => !isNaN(n);
 
 /** Get mempool size
 

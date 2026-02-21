@@ -38,15 +38,10 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected}) => {
+for (const { args, description, error, expected } of tests) {
   test(description, (t, end) => {
     let loggedErr;
     let loggedInfo;
-
-    const logger = {
-      error: ({err}) => loggedErr = err,
-      info: info => loggedInfo = info,
-    };
 
     if (args.table) {
       return returnObject({table: 'table', resolve: n => {
@@ -101,4 +96,4 @@ tests.forEach(({args, description, error, expected}) => {
       return end();
     }})(null, args.res);
   });
-});
+}

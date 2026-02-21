@@ -75,17 +75,16 @@ export default ({blocks, lnd}, cbk) => {
         let cursor = {};
         const feeByBlockTarget = {};
 
-        getFees
+        for (const { target, rate } of getFees
           .filter(fee => {
             const isNewFee = cursor.rate !== fee.rate;
 
             cursor = isNewFee ? fee : cursor;
 
             return isNewFee;
-          })
-          .forEach(({target, rate}) => {
-            return feeByBlockTarget[target+''] = ceil(rate * bytesPerKb);
-          });
+          })) {
+            feeByBlockTarget[target + ''] = ceil(rate * bytesPerKb)
+          }
 
         return cbk(null, {
           current_block_hash: getHeight.current_block_hash,

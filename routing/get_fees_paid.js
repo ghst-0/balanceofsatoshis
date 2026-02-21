@@ -25,7 +25,7 @@ const minChartDays = 4;
 const maxChartDays = 90;
 const mtokensAsBigUnit = n => (Number(n / BigInt(1e3)) / 1e8).toFixed(8);
 const mtokensAsTokens = mtokens => Number(mtokens / BigInt(1e3));
-const niceAlias = n => `${(n.alias || n.id).trim()} ${n.id.substring(0, 8)}`;
+const niceAlias = n => `${(n.alias || n.id).trim()} ${n.id.slice(0, 8)}`;
 const {now} = Date;
 const parseDate = n => Date.parse(n);
 const title = 'Routing fees paid';
@@ -70,7 +70,7 @@ export default (args, cbk) => {
           return cbk([400, 'ExpectedEitherNetworkOrPeersNotBoth']);
         }
 
-        if (!isArray(args.lnds) || !args.lnds.length) {
+        if (!isArray(args.lnds) || args.lnds.length === 0) {
           return cbk([400, 'ExpectedLndToGetRoutingFeesPaid']);
         }
 
@@ -256,9 +256,8 @@ export default (args, cbk) => {
           return cbk(null, 'week');
         } else if (days < minChartDays) {
           return cbk(null, 'hour');
-        } else {
-          return cbk(null, 'day');
         }
+        return cbk(null, 'day');
       }],
 
       // Get payments
@@ -350,7 +349,7 @@ export default (args, cbk) => {
               return true;
             });
 
-            if (!attempts.length) {
+            if (attempts.length === 0) {
               return;
             }
 
@@ -390,12 +389,13 @@ export default (args, cbk) => {
         }
 
         const fees = forwards.reduce((sum, {attempts}) => {
-          attempts.forEach(({hops, route}) => {
+          for (const { hops, route } of attempts) {
             const usedHops = route ? route.hops : hops;
 
-            return usedHops.slice().reverse().forEach((hop, i) => {
+            for (const hop of usedHops.slice().reverse()) {
+              const i = usedHops.slice().reverse().indexOf(hop)
               if (!i) {
-                return;
+                continue
               }
 
               const key = hop.public_key;
@@ -403,20 +403,21 @@ export default (args, cbk) => {
               const current = sum[key] || BigInt(Number());
 
               sum[key] = current + BigInt(hop.fee_mtokens);
-            });
-          });
+            }
+          }
 
-          return sum;
+            return sum;
         },
         {});
 
         const forwarded = forwards.reduce((sum, {attempts}) => {
-          attempts.forEach(({hops, route}) => {
+          for (const { hops, route } of attempts) {
             const usedHops = route ? route.hops : hops;
 
-            return usedHops.slice().reverse().forEach((hop, i) => {
+            for (const hop of usedHops.slice().reverse()) {
+              const i = usedHops.slice().reverse().indexOf(hop)
               if (!i) {
-                return;
+                continue
               }
 
               const key = hop.public_key;
@@ -424,10 +425,10 @@ export default (args, cbk) => {
               const current = sum[key] || BigInt(Number());
 
               sum[key] = current + BigInt(hop.forward_mtokens);
-            });
-          });
+            }
+          }
 
-          return sum;
+            return sum;
         },
         {});
 
@@ -464,7 +465,7 @@ export default (args, cbk) => {
                 return true;
               }
 
-              const isPeer = !!peerKeys.find(key => key === n.public_key);
+              const isPeer = !!peerKeys.some(key => key === n.public_key);
 
               return args.is_peer ? isPeer : !isPeer;
             })
@@ -564,8 +565,8 @@ export default (args, cbk) => {
       {
         const [lnd] = args.lnds;
 
-        const into = !args.in ? {} : await getNodeAlias({lnd, id: getInKey});
-        const out = !args.out ? {} : await getNodeAlias({lnd, id: getOutKey});
+        const into = args.in ? await getNodeAlias({ lnd, id: getInKey }) : {};
+        const out = args.out ? await getNodeAlias({ lnd, id: getOutKey }) : {};
 
         const inPeer = args.in ? `in ${niceAlias(into)}` : '';
         const outPeer = args.out ? `out ${niceAlias(out)}` : '';

@@ -21,12 +21,12 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected}) => {
-  return test(description, (t, end) => {
+for (const { args, description, error, expected } of tests) {
+  test(description, (t, end) => {
     const {pem} = derAsPem(args);
 
     equal(pem, expected.pem, 'Got expected pem');
 
     return end();
   });
-});
+}

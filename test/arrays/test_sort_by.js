@@ -31,8 +31,8 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected}) => {
-  return test(description, (t, end) => {
+for (const { args, description, error, expected } of tests) {
+  test(description, (t, end) => {
     if (error) {
       throws(() => sortBy(args), new Error(error), 'Got expected error');
     } else {
@@ -43,4 +43,4 @@ tests.forEach(({args, description, error, expected}) => {
 
     return end();
   });
-});
+}

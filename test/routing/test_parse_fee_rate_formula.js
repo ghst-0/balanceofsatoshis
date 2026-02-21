@@ -12,7 +12,9 @@ const makeArgs = overrides => {
     node_rates: [{key: 'key', rate: 1}],
   };
 
-  Object.keys(overrides).forEach(k => args[k] = overrides[k]);
+  for (const k of Object.keys(overrides)) {
+    args[k] = overrides[k]
+  }
 
   return args;
 };
@@ -55,8 +57,8 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected}) => {
-  return test(description, (t, end) => {
+for (const { args, description, error, expected } of tests) {
+  test(description, (t, end) => {
     if (error) {
       throws(() => method(args), new Error(error), 'Got expected error');
     } else {
@@ -65,4 +67,4 @@ tests.forEach(({args, description, error, expected}) => {
 
     return end();
   });
-});
+}

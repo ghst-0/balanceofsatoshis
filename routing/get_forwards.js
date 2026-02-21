@@ -49,7 +49,7 @@ export default ({after, before, lnd, via}, cbk) => {
           return cbk([400, 'ExpectedArrayOfPublicKeysForForwardsViaNodes']);
         }
 
-        if (!!via && !!via.filter(n => !isPublicKey(n)).length) {
+        if (!!via && via.some(n => !isPublicKey(n))) {
           return cbk([400, 'ExpectedPublicKeyForViaFilterOfForwardsForNode']);
         }
 
@@ -79,17 +79,19 @@ export default ({after, before, lnd, via}, cbk) => {
               lnd,
               token,
               before: before || new Date().toISOString(),
-              limit: !token ? pageLimit : undefined,
+              limit: token ? undefined : pageLimit,
             },
             (err, res) => {
               if (err) {
                 return cbk(err);
               }
 
-              limit = null;
+              let limit = null;
               token = res.next || false;
 
-              res.forwards.forEach(n => forwards.push(n));
+              for (const n of res.forwards) {
+                forwards.push(n)
+              }
 
               return cbk();
             });

@@ -34,7 +34,9 @@ export default (args, cbk) => {
 
   // Include passed query string arguments
   if (args.qs) {
-    keys(args.qs).forEach(key => qs.set(key, args.qs[key]));
+    for (const key of keys(args.qs)) {
+      qs.set(key, args.qs[key])
+    }
   }
 
   const req = https.request({
@@ -53,7 +55,7 @@ export default (args, cbk) => {
     // Response is finished
     res.on('end', () => {
       if (error) {
-        return cbk(err);
+        return cbk(error);
       }
 
       const combined = Buffer.concat(body).toString();

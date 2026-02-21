@@ -36,12 +36,12 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, expected}) => {
-  return test(description, (t, end) => {
+for (const { args, description, expected } of tests) {
+  test(description, (t, end) => {
     const {description} = describeConfidence(args);
 
     equal(description, expected.description, 'Got expected description');
 
     return end();
   });
-});
+}

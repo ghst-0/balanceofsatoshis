@@ -49,8 +49,8 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected}) => {
-  return test(description, async () => {
+for (const { args, description, error, expected } of tests) {
+  test(description, async () => {
     if (error) {
       await rejects(getBalance(args), error, 'Got expected error');
     } else {
@@ -60,4 +60,4 @@ tests.forEach(({args, description, error, expected}) => {
       equal(balances.channel_balance, expected.channel_balance, 'Chan tokens');
     }
   });
-});
+}

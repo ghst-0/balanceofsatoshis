@@ -57,7 +57,9 @@ export default ({lnds}) => {
 
   // Clean up when there is an error
   const errored = err => {
-    subs.forEach(n => n.removeAllListeners());
+    for (const n of subs) {
+      n.removeAllListeners()
+    }
 
     if (!emitter.listenerCount('error')) {
       return;
@@ -95,7 +97,7 @@ export default ({lnds}) => {
     });
   };
 
-  lnds.forEach(lnd => {
+  for (const lnd of lnds) {
     const graphSub = subscribeToGraph({lnd});
     const invoicesSub = subscribeToInvoices({lnd});
     const peersSub = subscribeToPeers({lnd});
@@ -141,7 +143,7 @@ export default ({lnds}) => {
         .filter(id => update.public_keys.includes(triggers[id].follow.id));
 
       // Exit early when this channel doesn't match any follow trigger
-      if (!follows.length) {
+      if (follows.length === 0) {
         return;
       }
 
@@ -175,7 +177,7 @@ export default ({lnds}) => {
         .filter(id => update.public_key === triggers[id].connectivity.id);
 
       // Exit early when this peer doesn't match any connectivity trigger
-      if (!follows.length) {
+      if (follows.length === 0) {
         return;
       }
 
@@ -191,7 +193,7 @@ export default ({lnds}) => {
         .filter(id => update.public_key === triggers[id].connectivity.id);
 
       // Exit early when this peer doesn't match any connectivity trigger
-      if (!follows.length) {
+      if (follows.length === 0) {
         return;
       }
 
@@ -206,7 +208,7 @@ export default ({lnds}) => {
           lnd,
           token,
           is_unconfirmed: true,
-          limit: !token ? defaultInvoicesLimit : undefined,
+          limit: token ? undefined : defaultInvoicesLimit,
         },
         (err, res) => {
           if (err) {
@@ -215,14 +217,16 @@ export default ({lnds}) => {
 
           token = res.next || false;
 
-          res.invoices.forEach(invoice => register(invoice, lnd));
+          for (const invoice of res.invoices) {
+            register(invoice, lnd)
+          }
 
           return cbk();
         });
       },
       err => err ? errored(err) : null,
     );
-  });
+  }
 
   return emitter;
 };

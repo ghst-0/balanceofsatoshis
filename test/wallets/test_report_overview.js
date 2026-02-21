@@ -62,12 +62,12 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected}) => {
-  return test(description, (t, end) => {
+for (const { args, description, error, expected } of tests) {
+  test(description, (t, end) => {
     const {report} = method(args);
 
     deepEqual(report, expected.report, 'Got expected report');
 
     return end();
   });
-});
+}

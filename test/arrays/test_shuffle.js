@@ -21,13 +21,11 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected}) => {
-  return test(description, (t, end) => {
+for (const { args, description, error, expected } of tests) {
+  test(description, (t, end) => {
     if (error) {
       throws(() => shuffle(args), new Error(error), 'Got expected error');
-    } else if (!expected.shuffled) {
-      equal(shuffle(args).shuffled.join(''), '', 'Empty array is returned');
-    } else {
+    } else if (expected.shuffled) {
       let shuffled = [];
 
       while (shuffled.join(',') !== expected.shuffled) {
@@ -35,8 +33,10 @@ tests.forEach(({args, description, error, expected}) => {
       }
 
       equal(shuffled.join(','), expected.shuffled, 'Array is shuffled');
+    } else {
+      equal(shuffle(args).shuffled.join(''), '', 'Empty array is returned');
     }
 
     return end();
   });
-});
+}

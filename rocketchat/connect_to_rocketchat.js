@@ -9,7 +9,7 @@ import getRocketChatBot from './get_rocketchat_bot.js';
 import runRocketChatBot from './run_rocketchat_bot.js';
 
 const defaultPaymentsBudget = 0;
-const isNumber = n => !Number.isNaN(n);
+const isNumber = n => !isNaN(n);
 const restartDelayMs = 1000 * 60 * 3;
 const roundedUnitsType = 'rounded';
 const smallUnitsType = 'full';

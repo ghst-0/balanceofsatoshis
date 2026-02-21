@@ -23,18 +23,22 @@ export default args => {
   const methods = args.methods || [];
 
   // Exit early when specific credentials are not requested
-  if (!args.is_readonly && !args.is_nospend && !methods.length) {
+  if (!args.is_readonly && !args.is_nospend && methods.length === 0) {
     return {};
   }
 
   const permissions = [];
 
   if (args.is_readonly) {
-    readPerms.forEach(n => permissions.push(n));
+    for (const n of readPerms) {
+      permissions.push(n)
+    }
   }
 
   if (args.is_nospend) {
-    noSpendPerms.forEach(n => permissions.push(n));
+    for (const n of noSpendPerms) {
+      permissions.push(n)
+    }
   }
 
   return {allow: {methods, permissions}};

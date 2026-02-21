@@ -124,16 +124,18 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected}) => {
-  return test(description, async () => {
+for (const { args, description, error, expected } of tests) {
+  test(description, async () => {
     if (error) {
       await rejects(findRecord(args), error, 'Got expected error');
     } else {
       const res = await findRecord(args);
 
-      (res.nodes || []).forEach(n => delete n.updated);
+      for (const n of (res.nodes || [])) {
+        delete n.updated
+      }
 
       deepEqual(res, expected, 'Got expected result');
     }
   });
-});
+}
