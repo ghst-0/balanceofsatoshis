@@ -37,9 +37,6 @@ importers:
       '@alexbosworth/html2unicode':
         specifier: 1.1.5
         version: 1.1.5
-      '@alexbosworth/node-fetch':
-        specifier: 2.6.2
-        version: 2.6.2
       abort-controller:
         specifier: 3.0.0
         version: 3.0.0
@@ -217,9 +214,6 @@ importers:
 
   packages/ln-docker-daemons:
     dependencies:
-      '@alexbosworth/node-fetch':
-        specifier: 2.6.2
-        version: 2.6.2
       async:
         specifier: 3.2.6
         version: 3.2.6
@@ -257,9 +251,6 @@ importers:
       '@alexbosworth/blockchain':
         specifier: 3.2.0
         version: 3.2.0
-      '@alexbosworth/node-fetch':
-        specifier: 2.6.2
-        version: 2.6.2
       async:
         specifier: 3.2.6
         version: 3.2.6
@@ -302,9 +293,6 @@ importers:
       tiny-secp256k1:
         specifier: 2.2.4
         version: 2.2.4
-      uuid:
-        specifier: 13.0.0
-        version: 13.0.0
       varuint-bitcoin:
         specifier: 2.0.0
         version: 2.0.0
@@ -406,10 +394,6 @@ packages:
   '@alexbosworth/html2unicode@1.1.5':
     resolution: {integrity: sha512-CXMFAyovJHtLzKlraBpGlM/8TX9bvVz081IDZkQF3IMGHePgHCAs1vQdnKM38VMGekywNCbo7kt3fHooSMgA2w==}
     hasBin: true
-
-  '@alexbosworth/node-fetch@2.6.2':
-    resolution: {integrity: sha512-9ls0Zn0qXTmUdt1p9LA1P9Kor9wF1pXtfUTjipCpoYYQ4fEUsuCgQbiymk4oJccpsZ9dAG3vZ1Zt51WabjJTUw==}
-    engines: {node: 4.x || >=6.0.0}
 
   '@alexbosworth/prettyjson@1.2.2':
     resolution: {integrity: sha512-JsqGgC96z8HFceI94ZLAXLxPXw9oMmQh9XpK5tbRSoU6A4JGz1I7ssplLOTfc50Y73bWVoEJs1ja7BcEToMFmQ==}
@@ -1317,10 +1301,6 @@ packages:
     resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
     hasBin: true
 
-  uuid@13.0.0:
-    resolution: {integrity: sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==}
-    hasBin: true
-
   valibot@1.2.0:
     resolution: {integrity: sha512-mm1rxUsmOxzrwnX5arGS+U4T25RdvpPjPN4yR0u9pUBov9+zGVtO84tif1eY4r6zWxVxu3KzIyknJy3rxfRZZg==}
     peerDependencies:
@@ -1380,8 +1360,6 @@ snapshots:
   '@alexbosworth/html2unicode@1.1.5':
     dependencies:
       '@alexbosworth/saxophone': 0.6.2
-
-  '@alexbosworth/node-fetch@2.6.2': {}
 
   '@alexbosworth/prettyjson@1.2.2':
     dependencies:
@@ -2294,8 +2272,6 @@ snapshots:
   util-deprecate@1.0.2: {}
 
   uuid@10.0.0: {}
-
-  uuid@13.0.0: {}
 
   valibot@1.2.0(typescript@5.9.3):
     optionalDependencies:
