@@ -54,19 +54,16 @@ importers:
         version: 6.1.7
       bolt01:
         specifier: 2.0.0
-        version: 2.0.0
+        version: link:packages/bolt01
       bolt07:
         specifier: 1.9.4
-        version: 1.9.4
+        version: link:packages/bolt07
       cbor:
         specifier: 10.0.11
         version: 10.0.11
       colorette:
         specifier: 2.0.20
         version: 2.0.20
-      crypto-js:
-        specifier: 4.2.0
-        version: 4.2.0
       csv-parse:
         specifier: 6.1.0
         version: 6.1.0
@@ -117,6 +114,20 @@ importers:
         specifier: ^1.49.0
         version: 1.49.0
 
+  packages/bolt01:
+    dependencies:
+      bn.js:
+        specifier: 5.2.1
+        version: 5.2.1
+
+  packages/bolt07:
+    dependencies:
+      bn.js:
+        specifier: 5.2.1
+        version: 5.2.1
+
+  packages/bolt09: {}
+
   packages/caporal:
     dependencies:
       '@alexbosworth/cli-table3':
@@ -138,6 +149,27 @@ importers:
       oxlint:
         specifier: ^1.49.0
         version: 1.49.0
+
+  packages/invoices:
+    dependencies:
+      bech32:
+        specifier: 2.0.0
+        version: 2.0.0
+      bitcoinjs-lib:
+        specifier: 6.1.7
+        version: 6.1.7
+      bn.js:
+        specifier: 5.2.3
+        version: 5.2.3
+      bolt07:
+        specifier: 1.9.4
+        version: link:../bolt07
+      bolt09:
+        specifier: 2.2.0
+        version: link:../bolt09
+      tiny-secp256k1:
+        specifier: 2.2.4
+        version: 2.2.4
 
   packages/lightning:
     dependencies:
@@ -170,13 +202,13 @@ importers:
         version: 5.2.3
       bolt07:
         specifier: 1.9.4
-        version: 1.9.4
+        version: link:../bolt07
       bolt09:
         specifier: 2.2.0
-        version: 2.2.0
+        version: link:../bolt09
       invoices:
         specifier: 5.0.0
-        version: 5.0.0
+        version: link:../invoices
       oxlint:
         specifier: ^1.49.0
         version: 1.49.0
@@ -237,10 +269,10 @@ importers:
     dependencies:
       bolt07:
         specifier: 1.9.4
-        version: 1.9.4
+        version: link:../bolt07
       invoices:
         specifier: 5.0.0
-        version: 5.0.0
+        version: link:../invoices
       lightning:
         specifier: workspace:*
         version: link:../lightning
@@ -301,7 +333,7 @@ importers:
         version: 6.1.7
       bolt07:
         specifier: 1.9.4
-        version: 1.9.4
+        version: link:../bolt07
       colorette:
         specifier: 2.0.20
         version: 2.0.20
@@ -326,7 +358,7 @@ importers:
         version: link:../ln-docker-daemons
       mock-lnd:
         specifier: 2.0.0
-        version: 2.0.0
+        version: link:../mock-lnd
       oxlint:
         specifier: ^1.49.0
         version: 1.49.0
@@ -344,7 +376,7 @@ importers:
         version: 1.2.12
       bolt07:
         specifier: 1.9.4
-        version: 1.9.4
+        version: link:../bolt07
       ln-accounting:
         specifier: workspace:*
         version: link:../ln-accounting
@@ -364,6 +396,12 @@ importers:
       oxlint:
         specifier: ^1.49.0
         version: 1.49.0
+
+  packages/mock-lnd:
+    dependencies:
+      invoices:
+        specifier: 5.0.0
+        version: link:../invoices
 
 packages:
 
@@ -703,10 +741,6 @@ packages:
   bitcoin-ops@1.4.1:
     resolution: {integrity: sha512-pef6gxZFztEhaE9RY9HmWVmiIHqCb2OyS4HPKkpc6CIiiOa3Qmuoylxc5P2EkU3w+5eTSifI9SEZC88idAIGow==}
 
-  bitcoinjs-lib@6.1.3:
-    resolution: {integrity: sha512-TYXs/Qf+GNk2nnsB9HrXWqzFuEgCg0Gx+v3UW3B8VuceFHXVvhT+7hRnTSvwkX0i8rz2rtujeU6gFaDcFqYFDw==}
-    engines: {node: '>=8.0.0'}
-
   bitcoinjs-lib@6.1.7:
     resolution: {integrity: sha512-tlf/r2DGMbF7ky1MgUqXHzypYHakkEnm0SZP23CJKIqNY/5uNAnMbFhMJdhjrL/7anfb/U8+AlpdjPWjPnAalg==}
     engines: {node: '>=8.0.0'}
@@ -717,29 +751,8 @@ packages:
   bn.js@5.2.1:
     resolution: {integrity: sha512-eXRvHzWyYPBuB4NBy0cmYQjGitUrtqwbvlzP3G6VFnNRbsZQIxQ10PbKKHt8gZ/HW/D/747aDl+QkDqg3KQLMQ==}
 
-  bn.js@5.2.2:
-    resolution: {integrity: sha512-v2YAxEmKaBLahNwE1mjp4WON6huMNeuDvagFZW+ASCuA/ku0bXR9hSMw0XpiqMoA3+rmnyck/tPRSFQkoC9Cuw==}
-
   bn.js@5.2.3:
     resolution: {integrity: sha512-EAcmnPkxpntVL+DS7bO1zhcZNvCkxqtkd0ZY53h06GNQ3DEkkGZ/gKgmDv6DdZQGj9BgfSPKtJJ7Dp1GPP8f7w==}
-
-  bolt01@2.0.0:
-    resolution: {integrity: sha512-861g8sEe0p7ILyADnpwJ8xAMkILDPHXWx3FXBDdc0rqz2D16YtrRUATmyvP8vu/WBH93wNBr6ak0s+2XzNeOyA==}
-    engines: {node: '>=16'}
-
-  bolt07@1.8.4:
-    resolution: {integrity: sha512-UyZRSYmVE8K++Jg1BiJrUkxQak03aS/s7ESKDsBdBPzaTlk2E09Y0JYa9HhWN7MRn48Y2K1doOzkb1Hn6XixZw==}
-
-  bolt07@1.9.4:
-    resolution: {integrity: sha512-zt+PZPoD8DN/ZaqqKen0B/NiAvWOgbPkj1/XS39CcAdwqGQSW9KG8Cf28m7fzFw+amZAvgG+jzRA1rGj/lDdwA==}
-
-  bolt09@1.0.0:
-    resolution: {integrity: sha512-J8wh6mRTNnYJuC43iSJRvM2Te0RtO4+Cn0JCgF6q2xWXKWjZjdPV5AGamD8R8C39/Ei6L0I780aFvIZu+bATWw==}
-    engines: {node: '>=16'}
-
-  bolt09@2.2.0:
-    resolution: {integrity: sha512-MzpiDQE4QavQTh5EqNv+Tmv+yoZMHys3j4OU3iiGO50IAu7FbVWmj1sipHIT+lvCKG6ROBFIJezND2vE3io75Q==}
-    engines: {node: '>=18'}
 
   bs58@5.0.0:
     resolution: {integrity: sha512-r+ihvQJvahgYT50JD05dyJNKlmmSlMoOGwn1lCcEzanPglg7TxYjioQUYehQ9mAR/+hOSd2jRc/Z2y5UxBymvQ==}
@@ -807,9 +820,6 @@ packages:
   cpu-features@0.0.10:
     resolution: {integrity: sha512-9IkYqtX3YHPCzoVg1Py+o9057a3i0fp7S530UWokCSaFVTc7CwXPRiOjRjBQQ18ZCNafx78YfnG+HALxtVmOGA==}
     engines: {node: '>=10.0.0'}
-
-  crypto-js@4.2.0:
-    resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
 
   csv-parse@6.1.0:
     resolution: {integrity: sha512-CEE+jwpgLn+MmtCpVcPtiCZpVtB6Z2OKPTr34pycYYoL7sxdOkXDdQ4lRiw6ioC0q6BLqhc6cKweCVvral8yhw==}
@@ -972,14 +982,6 @@ packages:
       '@types/node':
         optional: true
 
-  invoices@3.0.0:
-    resolution: {integrity: sha512-/WDTkfU2RMelQpQ54BwZssqGXYNWbPnWkZ/9QV57vAvD3RLdCDbhDuucOGti8CK3sgk8nmhRV6V0WfMrxojMmA==}
-    engines: {node: '>=16'}
-
-  invoices@5.0.0:
-    resolution: {integrity: sha512-ZR1m7zVH7iEpRxoSE3N0PwdpS+3NWSmM4yQi+t5jGIueEjCHqvULEI1jZNzUSaiAHoE7UVXXW30q8lzUDBd5Mg==}
-    engines: {node: '>=20'}
-
   is-accessor-descriptor@1.0.1:
     resolution: {integrity: sha512-YBUanLI8Yoihw923YeFUS5fs0fF2f5TSFTNiYAAzhhDscDa3lEqYuz1pDOEP5KvX94I9ey3vsqjJcLVFVU+3QA==}
     engines: {node: '>= 0.10'}
@@ -1048,10 +1050,6 @@ packages:
 
   mkdirp-classic@0.5.3:
     resolution: {integrity: sha512-gKLcREMhtuZRwRAfqP3RFW+TK4JqApVBtOIftVgjuABpAtpxhPGaDcfvbhNvD0B8iD1oUr/txX35NjcaY6Ns/A==}
-
-  mock-lnd@2.0.0:
-    resolution: {integrity: sha512-y0Hq+fTurFyx0nhYEzMvVEmI1RsoNGtXfyFOWXy6qdW/fdb2CXfreS1fhfHrT/9AmoS6IaMgLdvPfQ2iGifXsA==}
-    engines: {node: '>=18'}
 
   moment@2.30.1:
     resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
@@ -1184,10 +1182,6 @@ packages:
 
   tiny-emitter@2.1.0:
     resolution: {integrity: sha512-NB6Dk1A9xgQPMoGqC5CVXn123gWyte215ONT5Pp5a0yt4nlEoO1ZWeCwpncaekPHXO60i47ihFnZPiRPjRMq4Q==}
-
-  tiny-secp256k1@2.2.2:
-    resolution: {integrity: sha512-KP3eqslmiUH9jxhyQuLY+GqI4wt1EiHWNHHqKVUxCZV41+MT+esucaK4mb6Ji0vKWVKBffJ6tlxU83Pq5TIUwg==}
-    engines: {node: '>=14.0.0'}
 
   tiny-secp256k1@2.2.4:
     resolution: {integrity: sha512-FoDTcToPqZE454Q04hH9o2EhxWsm7pOSpicyHkgTwKhdKWdsTUuqfP5MLq3g+VjAtl2vSx6JpXGdwA2qpYkI0Q==}
@@ -1582,15 +1576,6 @@ snapshots:
 
   bitcoin-ops@1.4.1: {}
 
-  bitcoinjs-lib@6.1.3:
-    dependencies:
-      '@noble/hashes': 1.8.0
-      bech32: 2.0.0
-      bip174: 2.1.1
-      bs58check: 3.0.1
-      typeforce: 1.18.0
-      varuint-bitcoin: 1.1.2
-
   bitcoinjs-lib@6.1.7:
     dependencies:
       '@noble/hashes': 1.8.0
@@ -1608,25 +1593,7 @@ snapshots:
 
   bn.js@5.2.1: {}
 
-  bn.js@5.2.2: {}
-
   bn.js@5.2.3: {}
-
-  bolt01@2.0.0:
-    dependencies:
-      bn.js: 5.2.1
-
-  bolt07@1.8.4:
-    dependencies:
-      bn.js: 5.2.1
-
-  bolt07@1.9.4:
-    dependencies:
-      bn.js: 5.2.1
-
-  bolt09@1.0.0: {}
-
-  bolt09@2.2.0: {}
 
   bs58@5.0.0:
     dependencies:
@@ -1697,8 +1664,6 @@ snapshots:
       buildcheck: 0.0.7
       nan: 2.25.0
     optional: true
-
-  crypto-js@4.2.0: {}
 
   csv-parse@6.1.0: {}
 
@@ -1874,24 +1839,6 @@ snapshots:
     optionalDependencies:
       '@types/node': 25.3.0
 
-  invoices@3.0.0:
-    dependencies:
-      bech32: 2.0.0
-      bitcoinjs-lib: 6.1.3
-      bn.js: 5.2.1
-      bolt07: 1.8.4
-      bolt09: 1.0.0
-      tiny-secp256k1: 2.2.2
-
-  invoices@5.0.0:
-    dependencies:
-      bech32: 2.0.0
-      bitcoinjs-lib: 6.1.7
-      bn.js: 5.2.2
-      bolt07: 1.9.4
-      bolt09: 2.2.0
-      tiny-secp256k1: 2.2.4
-
   is-accessor-descriptor@1.0.1:
     dependencies:
       hasown: 2.0.2
@@ -1950,10 +1897,6 @@ snapshots:
   minimist@1.2.8: {}
 
   mkdirp-classic@0.5.3: {}
-
-  mock-lnd@2.0.0:
-    dependencies:
-      invoices: 3.0.0
 
   moment@2.30.1: {}
 
@@ -2121,10 +2064,6 @@ snapshots:
       - react-native-b4a
 
   tiny-emitter@2.1.0: {}
-
-  tiny-secp256k1@2.2.2:
-    dependencies:
-      uint8array-tools: 0.0.7
 
   tiny-secp256k1@2.2.4:
     dependencies:

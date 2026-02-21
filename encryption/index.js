@@ -1,6 +1,5 @@
 import certExpiration from './cert_expiration.js';
 import decryptCiphertext from './decrypt_ciphertext.js';
-import decryptPayload from './decrypt_payload.js';
 import decryptWithNode from './decrypt_with_node.js';
 import derAsPem from './der_as_pem.js';
 import encryptToNode from './encrypt_to_node.js';
@@ -10,7 +9,6 @@ import pemAsDer from './pem_as_der.js';
 export {
   certExpiration,
   decryptCiphertext,
-  decryptPayload,
   decryptWithNode,
   derAsPem,
   encryptToNode,
