@@ -12,7 +12,7 @@ const asPath = file => join(file.path || file.parentPath, file.name);
 const flatten = arr => [].concat(...arr);
 
 const files = flatten(dirs.map(dir => {
-  return readdirSync(join(__dirname, dir), {withFileTypes: true}).map(asPath);
+  return readdirSync(join(import.meta.dirname, dir), {withFileTypes: true}).map(asPath);
 }));
 
 run({concurrency, files, timeout}).compose(tap).pipe(process.stdout);
