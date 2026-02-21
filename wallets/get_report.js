@@ -3,7 +3,6 @@ import asyncMap from 'async/map.js';
 import { bolden, italicize } from '@alexbosworth/html2unicode';
 import {
   getAutopilot,
-  getBackups,
   getChainFeeRate,
   getChannel,
   getChannels,
@@ -72,11 +71,6 @@ export default ({fs, node, request, style}, cbk) => {
 
         return cbk(null, res);
       });
-    }],
-
-    // Get backups
-    getBackups: ['getLnd', ({getLnd}, cbk) => {
-      return getBackups({lnd: getLnd.lnd}, cbk);
     }],
 
     // Get channels
@@ -205,7 +199,6 @@ export default ({fs, node, request, style}, cbk) => {
     report: [
       'currency',
       'getAutopilot',
-      'getBackups',
       'getBalance',
       'getChainFee',
       'getChannels',
@@ -219,7 +212,6 @@ export default ({fs, node, request, style}, cbk) => {
       ({
         currency,
         getAutopilot,
-        getBackups,
         getBalance,
         getChainFee,
         getChannels,
@@ -251,7 +243,6 @@ export default ({fs, node, request, style}, cbk) => {
 
       const channelsActivity = channelsAsReportActivity({
         now,
-        backups: getBackups.channels,
         chain: {
           currency,
           height: getInfo.current_block_height,

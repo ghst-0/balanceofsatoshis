@@ -1,5 +1,4 @@
 import {
-  handleBackupCommand,
   handleBalanceCommand,
   handleConnectCommand,
   handleCostsCommand,
@@ -18,8 +17,7 @@ import {
   postOpenMessage,
   postOpeningMessage,
   postNodesOnline,
-  postSettledPayment,
-  postUpdatedBackup
+  postSettledPayment
 } from 'ln-telegram';
 import asyncAuto from 'async/auto.js';
 import asyncEach from 'async/each.js';
@@ -28,13 +26,11 @@ import asyncMap from 'async/map.js';
 import asyncRetry from 'async/retry.js';
 import { getForwards,
   getWalletInfo,
-  subscribeToBackups,
   subscribeToChannels,
   subscribeToPastPayments,
   subscribeToTransactions
 } from 'ln-service';
 import { getTransactionRecord, subscribeToPendingChannels } from 'ln-sync';
-import { InputFile } from 'grammy';
 import { noLocktimeIdForTransaction } from '@alexbosworth/blockchain';
 import { returnResult } from 'asyncjs-util';
 
@@ -44,7 +40,6 @@ import PACKAGE_JSON from '../package.json' with { type: 'json' };
 
 const { name: named, version } = PACKAGE_JSON ;
 
-const fileAsDoc = file => new InputFile(file.source, file.filename);
 const fromName = node => `${node.alias} ${node.public_key.slice(0, 8)}`;
 const getLnds = (y, z) => getNodeDetails({names: y, nodes: z});
 const hexAsBuffer = hex => Buffer.from(hex, 'hex');
@@ -165,21 +160,6 @@ export default (args, cbk) => {
           }
 
           return next();
-        });
-
-        // Handle command to get backups
-        args.bot.command('backup', async ctx => {
-          try {
-            await handleBackupCommand({
-              from: ctx.message.from.id,
-              id: connectedId,
-              nodes: (await getLnds(names, args.nodes)).nodes,
-              reply: ctx.reply,
-              send: (n, opts) => ctx.replyWithDocument(fileAsDoc(n), opts),
-            });
-          } catch (err) {
-            console.error({err});
-          }
         });
 
         // Handle lookup of total funds
@@ -334,7 +314,6 @@ export default (args, cbk) => {
         // Handle command to get help with the bot
         args.bot.command('help', async ctx => {
           const commands = [
-            '/backup - Get node backup file',
             '/blocknotify - Notification on next block',
             '/connect - Connect bot',
             '/costs - View costs over the past week',
@@ -406,7 +385,6 @@ export default (args, cbk) => {
       // Setup the bot commands
       setCommands: ['validate', async ({}) => {
         return await args.bot.api.setMyCommands([
-          {command: 'backup', description: 'Get node backup file'},
           {command: 'balance', description: 'Show funds on the node'},
           {command: 'blocknotify', description: 'Get notified on next block'},
           {command: 'connect', description: 'Get connect code for the bot'},
@@ -420,44 +398,6 @@ export default (args, cbk) => {
           {command: 'pending', description: 'Get pending forwards, channels'},
           {command: 'version', description: 'View current bot version'},
         ]);
-      }],
-
-      // Subscribe to backups
-      backups: ['getNodes', 'userId', ({getNodes}, cbk) => {
-        return asyncEach(getNodes, (node, cbk) => {
-          let postBackupTimeoutHandle;
-          const sub = subscribeToBackups({lnd: node.lnd});
-
-          subscriptions.push(sub);
-
-          sub.on('backup', ({backup}) => {
-            // Cancel pending backup notification when there is a new backup
-            if (postBackupTimeoutHandle) {
-              clearTimeout(postBackupTimeoutHandle);
-            }
-
-            // Time delay backup posting to avoid posting duplicate messages
-            postBackupTimeoutHandle = setTimeout(() => {
-              return postUpdatedBackup({
-                backup,
-                id: connectedId,
-                key: args.key,
-                node: {alias: node.alias, public_key: node.public_key},
-                send: (id, n) => args.bot.api.sendDocument(id, fileAsDoc(n)),
-              },
-              err => err ? console.error({post_backup_err: err}) : null);
-            },
-            restartSubscriptionTimeMs);
-          });
-
-          sub.once('error', err => {
-            // Terminate subscription and restart after a delay
-            sub.removeAllListeners();
-
-            return cbk([503, 'ErrorInBackupsSub', {err}]);
-          });
-        },
-        cbk);
       }],
 
       // Channel status changes
