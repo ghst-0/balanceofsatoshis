@@ -18,7 +18,7 @@ Supported LND versions:
 - Requires an [installation of Node v20+][nodejs-install-guide]
 
 ```shell
-npm install -g balanceofsatoshis
+pnpm install -g balanceofsatoshis
 ```
 
 Or use a platform-specific guide:
@@ -27,7 +27,7 @@ Or use a platform-specific guide:
 - [RaspiBolt/Debian guide][raspibolt-install-guide]
 - [Umbrel install guide][umbrel-install-guide]
 
-If you want to try out any command without npm install, you can also do `npx
+If you want to try out any command without pnpm install, you can also do `npx
 balanceofsatoshis` to run a command directly.
 
 Get the version to verify that it's installed:
