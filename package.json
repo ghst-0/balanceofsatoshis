@@ -27,7 +27,6 @@
     "crypto-js": "4.2.0",
     "csv-parse": "6.1.0",
     "ecpair": "3.0.1",
-    "grammy": "1.40.0",
     "hot-formula-parser": "4.0.0",
     "ini": "6.0.0",
     "inquirer": "13.2.5",
