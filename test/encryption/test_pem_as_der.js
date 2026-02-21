@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { equal } from 'node:assert/strict';
 
-import { pemAsDer } from './../../encryption/index.js';
+import { pemAsDer } from '../../encryption/index.js';
 
 const tests = [
   {

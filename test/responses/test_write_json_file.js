@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { equal, rejects } from 'node:assert/strict';
 
-import writeJsonFile from './../../responses/write_json_file.js';
+import writeJsonFile from '../../responses/write_json_file.js';
 
 const tests = [
   {

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { throws, deepEqual } from 'node:assert/strict';
 
-import method from './../../display/is_matching_filters.js';
+import method from '../../display/is_matching_filters.js';
 
 const tests = [
   {

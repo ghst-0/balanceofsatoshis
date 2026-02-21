@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { deepEqual, rejects } from 'node:assert/strict';
 
-import getPath from './../../lnd/get_path.js';
+import getPath from '../../lnd/get_path.js';
 
 const os = {userInfo: () => ({username: 'umbrel'})};
 

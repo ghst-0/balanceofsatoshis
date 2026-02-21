@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { throws, deepEqual } from 'node:assert/strict';
 
-import method from './../../routing/parse_fee_rate_formula.js';
+import method from '../../routing/parse_fee_rate_formula.js';
 
 const makeArgs = overrides => {
   const args = {

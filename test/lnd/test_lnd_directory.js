@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { equal, throws } from 'node:assert/strict';
 
-import lndDirectory from './../../lnd/lnd_directory.js';
+import lndDirectory from '../../lnd/lnd_directory.js';
 
 const userInfo = () => ({username: 'username'});
 

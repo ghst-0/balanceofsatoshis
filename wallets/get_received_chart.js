@@ -6,8 +6,8 @@ import { getAllInvoices } from 'ln-sync';
 import { getPayment } from 'ln-service';
 import moment from 'moment';
 import { returnResult } from 'asyncjs-util';
-import { segmentMeasure } from './../display/index.js';
-import { sumsForSegment } from './../display/index.js';
+import { segmentMeasure } from '../display/index.js';
+import { sumsForSegment } from '../display/index.js';
 
 const daysBetween = (a, b) => moment(a).diff(b, 'days') + 1;
 const defaultDays = 60;

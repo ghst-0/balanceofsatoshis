@@ -3,7 +3,7 @@ import asyncMap from 'async/map.js';
 import asyncMapSeries from 'async/mapSeries.js';
 import { returnResult } from 'asyncjs-util';
 import decryptSavedMacaroons from './decrypt_saved_macaroons.js';
-import { encryptToPublicKeys } from './../encryption/index.js';
+import { encryptToPublicKeys } from '../encryption/index.js';
 import getSavedCredentials from './get_saved_credentials.js';
 import putSavedCredentials from './put_saved_credentials.js';
 

@@ -1,6 +1,6 @@
 import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
-import { certExpiration, pemAsDer } from './../encryption/index.js';
+import { certExpiration, pemAsDer } from '../encryption/index.js';
 import lndCredentials from './lnd_credentials.js';
 
 const base64AsString = base64 => Buffer.from(base64, 'base64').toString();

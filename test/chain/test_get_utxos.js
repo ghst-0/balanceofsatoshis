@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { equal, rejects } from 'node:assert/strict';
 
-import { getUtxos } from './../../chain/index.js';
+import { getUtxos } from '../../chain/index.js';
 
 const utxo = {
   address: 'address',

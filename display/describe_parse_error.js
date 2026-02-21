@@ -1,6 +1,6 @@
 import constants from './constants.json' with { type: 'json' };
 
-const { parseErrors } = constants
+const { parseErrors } = constants;
 const defaultError = '#ERROR!';
 
 /** Describe a hot formula parser error

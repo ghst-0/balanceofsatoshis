@@ -5,7 +5,7 @@ import moment from 'moment';
 import { returnResult } from 'asyncjs-util';
 
 import feesForSegment from './fees_for_segment.js';
-import { getTags } from './../tags/index.js';
+import { getTags } from '../tags/index.js';
 import getForwards from './get_forwards.js';
 
 const asDate = n => n ? n.toISOString() : undefined;

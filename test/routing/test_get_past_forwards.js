@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { deepEqual, rejects } from 'node:assert/strict';
 
-import getPastForwards from './../../routing/get_past_forwards.js';
+import getPastForwards from '../../routing/get_past_forwards.js';
 
 const makeArgs = overrides => {
   const args = {

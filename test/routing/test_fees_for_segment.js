@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { deepEqual } from 'node:assert/strict';
 
-import feesForSegment from './../../routing/fees_for_segment.js';
+import feesForSegment from '../../routing/fees_for_segment.js';
 
 const tests = [
   {

@@ -3,7 +3,7 @@ import cbor from 'cbor';
 import moment from 'moment';
 import { returnResult } from 'asyncjs-util';
 import lndCredentials from './lnd_credentials.js';
-import { pemAsDer } from './../encryption/index.js';
+import { pemAsDer } from '../encryption/index.js';
 
 const { encode } = cbor;
 /** Get exported credentials

@@ -7,7 +7,7 @@ import constants from './constants.json' with { type: 'json' };
 import rangeForDate from './range_for_date.js';
 import tableRowsFromCsv from './table_rows_from_csv.js';
 
-const { defaultCurrency, defaultFiat } = constants
+const { defaultCurrency, defaultFiat } = constants;
 const assetType = 'BTC';
 const currentDate = new Date().toISOString();
 const empty = '';

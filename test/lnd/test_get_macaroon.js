@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { equal, rejects } from 'node:assert/strict';
 
-import getMacaroon from './../../lnd/get_macaroon.js';
+import getMacaroon from '../../lnd/get_macaroon.js';
 
 const os = {
   homedir: () => 'homedir',

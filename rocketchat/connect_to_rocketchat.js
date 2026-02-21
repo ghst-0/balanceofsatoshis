@@ -4,7 +4,7 @@ import asyncMap from 'async/map.js';
 import { getWalletInfo } from 'ln-service';
 import { postNodesOffline } from 'ln-telegram';
 import { returnResult } from 'asyncjs-util';
-import { getLnds } from './../lnd/index.js';
+import { getLnds } from '../lnd/index.js';
 import getRocketChatBot from './get_rocketchat_bot.js';
 import runRocketChatBot from './run_rocketchat_bot.js';
 

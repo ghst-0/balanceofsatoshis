@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { equal, throws } from 'node:assert/strict';
 
-import { decryptPayload } from './../../encryption/index.js';
+import { decryptPayload } from '../../encryption/index.js';
 import fixtures from './fixtures.json' with { type: 'json' };
 
 const encrypted = fixtures.encrypted

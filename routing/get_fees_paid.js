@@ -4,9 +4,9 @@ import { findKey, getNodeAlias, getPayments, getRebalancePayments } from 'ln-syn
 import { getNode, getChannels } from 'ln-service';
 import moment from 'moment';
 import { returnResult } from 'asyncjs-util';
-import { chartAliasForPeer, getIcons } from './../display/index.js';
+import { chartAliasForPeer, getIcons } from '../display/index.js';
 import feesForSegment from './fees_for_segment.js';
-import { sortBy } from './../arrays/index.js';
+import { sortBy } from '../arrays/index.js';
 
 const by = 'confirmed_at';
 const daysBetween = (a, b) => moment(a).diff(b, 'days') + 1;

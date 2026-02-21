@@ -3,7 +3,7 @@ import asyncMap from 'async/map.js';
 import { getIdentity } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
 
-import { getLnds } from './../lnd/index.js';
+import { getLnds } from '../lnd/index.js';
 import startTelegramBot from './start_rocketchat_bot.js';
 
 const {isArray} = Array;

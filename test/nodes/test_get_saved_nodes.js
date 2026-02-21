@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { deepEqual, rejects } from 'node:assert/strict';
 
-import { getSavedNodes } from './../../nodes/index.js';
+import { getSavedNodes } from '../../nodes/index.js';
 
 const getDirectoryFiles = ({}, cbk) => cbk(null, ['name']);
 

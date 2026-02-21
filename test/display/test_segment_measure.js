@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { deepEqual } from 'node:assert/strict';
 
-import { segmentMeasure } from './../../display/index.js';
+import { segmentMeasure } from '../../display/index.js';
 
 const tests = [
   {

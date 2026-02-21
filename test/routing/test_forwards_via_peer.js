@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { deepEqual, throws } from 'node:assert/strict';
 
-import forwardsViaPeer from './../../routing/forwards_via_peer.js';
+import forwardsViaPeer from '../../routing/forwards_via_peer.js';
 
 const tests = [
   {

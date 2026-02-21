@@ -3,7 +3,7 @@ import { rejects } from 'node:assert/strict';
 
 import cbor from 'cbor';
 
-import registerNode from './../../nodes/register_node.js';
+import registerNode from '../../nodes/register_node.js';
 
 const { encode } = cbor;
 const tests = [

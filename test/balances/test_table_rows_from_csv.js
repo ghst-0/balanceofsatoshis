@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { deepEqual, rejects } from 'node:assert/strict';
 
-import tableRowsFromCsv from './../../balances/table_rows_from_csv.js';
+import tableRowsFromCsv from '../../balances/table_rows_from_csv.js';
 
 const tests = [
   {

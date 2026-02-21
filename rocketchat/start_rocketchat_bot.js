@@ -40,7 +40,7 @@ import { returnResult } from 'asyncjs-util';
 
 import getNodeDetails from './get_node_details.js';
 import interaction from './interaction.json' with { type: 'json' };
-import PACKAGE_JSON from './../package.json' with { type: 'json' };
+import PACKAGE_JSON from '../package.json' with { type: 'json' };
 
 const { name: named, version } = PACKAGE_JSON ;
 

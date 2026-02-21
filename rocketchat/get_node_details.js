@@ -1,6 +1,6 @@
 import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
-import { getLnds } from './../lnd/index.js';
+import { getLnds } from '../lnd/index.js';
 
 const {isArray} = Array;
 

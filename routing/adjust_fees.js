@@ -4,7 +4,7 @@ import { findKey, getNodeAlias } from 'ln-sync';
 import { getChannel, getChannels, getFeeRates, getIdentity, getNode, getPendingChannels } from 'ln-service';
 import { gray, green } from 'colorette';
 import { returnResult } from 'asyncjs-util';
-import { chartAliasForPeer, formatFeeRate, getIcons } from './../display/index.js';
+import { chartAliasForPeer, formatFeeRate, getIcons } from '../display/index.js';
 import parseFeeRateFormula from './parse_fee_rate_formula.js';
 
 const asRate = rate => formatFeeRate({rate}).display;

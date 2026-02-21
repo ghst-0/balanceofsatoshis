@@ -1,7 +1,7 @@
 import moment from 'moment';
 import constants from './constants.json' with { type: 'json' };
 
-const { monthNumbers, monthOffset, notFoundIndex } = constants
+const { monthNumbers, monthOffset, notFoundIndex } = constants;
 
 /** Get a before and after range
 

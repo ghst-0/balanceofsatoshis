@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { equal, rejects } from 'node:assert/strict';
 
-import getMaximum from './../../routing/get_maximum.js';
+import getMaximum from '../../routing/get_maximum.js';
 
 const space = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 

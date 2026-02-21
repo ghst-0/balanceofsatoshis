@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { throws, deepEqual } from 'node:assert/strict';
 
-import { ignoreFromAvoid } from './../../routing/index.js';
+import { ignoreFromAvoid } from '../../routing/index.js';
 
 const tests = [
   {

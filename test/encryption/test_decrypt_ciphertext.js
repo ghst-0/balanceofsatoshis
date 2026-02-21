@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { equal, rejects } from 'node:assert/strict';
 
-import { decryptCiphertext } from './../../encryption/index.js';
+import { decryptCiphertext } from '../../encryption/index.js';
 
 const makeSpawn = args => {
   return () => {

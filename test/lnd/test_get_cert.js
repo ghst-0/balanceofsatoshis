@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { equal, rejects } from 'node:assert/strict';
 
-import getCert from './../../lnd/get_cert.js';
+import getCert from '../../lnd/get_cert.js';
 
 const os = {
   homedir: () => 'homedir',

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { deepEqual } from 'node:assert/strict';
 
-import method from './../../wallets/report_overview.js';
+import method from '../../wallets/report_overview.js';
 
 const report = [
   {

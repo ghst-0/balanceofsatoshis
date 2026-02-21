@@ -1,8 +1,8 @@
 import test from 'node:test';
 import { equal, rejects } from 'node:assert/strict';
 
-import { chanInfoResponse, getNodeInfoResponse, versionInfoResponse } from './../fixtures/index.js';
-import { getFeesChart } from './../../routing/index.js';
+import { chanInfoResponse, getNodeInfoResponse, versionInfoResponse } from '../fixtures/index.js';
+import { getFeesChart } from '../../routing/index.js';
 
 const fs = {getFile: ({}, cbk) => cbk('err')};
 

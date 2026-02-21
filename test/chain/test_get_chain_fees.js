@@ -2,8 +2,8 @@ import test from 'node:test';
 import { deepEqual, rejects } from 'node:assert/strict';
 import EventEmitter from 'node:events';
 
-import { getChainFees } from './../../chain/index.js';
-import { getInfoResponse } from './../fixtures/index.js';
+import { getChainFees } from '../../chain/index.js';
+import { getInfoResponse } from '../fixtures/index.js';
 
 const getInfoRes = () => JSON.parse(JSON.stringify(getInfoResponse));
 

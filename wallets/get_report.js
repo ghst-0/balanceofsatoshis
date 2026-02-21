@@ -1,27 +1,28 @@
 import asyncAuto from 'async/auto.js';
 import asyncMap from 'async/map.js';
-import { bolden } from '@alexbosworth/html2unicode';
-import { getAutopilot } from 'ln-service';
-import { getBackups } from 'ln-service';
-import { getChainFeeRate } from 'ln-service';
-import { getChannel } from 'ln-service';
-import { getChannels } from 'ln-service';
-import { getClosedChannels } from 'ln-service';
-import { getInvoice } from 'ln-service';
-import { getInvoices } from 'ln-service';
-import { getNetwork } from 'ln-sync';
-import { getNetworkGraph } from 'ln-service';
-import { getPayments } from 'ln-sync';
-import { getWalletInfo } from 'ln-service';
-import { italicize } from '@alexbosworth/html2unicode';
+import { bolden, italicize } from '@alexbosworth/html2unicode';
+import {
+  getAutopilot,
+  getBackups,
+  getChainFeeRate,
+  getChannel,
+  getChannels,
+  getClosedChannels,
+  getInvoice,
+  getInvoices,
+  getNetworkGraph,
+  getWalletInfo,
+  parsePaymentRequest
+} from 'ln-service';
+import { getNetwork, getPayments } from 'ln-sync';
 import moment from 'moment';
-import { parsePaymentRequest } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
-import { authenticatedLnd } from './../lnd/index.js';
+
+import { authenticatedLnd } from '../lnd/index.js';
 import channelsAsReportActivity from './channels_as_report_activity.js';
-import { currencyForNetwork } from './../network/index.js';
-import { getBalance } from './../balances/index.js';
-import { getForwards } from './../network/index.js';
+// TODO: FIX THIS, using network which is removed
+import { currencyForNetwork, getForwards } from '../network/index.js';
+import { getBalance } from '../balances/index.js';
 import reportOverview from './report_overview.js';
 
 const afterMs = 1000 * 60 * 60 * 24;

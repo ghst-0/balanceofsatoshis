@@ -2,7 +2,7 @@ import asyncAuto from 'async/auto.js';
 import { getLiquidity } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
 import balanceFromTokens from './balance_from_tokens.js';
-import { getTags } from './../tags/index.js';
+import { getTags } from '../tags/index.js';
 
 
 /** Get the channel available liquidity

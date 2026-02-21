@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { equal } from 'node:assert/strict';
 
-import { derAsPem } from './../../encryption/index.js';
+import { derAsPem } from '../../encryption/index.js';
 
 const tests = [
   {

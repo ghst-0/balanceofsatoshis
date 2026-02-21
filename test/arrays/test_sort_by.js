@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { throws, deepEqual } from 'node:assert/strict';
 
-import { sortBy } from './../../arrays/index.js';
+import { sortBy } from '../../arrays/index.js';
 
 const tests = [
   {

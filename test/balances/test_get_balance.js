@@ -1,8 +1,8 @@
 import test from 'node:test';
 import { equal, rejects } from 'node:assert/strict';
 
-import { getBalance } from './../../balances/index.js';
-import { listChannelsResponse } from './../fixtures/index.js';
+import { getBalance } from '../../balances/index.js';
+import { listChannelsResponse } from '../fixtures/index.js';
 
 const makeLnd = ({unconfirmedBalance}) => {
   return {

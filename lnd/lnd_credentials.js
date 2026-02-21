@@ -6,11 +6,11 @@ import asyncAuto from 'async/auto.js';
 import { authenticatedLndGrpc, grantAccess, restrictMacaroon } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
 import credentialRestrictions from './credential_restrictions.js';
-import { decryptCiphertext, derAsPem } from './../encryption/index.js';
+import { decryptCiphertext, derAsPem } from '../encryption/index.js';
 import getCert from './get_cert.js';
 import getMacaroon from './get_macaroon.js';
 import getPath from './get_path.js';
-import { getSavedCredentials } from './../nodes/index.js';
+import { getSavedCredentials } from '../nodes/index.js';
 import getSocket from './get_socket.js';
 import { homePath } from '../storage/index.js';
 

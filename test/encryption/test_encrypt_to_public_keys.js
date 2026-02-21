@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { equal, rejects } from 'node:assert/strict';
 
-import { encryptToPublicKeys } from './../../encryption/index.js';
+import { encryptToPublicKeys } from '../../encryption/index.js';
 
 const makeSpawn = args => {
   return () => {

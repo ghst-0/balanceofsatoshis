@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { throws, deepEqual } from 'node:assert/strict';
 
-import method from './../../lnd/credential_restrictions.js';
+import method from '../../lnd/credential_restrictions.js';
 
 const tests = [
   {

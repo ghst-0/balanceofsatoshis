@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { equal } from 'node:assert/strict';
 
-import { chartAliasForPeer } from './../../display/index.js';
+import { chartAliasForPeer } from '../../display/index.js';
 
 const tests = [
   {

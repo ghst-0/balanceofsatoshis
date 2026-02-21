@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { rejects } from 'node:assert/strict';
 
-import putSavedCredentials from './../../nodes/put_saved_credentials.js';
+import putSavedCredentials from '../../nodes/put_saved_credentials.js';
 
 const tests = [
   {

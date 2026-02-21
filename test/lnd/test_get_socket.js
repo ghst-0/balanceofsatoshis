@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { equal, rejects } from 'node:assert/strict';
 
-import getSocket from './../../lnd/get_socket.js';
+import getSocket from '../../lnd/get_socket.js';
 
 const os = {
   homedir: () => 'homedir',

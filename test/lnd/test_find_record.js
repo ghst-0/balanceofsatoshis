@@ -2,8 +2,8 @@ import test from 'node:test';
 import { deepEqual, rejects } from 'node:assert/strict';
 import EventEmitter from 'node:events';
 
-import { describeGraphResponse } from './../fixtures/index.js';
-import { findRecord } from './../../lnd/index.js';
+import { describeGraphResponse } from '../fixtures/index.js';
+import { findRecord } from '../../lnd/index.js';
 
 const tests = [
   {
