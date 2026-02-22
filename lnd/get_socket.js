@@ -72,7 +72,7 @@ export default ({fs, node, os, path}, cbk) => {
         try {
           const conf = parse(getConfFile.toString());
 
-          if (!keys(conf).length) {
+          if (keys(conf).length === 0) {
             throw new Error('ExpectedConfigurationInfoFromConfigFile');
           }
 

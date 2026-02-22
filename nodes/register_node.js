@@ -1,11 +1,14 @@
 import asyncAuto from 'async/auto.js';
 import cbor from 'cbor';
 import { returnResult } from 'asyncjs-util';
-import sanitize from 'sanitize-filename';
 import { derAsPem } from '../encryption/index.js';
 import { homePath } from '../storage/index.js';
 import putSavedCredentials from './put_saved_credentials.js';
 
+
+const sanitize = (a) => a
+  .replaceAll(/[/?<>\\:*|"\x00-\x1F\x80-\x9F]/g, '')
+  .replace(/^\.+$/, '')
 const { decodeFirst } = cbor;
 const defaultHost = 'localhost';
 const defaultRpcPort = 10009;
