@@ -1,42 +1,42 @@
 [submodule "asyncjs-util"]
 	path = asyncjs-util
-	url = ../asyncjs-util.git
+	url = ../../asyncjs-util.git
 [submodule "bolt01"]
 	path = bolt01
-	url = ../bolt01.git
+	url = ../../bolt01.git
 [submodule "bolt07"]
 	path = bolt07
-	url = ../bolt07.git
+	url = ../../bolt07.git
 [submodule "bolt09"]
 	path = bolt09
-	url = ../bolt09.git
+	url = ../../bolt09.git
 [submodule "caporal"]
 	path = caporal
-	url = ../caporal.git
+	url = ../../caporal.git
 [submodule "fiat"]
 	path = fiat
-	url = ../fiat.git
+	url = ../../fiat.git
 [submodule "invoices"]
 	path = invoices
-	url = ../invoices.git
+	url = ../../invoices.git
 [submodule "lightning"]
 	path = lightning
-	url = ../lightning.git
+	url = ../../lightning.git
 [submodule "ln-accounting"]
 	path = ln-accounting
-	url = ../ln-accounting.git
+	url = ../../ln-accounting.git
 [submodule "ln-docker-daemons"]
 	path = ln-docker-daemons
-	url = ../ln-docker-daemons.git
+	url = ../../ln-docker-daemons.git
 [submodule "ln-service"]
 	path = ln-service
-	url = ../ln-service.git
+	url = ../../ln-service.git
 [submodule "ln-sync"]
 	path = ln-sync
-	url = ../ln-sync.git
+	url = ../../ln-sync.git
 [submodule "ln-telegram"]
 	path = ln-telegram
-	url = ../ln-telegram.git
+	url = ../../ln-telegram.git
 [submodule "mock-lnd"]
 	path = mock-lnd
-	url = ../mock-lnd.git
+	url = ../../mock-lnd.git
