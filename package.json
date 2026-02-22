@@ -36,8 +36,7 @@
     "moment": "2.30.1",
     "sanitize-filename": "1.6.3",
     "table": "6.9.0",
-    "tiny-secp256k1": "2.2.4",
-    "window-size": "1.1.1"
+    "tiny-secp256k1": "2.2.4"
   },
   "description": "Lightning balance CLI",
   "devDependencies": {

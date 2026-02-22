@@ -11,3 +11,4 @@ minimumReleaseAgeExclude:
 - "@inquirer/core"
 - "@types/node"
 - bn.js
+- psbt
