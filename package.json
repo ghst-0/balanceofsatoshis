@@ -17,7 +17,7 @@
     "abort-controller": "3.0.0",
     "asciichart": "1.5.25",
     "async": "3.2.6",
-    "asyncjs-util": "1.2.12",
+    "asyncjs-util": "workspace*",
     "bitcoinjs-lib": "6.1.7",
     "bolt01": "2.0.0",
     "bolt07": "1.9.4",
@@ -83,7 +83,8 @@
       "@oxlint/binding-linux-riscv64-gnu": "-",
       "@oxlint/binding-darwin-x64": "-",
       "@oxlint/binding-linux-s390x-gnu": "-",
-      "@oxlint/binding-freebsd-x64": "-"
+      "@oxlint/binding-freebsd-x64": "-",
+      "yargs": "-"
     }
   }
 }
