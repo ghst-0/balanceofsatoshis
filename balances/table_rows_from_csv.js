@@ -35,7 +35,7 @@ export default ({csv}, cbk) => {
 
       // Arrange rows
       rows: ['entries', ({entries}, cbk) => {
-        if (!entries.length) {
+        if (entries.length === 0) {
           return cbk(null, {rows: [[]]});
         }
 
