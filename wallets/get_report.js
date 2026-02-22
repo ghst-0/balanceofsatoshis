@@ -1,6 +1,5 @@
 import asyncAuto from 'async/auto.js';
 import asyncMap from 'async/map.js';
-import { bolden, italicize } from '@alexbosworth/html2unicode';
 import {
   getAutopilot,
   getChainFeeRate,
@@ -32,6 +31,10 @@ const msPerBlock = 1000 * 60 * 10;
 const {now} = Date;
 const sumOf = arr => arr.reduce((sum, n) => n + sum, 0);
 const styled = 'styled';
+
+
+const bolden = (t) => `*{$t}*`
+const italicize = (t) => `_{$t}_`
 
 /** Get report
 
