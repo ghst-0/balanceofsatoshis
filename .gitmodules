@@ -1,0 +1,42 @@
+[submodule "asyncjs-util"]
+	path = packages/asyncjs-util
+	url = ../asyncjs-util.git
+[submodule "bolt01"]
+	path = packages/bolt01
+	url = ../bolt01.git
+[submodule "bolt07"]
+	path = packages/bolt07
+	url = ../bolt07.git
+[submodule "bolt09"]
+	path = packages/bolt09
+	url = ../bolt09.git
+[submodule "caporal"]
+	path = packages/caporal
+	url = ../caporal.git
+[submodule "fiat"]
+	path = packages/fiat
+	url = ../fiat.git
+[submodule "invoices"]
+	path = packages/invoices
+	url = ../invoices.git
+[submodule "lightning"]
+	path = packages/lightning
+	url = ../lightning.git
+[submodule "ln-accounting"]
+	path = packages/ln-accounting
+	url = ../ln-accounting.git
+[submodule "ln-docker-daemons"]
+	path = packages/ln-docker-daemons
+	url = ../ln-docker-daemons.git
+[submodule "ln-service"]
+	path = packages/ln-service
+	url = ../ln-service.git
+[submodule "ln-sync"]
+	path = packages/ln-sync
+	url = ../ln-sync.git
+[submodule "ln-telegram"]
+	path = packages/ln-telegram
+	url = ../ln-telegram.git
+[submodule "mock-lnd"]
+	path = packages/mock-lnd
+	url = ../mock-lnd.git
