@@ -166,8 +166,7 @@ function createRawApi(token, options, webhookReplyEnvelope) {
         ? "__internal"
         // Methods with zero parameters are called without any payload,
         // so we have to manually inject an empty payload.
-        : m === "getMe" ||
-        m === "getWebhookInfo" ||
+        : m === "getWebhookInfo" ||
         m === "getForumTopicIconStickers" ||
         m === "getAvailableGifts" ||
         m === "logOut" ||
