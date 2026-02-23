@@ -148,7 +148,7 @@ export default (args, cbk) => {
           public_key: node.public_key,
         }));
 
-        args.bot.catch(err => console.error({telegram_error: err}));
+        args.bot.catch(err => console.error({rocketchat_error: err}));
 
         // Handle lookup of total funds
         args.bot.command('balance', async ctx => {

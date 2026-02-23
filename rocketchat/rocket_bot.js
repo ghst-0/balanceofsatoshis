@@ -31,12 +31,6 @@ const DEFAULT_UPDATE_TYPES = [
 /**
  * This is the single most important class of grammY. It represents your bot.
  *
- * First, you must create a bot by talking to @BotFather, check out
- * https://t.me/BotFather. Once it is ready, you obtain a secret token for your
- * bot. grammY will use that token to identify as your bot when talking to the
- * Telegram servers. Got the token? You are now ready to write some code and run
- * your bot!
- *
  * You should do three things to run your bot:
  * ```ts
  * // 1. Create a bot instance
@@ -97,10 +91,6 @@ class Bot extends Composer {
     this.api = new Api(token, this.clientConfig);
   }
   /**
-   * Information about the bot itself as retrieved from `api.getMe()`. Only
-   * available after the bot has been initialized via `await bot.init()`, or
-   * after the value has been set manually.
-   *
    * Starting the bot will always perform the initialization automatically,
    * unless a manual value is already set.
    *
@@ -150,26 +140,12 @@ class Bot extends Composer {
    * method is called automatically, you usually don't have to call it
    * manually.
    *
-   * @param signal Optional `AbortSignal` to cancel the initialization
    */
-  async init(signal) {
-    let _a;
+  init() {
     if (!this.isInited()) {
       console.debug("Initializing bot");
-      (_a = this.mePromise) !== null && _a !== void 0 ? _a : (this.mePromise = withRetries(() => this.api.getMe(signal), signal));
-      let me;
-      try {
-        me = await this.mePromise;
-      }
-      finally {
-        this.mePromise = undefined;
-      }
-      if (this.me === undefined)
-        this.me = me;
-      else
-        console.debug("Bot info was set by now, will not overwrite");
     }
-    console.debug(`I am ${this.me.username}!`);
+    console.debug(`I am hardcoded bot!`);
   }
   /**
    * Internal. Do not call. Handles an update batch sequentially by supplying
@@ -556,8 +532,7 @@ function noUseFunction() {
 on your bot from within other listeners! This means that every time your bot \
 handles a message like this one, new listeners will be added. This list grows until \
 your machine crashes, so grammY throws this error to tell you that you should \
-probably do things a bit differently. If you're unsure how to resolve this problem, \
-you can ask in the group chat: https://telegram.me/grammyjs
+probably do things a bit differently.
 
 On the other hand, if you actually know what you're doing and you do need to install \
 further middleware while your bot is running, consider installing a composer \

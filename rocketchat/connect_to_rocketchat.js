@@ -5,7 +5,7 @@ import { getWalletInfo } from 'ln-service';
 import { postNodesOffline } from 'ln-rocketchat';
 import { returnResult } from 'asyncjs-util';
 import { getLnds } from '../lnd/index.js';
-import getRocketChatBot from './get_rocketchat_bot.js';
+import { Bot } from './rocket_bot.js';
 import runRocketChatBot from './run_rocketchat_bot.js';
 
 const defaultPaymentsBudget = 0;
@@ -92,8 +92,10 @@ export default (args, cbk) => {
       }],
 
       // Get the telegram bot
-      getBot: ['validate', ({}, cbk) => {
-        return getRocketChatBot({fs: args.fs}, cbk);
+      getBot: ['validate', async ({}, cbk) => {
+        const bot = new Bot();
+        // Start the bot
+        return await bot.bot.init();
       }],
 
       // Set the units formatting
