@@ -80,15 +80,15 @@ importers:
       ln-accounting:
         specifier: workspace:*
         version: link:packages/ln-accounting
+      ln-rocketchat:
+        specifier: workspace:*
+        version: link:packages/ln-rocketchat
       ln-service:
         specifier: workspace:*
         version: link:packages/ln-service
       ln-sync:
         specifier: workspace:*
         version: link:packages/ln-sync
-      ln-telegram:
-        specifier: workspace:*
-        version: link:packages/ln-telegram
       minimist:
         specifier: 1.2.8
         version: 1.2.8
@@ -261,6 +261,40 @@ importers:
         specifier: 3.1.7
         version: 3.1.7
 
+  packages/ln-rocketchat:
+    dependencies:
+      '@alexbosworth/fiat':
+        specifier: workspace*
+        version: link:../fiat
+      async:
+        specifier: 3.2.6
+        version: 3.2.6
+      asyncjs-util:
+        specifier: workspace*
+        version: link:../asyncjs-util
+      bolt07:
+        specifier: workspace:*
+        version: link:../bolt07
+      ln-accounting:
+        specifier: workspace:*
+        version: link:../ln-accounting
+      ln-service:
+        specifier: workspace:*
+        version: link:../ln-service
+      ln-sync:
+        specifier: workspace:*
+        version: link:../ln-sync
+      table:
+        specifier: 6.9.0
+        version: 6.9.0
+    devDependencies:
+      ln-docker-daemons:
+        specifier: workspace:*
+        version: link:../ln-docker-daemons
+      oxlint:
+        specifier: ^1.50.0
+        version: 1.50.0
+
   packages/ln-service:
     dependencies:
       bolt07:
@@ -355,40 +389,6 @@ importers:
       mock-lnd:
         specifier: workspace:*
         version: link:../mock-lnd
-      oxlint:
-        specifier: ^1.50.0
-        version: 1.50.0
-
-  packages/ln-telegram:
-    dependencies:
-      '@alexbosworth/fiat':
-        specifier: workspace*
-        version: link:../fiat
-      async:
-        specifier: 3.2.6
-        version: 3.2.6
-      asyncjs-util:
-        specifier: workspace*
-        version: link:../asyncjs-util
-      bolt07:
-        specifier: workspace:*
-        version: link:../bolt07
-      ln-accounting:
-        specifier: workspace:*
-        version: link:../ln-accounting
-      ln-service:
-        specifier: workspace:*
-        version: link:../ln-service
-      ln-sync:
-        specifier: workspace:*
-        version: link:../ln-sync
-      table:
-        specifier: 6.9.0
-        version: 6.9.0
-    devDependencies:
-      ln-docker-daemons:
-        specifier: workspace:*
-        version: link:../ln-docker-daemons
       oxlint:
         specifier: ^1.50.0
         version: 1.50.0

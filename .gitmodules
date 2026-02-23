@@ -34,9 +34,9 @@
 [submodule "packages/ln-sync"]
 	path = packages/ln-sync
 	url = https://github.com/ghst-0/ln-sync.git
-[submodule "packages/ln-telegram"]
-	path = packages/ln-telegram
-	url = https://github.com/ghst-0/ln-telegram.git
+[submodule "packages/ln-rocketchat"]
+	path = packages/ln-rocketchat
+	url = https://github.com/ghst-0/ln-rocketchat.git
 [submodule "packages/mock-lnd"]
 	path = packages/mock-lnd
 	url = https://github.com/ghst-0/mock-lnd.git
