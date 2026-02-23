@@ -81,15 +81,15 @@ export default (args, cbk) => {
       // Check arguments
       validate: cbk => {
         if (!args.ask) {
-          return cbk([400, 'ExpectedAskFunctionToStartTelegramBot']);
+          return cbk([400, 'ExpectedAskFunctionToStartRocketChatBot']);
         }
 
         if (!isArray(args.lnds) || args.lnds.length === 0) {
-          return cbk([400, 'ExpectedLndsToStartTelegramBot']);
+          return cbk([400, 'ExpectedLndsToStartRocketChatBot']);
         }
 
         if (!args.key) {
-          return cbk([400, 'ExpectedApiKeyToStartTelegramBot']);
+          return cbk([400, 'ExpectedApiKeyToStartRocketChatBot']);
         }
 
         if (!!args.id && args.key.startsWith(`${args.id}:`)){
@@ -97,7 +97,7 @@ export default (args, cbk) => {
         }
 
         if (!isArray(args.nodes)) {
-          return cbk([400, 'ExpectedArrayOfSavedNodesToStartTelegramBot']);
+          return cbk([400, 'ExpectedArrayOfSavedNodesToStartRocketChatBot']);
         }
 
         if (!isNumber(args.payments_limit)) {
@@ -105,7 +105,7 @@ export default (args, cbk) => {
         }
 
         if (!args.request) {
-          return cbk([400, 'ExpectedRequestMethodToStartTelegramBot']);
+          return cbk([400, 'ExpectedRequestMethodToStartRocketChatBot']);
         }
 
         return cbk();
@@ -361,7 +361,7 @@ export default (args, cbk) => {
         },
         ({code}) => {
           if (!code) {
-            return cbk([400, 'ExpectedConnectCodeToStartTelegramBot']);
+            return cbk([400, 'ExpectedConnectCodeToStartRocketChatBot']);
           }
 
           connectedId = Number(code);

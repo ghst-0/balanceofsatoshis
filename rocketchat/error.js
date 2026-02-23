@@ -62,7 +62,7 @@ class HttpError extends Error {
   }
 }
 
-function isTelegramError(err) {
+function isRocketChatError(err) {
   return (typeof err === "object" &&
     err !== null &&
     "status" in err &&
@@ -71,7 +71,7 @@ function isTelegramError(err) {
 function toHttpError(method, sensitiveLogs) {
   return (err) => {
     let msg = `Network request for '${method}' failed!`;
-    if (isTelegramError(err))
+    if (isRocketChatError(err))
       msg += ` (${err.status}: ${err.statusText})`;
     if (sensitiveLogs && err instanceof Error)
       msg += ` ${err.message}`;

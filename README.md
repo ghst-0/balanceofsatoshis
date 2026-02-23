@@ -128,8 +128,8 @@ bos report
 # Send funds using keysend and an optional message to a node
 bos send
 
-# Connect up to a Telegram bot
-bos telegram
+# Connect up to a RocketChat bot
+bos rocketchat
 
 # Show unspent coin outputs
 bos utxos
@@ -377,7 +377,7 @@ process and restart it when updating.
 Nohup example:
 
 ```shell
-nohup /home/bos/.npm-global/bin/bos telegram --connect CONNECT_CODE > /dev/null &
+nohup /home/bos/.npm-global/bin/bos rocketchat --connect CONNECT_CODE > /dev/null &
 ```
 
 You can also create a shell-script.sh to run a command repeatedly, with a delay

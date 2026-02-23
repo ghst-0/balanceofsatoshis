@@ -4,7 +4,7 @@ import { getIdentity } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
 
 import { getLnds } from '../lnd/index.js';
-import startTelegramBot from './start_rocketchat_bot.js';
+import startRocketChatBot from './start_rocketchat_bot.js';
 
 const {isArray} = Array;
 
@@ -43,31 +43,31 @@ export default (args, cbk) => {
       // Check arguments
       validate: cbk => {
         if (!args.ask) {
-          return cbk([400, 'ExpectedAskFunctionToRunTelegramBot']);
+          return cbk([400, 'ExpectedAskFunctionToRunRocketChatBot']);
         }
 
         if (!args.bot) {
-          return cbk([400, 'ExpectedTelegramBotToRunTelegramBot']);
+          return cbk([400, 'ExpectedRocketChatBotToRunRocketChatBot']);
         }
 
         if (!args.fs) {
-          return cbk([400, 'ExpectedFilesystemMethodsToRunTelegramBot']);
+          return cbk([400, 'ExpectedFilesystemMethodsToRunRocketChatBot']);
         }
 
         if (!args.key) {
-          return cbk([400, 'ExpectedApiKeyToRunTelegramBot']);
+          return cbk([400, 'ExpectedApiKeyToRunRocketChatBot']);
         }
 
         if (!isArray(args.nodes)) {
-          return cbk([400, 'ExpectedArrayOfSavedNodesToRunTelegramBot']);
+          return cbk([400, 'ExpectedArrayOfSavedNodesToRunRocketChatBot']);
         }
 
         if (args.payments_limit === undefined) {
-          return cbk([400, 'ExpectedPaymentsLimitToRunTelegramBot']);
+          return cbk([400, 'ExpectedPaymentsLimitToRunRocketChatBot']);
         }
 
         if (!args.request) {
-          return cbk([400, 'ExpectedRequestFunctionToRunTelegrambot']);
+          return cbk([400, 'ExpectedRequestFunctionToRunRocketChatBot']);
         }
 
         return cbk();
@@ -80,9 +80,9 @@ export default (args, cbk) => {
 
       // Start the bot going
       startBot: ['getLnds', ({getLnds}, cbk) => {
-        console.info({connecting_to_telegram: args.nodes});
+        console.info({connecting_to_rocketchat: args.nodes});
 
-        return startTelegramBot({
+        return startRocketChatBot({
           ask: args.ask,
           bot: args.bot,
           fs: args.fs,

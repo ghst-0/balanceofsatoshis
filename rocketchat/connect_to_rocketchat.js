@@ -48,23 +48,23 @@ export default (args, cbk) => {
         }
 
         if (!args.ask) {
-          return cbk([400, 'ExpectedAskFunctionToConnectToTelegram']);
+          return cbk([400, 'ExpectedAskFunctionToConnectToRocketChat']);
         }
 
         if (!args.fs) {
-          return cbk([400, 'ExpectedFsToConnectToTelegram']);
+          return cbk([400, 'ExpectedFsToConnectToRocketChat']);
         }
 
         if (!!args.id && !isNumber(args.id)) {
-          return cbk([400, 'ExpectedNumericConnectCodeToConnectToTelegram']);
+          return cbk([400, 'ExpectedNumericConnectCodeToConnectToRocketChat']);
         }
 
         if (!args.payments) {
-          return cbk([400, 'ExpectedPaymentInstructionsToConnectToTelegram']);
+          return cbk([400, 'ExpectedPaymentInstructionsToConnectToRocketChat']);
         }
 
         if (!args.request) {
-          return cbk([400, 'ExpectedRequestFunctionToConnectToTelegram']);
+          return cbk([400, 'ExpectedRequestFunctionToConnectToRocketChat']);
         }
 
         return cbk();
