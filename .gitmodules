@@ -1,0 +1,42 @@
+[submodule "packages/asyncjs-util"]
+	path = packages/asyncjs-util
+	url = http://github.com/ghst-0/asyncjs-util.git
+[submodule "packages/bolt01"]
+	path = packages/bolt01
+	url = http://github.com/ghst-0/bolt01.git
+[submodule "packages/bolt07"]
+	path = packages/bolt07
+	url = http://github.com/ghst-0/bolt07.git
+[submodule "packages/bolt09"]
+	path = packages/bolt09
+	url = http://github.com/ghst-0/bolt09.git
+[submodule "packages/caporal"]
+	path = packages/caporal
+	url = http://github.com/ghst-0/caporal.git
+[submodule "packages/fiat"]
+	path = packages/fiat
+	url = http://github.com/ghst-0/fiat.git
+[submodule "packages/invoices"]
+	path = packages/invoices
+	url = http://github.com/ghst-0/invoices.git
+[submodule "packages/lightning"]
+	path = packages/lightning
+	url = http://github.com/ghst-0/lightning.git
+[submodule "packages/ln-accounting"]
+	path = packages/ln-accounting
+	url = http://github.com/ghst-0/ln-accounting.git
+[submodule "packages/ln-docker-daemons"]
+	path = packages/ln-docker-daemons
+	url = https://github.com/ghst-0/ln-docker-daemons.git
+[submodule "packages/ln-service"]
+	path = packages/ln-service
+	url = https://github.com/ghst-0/ln-service.git
+[submodule "packages/ln-sync"]
+	path = packages/ln-sync
+	url = https://github.com/ghst-0/ln-sync.git
+[submodule "packages/ln-telegram"]
+	path = packages/ln-telegram
+	url = https://github.com/ghst-0/ln-telegram.git
+[submodule "packages/mock-lnd"]
+	path = packages/mock-lnd
+	url = https://github.com/ghst-0/mock-lnd.git
