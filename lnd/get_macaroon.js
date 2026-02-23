@@ -4,7 +4,7 @@ import asyncDetectSeries from 'async/detectSeries.js';
 import { returnResult } from 'asyncjs-util';
 import lndDirectory from './lnd_directory.js';
 
-const defaults = [['bitcoin', 'litecoin'], ['mainnet', 'testnet']];
+const defaults = [['bitcoin'], ['mainnet', 'testnet']];
 const flatten = arr => [].concat(...arr);
 const macDirs = ['data', 'chain'];
 const macName = 'admin.macaroon';

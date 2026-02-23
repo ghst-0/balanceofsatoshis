@@ -2,7 +2,7 @@ import { decodeChanId } from 'bolt07';
 import moment from 'moment';
 
 const action = 'Opened channel';
-const minutesPerBlock = network => network === 'ltcmainnet' ? 10 / 4 : 10;
+const minutesPerBlock = 10;
 const minutesPerDay = 24 * 60;
 const msPerMinute = 1000 * 60;
 const sumOf = arr => arr.reduce((sum, n) => n + sum, 0);

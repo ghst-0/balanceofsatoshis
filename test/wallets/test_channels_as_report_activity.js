@@ -10,7 +10,7 @@ const tests = [
       chain: {
         currency: 'currency',
         height: 1,
-        network: 'ltcmainnet',
+        network: 'btc',
       },
       channels: [],
       days: 1,
