@@ -18,7 +18,6 @@ import { returnResult } from 'asyncjs-util';
 
 import { authenticatedLnd } from '../lnd/index.js';
 import channelsAsReportActivity from './channels_as_report_activity.js';
-// TODO: FIX THIS, using network which is removed
 import { currencyForNetwork, getForwards } from '../network/index.js';
 import { getBalance } from '../balances/index.js';
 import reportOverview from './report_overview.js';
