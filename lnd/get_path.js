@@ -3,10 +3,9 @@ import asyncAuto from 'async/auto.js';
 import asyncDetect from 'async/detect.js';
 import { returnResult } from 'asyncjs-util';
 
-const certPath = ['tls.cert'];
-const umbrelUser = 'umbrel';
-const umbrelV0Path = '/home/umbrel/umbrel/lnd';
-const umbrelV1Path = '/home/umbrel/umbrel/app-data/lightning/data/lnd';
+// TODO: Make this setting configurable with some new simple global config file
+const certFile = '/opt/bos/config/tls.cert';
+
 
 /** Look for the LND directory path
 
@@ -42,18 +41,14 @@ export default ({fs, os}, cbk) => {
 
       // Paths to look for
       paths: ['validate', ({}, cbk) => {
-        // Exit early when the user is not Umbrel
-        if (os.userInfo().username !== umbrelUser) {
-          return cbk(null, []);
-        }
-
-        return cbk(null, [umbrelV0Path, umbrelV1Path]);
-      }],
+        // Exit early because we are not using umbrel
+        return cbk(null, []);
+    }],
 
       // Look through the paths to find a cert file
       findCert: ['paths', ({paths}, cbk) => {
         return asyncDetect(paths, (path, cbk) => {
-          return fs.getFile(join(...[path].concat(certPath)), (err, cert) => {
+          return fs.getFile(join(...[path].concat(certFile)), (err, cert) => {
             return cbk(null, !err && !!cert);
           });
         },

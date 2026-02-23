@@ -1,9 +1,8 @@
-import { join } from 'node:path';
 import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
-import lndDirectory from './lnd_directory.js';
 
-const certPath = ['tls.cert'];
+// TODO: Make this setting configurable with some new simple global config file
+const certFile = '/opt/bos/config/tls.cert';
 
 /** Get cert for node
 
@@ -47,9 +46,7 @@ export default ({fs, node, os, path}, cbk) => {
           return cbk();
         }
 
-        const dir = path || lndDirectory({os}).path;
-
-        return fs.getFile(join(...[dir].concat(certPath)), (err, cert) => {
+        return fs.getFile(certFile, (err, cert) => {
           if (err) {
             return cbk([503, 'UnexpectedErrorGettingCertFileData', {err}]);
           }

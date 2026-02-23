@@ -1,13 +1,12 @@
-import { join } from 'node:path';
 import asyncAuto from 'async/auto.js';
 import asyncDetectSeries from 'async/detectSeries.js';
 import { returnResult } from 'asyncjs-util';
-import lndDirectory from './lnd_directory.js';
+
+// TODO: Make this setting configurable with some new simple global config file
+const macaroonPath = '/opt/readonlymacaroon/readonly.macaroon';
 
 const defaults = [['bitcoin'], ['mainnet', 'testnet']];
 const flatten = arr => [].concat(...arr);
-const macDirs = ['data', 'chain'];
-const macName = 'admin.macaroon';
 
 /** Get macaroon for node
 
@@ -54,7 +53,6 @@ export default ({fs, node, os, path}, cbk) => {
 
         const [chains, nets] = defaults;
         let defaultMacaroon;
-        const dir = path || lndDirectory({os}).path;
 
         const all = chains.map(chain => {
           return nets.map(network => ({chain, network}));
@@ -62,9 +60,8 @@ export default ({fs, node, os, path}, cbk) => {
 
         // Find the default macaroon
         return asyncDetectSeries(flatten(all), ({chain, network}, cbk) => {
-          const macPath = [].concat(macDirs).concat([chain, network, macName]);
 
-          return fs.getFile(join(...[dir].concat(macPath)), (_, macaroon) => {
+          return fs.getFile(macaroonPath, (_, macaroon) => {
             defaultMacaroon = macaroon;
 
             return cbk(null, !!defaultMacaroon);

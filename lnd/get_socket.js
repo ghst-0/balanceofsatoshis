@@ -1,12 +1,11 @@
-import { join } from 'node:path';
 import { URL } from 'node:url';
 import asyncAuto from 'async/auto.js';
 import { parse } from 'ini';
 import { returnResult } from 'asyncjs-util';
-import lndDirectory from './lnd_directory.js';
 
 const applicationOptions = 'Application Options';
-const confPath = ['lnd.conf'];
+// TODO: Remove reliance on the lnd.conf file, hardcoded for now
+const confFile = '/opt/lnd/lnd.conf';
 const isOnion = socket => /^[^\s]+\.onion/.test(socket.split(':').shift());
 const {keys} = Object;
 const scheme = 'rpc://';
@@ -54,9 +53,7 @@ export default ({fs, node, os, path}, cbk) => {
           return cbk();
         }
 
-        const dir = path || lndDirectory({os}).path;
-
-        return fs.getFile(join(...[dir].concat(confPath)), (err, conf) => {
+        return fs.getFile(confFile, (err, conf) => {
           // Don't report errors, the conf file is either there or not
           return cbk(null, conf);
         });
