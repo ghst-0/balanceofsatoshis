@@ -38,7 +38,7 @@
   },
   "description": "Lightning balance CLI",
   "devDependencies": {
-    "oxlint": "^1.49.0"
+    "oxlint": "^1.50.0"
   },
   "engines": {
     "node": ">=20"
