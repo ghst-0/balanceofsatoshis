@@ -1,7 +1,2 @@
-*~
-*.gz
-.env
-.nyc_output
 node_modules
-.prettierrc
-.vscode/settings.json
+bot_config.json
