@@ -1,5 +1,18 @@
 packages:
-  - 'packages/*'
+  - 'packages/asyncjs-util'
+  - 'packages/bolt01'
+  - 'packages/bolt07'
+  - 'packages/bolt09'
+  - 'packages/caporal'
+  - 'packages/fiat'
+  - 'packages/invoices'
+  - 'packages/lightning'
+  - 'packages/ln-accounting'
+  - 'packages/ln-docker-daemons'
+  - 'packages/ln-rocketchat'
+  - 'packages/ln-service'
+  - 'packages/ln-sync'
+  - 'packages/mock-lnd'
 
 linkWorkspacePackages: true
 sharedWorkspaceLockfile: true
