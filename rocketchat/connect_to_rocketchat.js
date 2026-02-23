@@ -2,7 +2,7 @@ import asyncAuto from 'async/auto.js';
 import asyncForever from 'async/forever.js';
 import asyncMap from 'async/map.js';
 import { getWalletInfo } from 'ln-service';
-import { postNodesOffline } from 'ln-telegram';
+import { postNodesOffline } from 'ln-rocketchat';
 import { returnResult } from 'asyncjs-util';
 import { getLnds } from '../lnd/index.js';
 import getRocketChatBot from './get_rocketchat_bot.js';

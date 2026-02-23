@@ -17,7 +17,7 @@ import {
   postOpeningMessage,
   postNodesOnline,
   postSettledPayment
-} from 'ln-telegram';
+} from 'ln-rocketchat';
 import asyncAuto from 'async/auto.js';
 import asyncEach from 'async/each.js';
 import asyncForever from 'async/forever.js';
