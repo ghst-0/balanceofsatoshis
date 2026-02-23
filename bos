@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { lstat, mkdir, readdir, readFile, rmdir, statSync, unlink, writeFile } from 'node:fs';
 import { spawn } from 'child_process';
-import prog from '@alexbosworth/caporal';
+import prog from 'caporal';
 import * as lnService from 'ln-service';
 import * as lnSync from 'ln-sync';
 import * as balances from './balances/index.js';

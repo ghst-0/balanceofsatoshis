@@ -32,9 +32,6 @@ importers:
       '@alexbosworth/blockchain':
         specifier: 3.2.0
         version: 3.2.0
-      '@alexbosworth/caporal':
-        specifier: workspace:*
-        version: link:packages/caporal
       abort-controller:
         specifier: 3.0.0
         version: 3.0.0
@@ -56,6 +53,9 @@ importers:
       bolt07:
         specifier: 1.9.4
         version: link:packages/bolt07
+      caporal:
+        specifier: workspace:*
+        version: link:packages/caporal
       cbor:
         specifier: 10.0.11
         version: 10.0.11
@@ -263,9 +263,6 @@ importers:
 
   packages/ln-rocketchat:
     dependencies:
-      '@alexbosworth/fiat':
-        specifier: workspace*
-        version: link:../fiat
       async:
         specifier: 3.2.6
         version: 3.2.6
@@ -275,6 +272,9 @@ importers:
       bolt07:
         specifier: workspace:*
         version: link:../bolt07
+      fiat:
+        specifier: workspace*
+        version: link:../fiat
       ln-accounting:
         specifier: workspace:*
         version: link:../ln-accounting

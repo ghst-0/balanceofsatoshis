@@ -12,7 +12,7 @@
   "type": "module",
   "dependencies": {
     "@alexbosworth/blockchain": "3.2.0",
-    "@alexbosworth/caporal": "workspace:*",
+    "caporal": "workspace:*",
     "abort-controller": "3.0.0",
     "asciichart": "1.5.25",
     "async": "3.2.6",
