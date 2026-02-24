@@ -1,7 +1,8 @@
 import asyncAuto from 'async/auto.js';
 import { diffieHellmanComputeSecret, getIdentity } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
-import encryptToSecret from './encrypt_to_secret.js';
+
+import { encryptToSecret } from './encrypt_to_secret.js';
 
 /** Encrypt data to a node
 
@@ -17,7 +18,7 @@ import encryptToSecret from './encrypt_to_secret.js';
     to: <Encrypted To Node Hex String>
   }
 */
-export default ({lnd, message, to}, cbk) => {
+const encryptToNode = ({lnd, message, to}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -86,3 +87,5 @@ export default ({lnd, message, to}, cbk) => {
     returnResult({reject, resolve, of: 'encrypted'}, cbk));
   });
 };
+
+export { encryptToNode }

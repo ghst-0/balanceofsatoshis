@@ -1,8 +1,10 @@
 import test from 'node:test';
 import { equal, rejects } from 'node:assert/strict';
 
-import { chanInfoResponse, getNodeInfoResponse, versionInfoResponse } from '../fixtures/index.js';
-import { getFeesChart } from '../../routing/index.js';
+import chanInfoResponse from '../fixtures/chan_info_response.json' with { type: 'json' };
+import getNodeInfoResponse from '../fixtures/get_node_info_response.json' with { type: 'json' };
+import versionInfoResponse from '../fixtures/version_info_response.json' with { type: 'json' };
+import { getFeesChart } from '../../routing/get_fees_chart.js';
 
 const fs = {getFile: ({}, cbk) => cbk('err')};
 

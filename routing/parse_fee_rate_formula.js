@@ -23,7 +23,7 @@ const percentAsPpm = percent => percent * 1e4;
     [rate]: <PPM Fee Rate Number>
   }
 */
-export default args => {
+const parseFeeRateFormula = args => {
   if (args.fee_rate === undefined) {
     return {};
   }
@@ -56,3 +56,5 @@ export default args => {
 
   return {rate: ceil(parsedRate.result)};
 };
+
+export { parseFeeRateFormula }

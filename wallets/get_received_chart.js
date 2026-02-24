@@ -1,13 +1,13 @@
 import asyncAuto from 'async/auto.js';
 import asyncFilterLimit from 'async/filterLimit.js';
 import asyncMap from 'async/map.js';
-import { formatTokens } from 'ln-sync';
-import { getAllInvoices } from 'ln-sync';
+import { formatTokens, getAllInvoices } from 'ln-sync';
 import { getPayment } from 'ln-service';
 import moment from 'moment';
 import { returnResult } from 'asyncjs-util';
-import { segmentMeasure } from '../display/index.js';
-import { sumsForSegment } from '../display/index.js';
+
+import { segmentMeasure } from '../display/segment_measure.js';
+import { sumsForSegment } from '../display/sums_for_segment.js';
 
 const daysBetween = (a, b) => moment(a).diff(b, 'days') + 1;
 const defaultDays = 60;
@@ -37,7 +37,7 @@ const parseDate = n => Date.parse(n);
     title: <Chart Title String>
   }
 */
-export default (args, cbk) => {
+const getReceivedChart = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -252,7 +252,7 @@ export default (args, cbk) => {
 
         return cbk(null, {
           description,
-          data: !args.is_count ? sum.sum : sum.count,
+          data: args.is_count ? sum.count : sum.sum,
           title: title.filter(n => !!n).join(' '),
         });
       }],
@@ -260,3 +260,5 @@ export default (args, cbk) => {
     returnResult({reject, resolve, of: 'data'}, cbk));
   });
 };
+
+export { getReceivedChart }

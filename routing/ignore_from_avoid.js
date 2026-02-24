@@ -18,7 +18,7 @@ const notFoundIndex = -1;
     }]
   }
 */
-export default ({avoid}) => {
+const ignoreFromAvoid = ({avoid}) => {
   const ignore = flatten([avoid].filter(n => !!n))
     .map(n => ({from_public_key: n}));
 
@@ -28,3 +28,5 @@ export default ({avoid}) => {
 
   return {ignore};
 };
+
+export { ignoreFromAvoid }

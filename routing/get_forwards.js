@@ -1,9 +1,10 @@
 import asyncAuto from 'async/auto.js';
 import asyncMap from 'async/map.js';
 import asyncUntil from 'async/until.js';
-import { getChannels, getClosedChannels, getForwards, getNode } from 'ln-service';
+import { getChannels, getClosedChannels, getForwards as ln_getForwards, getNode } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
-import forwardsViaPeer from './forwards_via_peer.js';
+
+import { forwardsViaPeer } from './forwards_via_peer.js';
 
 const flatten = arr => [].concat(...arr);
 const {isArray} = Array;
@@ -32,7 +33,7 @@ const pageLimit = 1e3;
     }]
   }
 */
-export default ({after, before, lnd, via}, cbk) => {
+const getForwards = ({after, before, lnd, via}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -74,7 +75,7 @@ export default ({after, before, lnd, via}, cbk) => {
         return asyncUntil(
           cbk => cbk(null, token === false),
           cbk => {
-            return getForwards({
+            return ln_getForwards({
               after,
               lnd,
               token,
@@ -171,3 +172,5 @@ export default ({after, before, lnd, via}, cbk) => {
     returnResult({reject, resolve, of: 'forwards'}, cbk));
   });
 };
+
+export { getForwards }

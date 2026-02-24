@@ -1,6 +1,7 @@
 import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
 import { parse } from 'csv-parse'
+
 /** Get rows for table output from CSV
 
   {
@@ -12,7 +13,7 @@ import { parse } from 'csv-parse'
     rows: [[<Column String>]]
   }
 */
-export default ({csv}, cbk) => {
+const tableRowsFromCsv = ({csv}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Get the parse function
@@ -61,3 +62,5 @@ export default ({csv}, cbk) => {
     returnResult({reject, resolve, of: 'rows'}, cbk));
   });
 };
+
+export { tableRowsFromCsv }

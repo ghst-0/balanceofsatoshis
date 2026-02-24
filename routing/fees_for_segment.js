@@ -21,7 +21,7 @@ const defaultSegmentBy = 'created_at';
     fees: [<Fee Earnings In Segment Number>]
   }
 */
-export default ({by, end, forwards, measure, segments}) => {
+const feesForSegment = ({by, end, forwards, measure, segments}) => {
   const fees = [...Array(segments)].map((_, i) => {
     const segment = moment(end).subtract(i, measure);
 
@@ -59,3 +59,5 @@ export default ({by, end, forwards, measure, segments}) => {
     forwarded: fees.map(({forwarded}) => forwarded).slice().reverse(),
   };
 };
+
+export { feesForSegment }

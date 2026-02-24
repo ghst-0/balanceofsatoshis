@@ -25,7 +25,7 @@ const percentFormat = n => isNaN(n) ? '0' : (n * 100).toFixed(0);
     }]
   }
 */
-export default args => {
+const reportOverview = args => {
   const balance = formatAsBigUnit(args.balance);
 
   const report = [
@@ -62,3 +62,5 @@ export default args => {
 
   return {report};
 };
+
+export { reportOverview }

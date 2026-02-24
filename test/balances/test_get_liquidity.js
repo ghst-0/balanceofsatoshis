@@ -1,8 +1,9 @@
 import test from 'node:test';
 import { equal, rejects } from 'node:assert/strict';
 
-import { getInfoResponse, listChannelsResponse } from '../fixtures/index.js';
-import { getLiquidity } from '../../balances/index.js';
+import getInfoResponse from '../fixtures/get_info_response.json' with { type: 'json' };
+import listChannelsResponse from '../fixtures/list_channels_response.json' with { type: 'json' };
+import { getLiquidity } from '../../balances/get_liquidity.js';
 
 const fs = {getFile: ({}, cbk) => cbk('err')};
 

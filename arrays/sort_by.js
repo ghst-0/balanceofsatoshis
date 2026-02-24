@@ -19,7 +19,7 @@ const lessThan = -1;
     sorted: [<Sorted Element Object>]
   }
 */
-export default ({array, attribute}) => {
+const sortBy = ({array, attribute}) => {
   if (!isArray(array)) {
     throw new Error('ExpectedArrayToSortByAttribute');
   }
@@ -42,3 +42,5 @@ export default ({array, attribute}) => {
 
   return {sorted};
 };
+
+export { sortBy }

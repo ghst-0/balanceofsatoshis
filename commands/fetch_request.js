@@ -15,7 +15,7 @@ const timeoutSignals = new WeakMap();
     request: <Request Function>
   }
 */
-export default ({fetch}, cbk) => {
+const fetchRequest = ({fetch}, cbk) => {
   return (options, cbk) => {
     (async () => {
     	const controller = new AbortController();
@@ -56,3 +56,5 @@ export default ({fetch}, cbk) => {
     })();
   };
 };
+
+export { fetchRequest }

@@ -1,9 +1,10 @@
 import asyncAuto from 'async/auto.js';
 import cbor from 'cbor';
 import { returnResult } from 'asyncjs-util';
-import { derAsPem } from '../encryption/index.js';
-import { homePath } from '../storage/index.js';
-import putSavedCredentials from './put_saved_credentials.js';
+
+import { derAsPem } from '../encryption/der_as_pem.js';
+import { homePath } from '../storage/home_path.js';
+import { putSavedCredentials } from './put_saved_credentials.js';
 
 
 const sanitize = (a) => a
@@ -33,7 +34,7 @@ const publicKeyEncoding = {format: 'der', type: 'spki'};
 
   @returns via cbk or Promise
 */
-export default ({ask, cryptography, fs, node}, cbk) => {
+const registerNode = ({ask, cryptography, fs, node}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -310,3 +311,5 @@ export default ({ask, cryptography, fs, node}, cbk) => {
     returnResult({reject, resolve}, cbk));
   });
 };
+
+export { registerNode }

@@ -1,7 +1,8 @@
 import asyncAuto from 'async/auto.js';
 import { createInvoice } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
-import encodeTrigger from './encode_trigger.js';
+
+import { encodeTrigger } from './encode_trigger.js';
 
 const daysAsMs = days => Number(days) * 1000 * 60 * 60 * 24;
 const defaultTriggerDays = 365;
@@ -16,7 +17,7 @@ const futureDate = ms => new Date(Date.now() + ms).toISOString();
 
   @returns via cbk or Promise
 */
-export default ({id, lnd}, cbk) => {
+const createConnectivityTrigger = ({id, lnd}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -56,3 +57,5 @@ export default ({id, lnd}, cbk) => {
     returnResult({reject, resolve}, cbk));
   });
 };
+
+export { createConnectivityTrigger }

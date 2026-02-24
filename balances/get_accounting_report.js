@@ -1,11 +1,12 @@
 import asyncAuto from 'async/auto.js';
-import { getAccountingReport } from 'ln-accounting';
-import { getNetwork } from 'ln-sync';
+import { getAccountingReport as ln_getAccountingReport } from 'ln-accounting';
+import { getNetwork as ln_getNetwork } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
+
+import { rangeForDate } from './range_for_date.js';
+import { tableRowsFromCsv } from './table_rows_from_csv.js';
 import categories from './accounting_categories.json' with { type: 'json' };
 import constants from './constants.json' with { type: 'json' };
-import rangeForDate from './range_for_date.js';
-import tableRowsFromCsv from './table_rows_from_csv.js';
 
 const { defaultCurrency, defaultFiat } = constants;
 const assetType = 'BTC';
@@ -38,7 +39,7 @@ const summaryHeadings = ['Total', 'Asset', 'Report Date', 'Total Fiat'];
     [rows_summary]: [[<Column String>]]
   }
 */
-export default (args, cbk) => {
+const getAccountingReport = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Validate
@@ -76,7 +77,7 @@ export default (args, cbk) => {
       }],
 
       // Get the network name
-      getNetwork: ['validate', ({}, cbk) => getNetwork({lnd: args.lnd}, cbk)],
+      getNetwork: ['validate', ({}, cbk) => ln_getNetwork({lnd: args.lnd}, cbk)],
 
       // Get accounting info
       getAccounting: [
@@ -84,12 +85,12 @@ export default (args, cbk) => {
         'getNetwork',
         ({dateRange, getNetwork}, cbk) =>
       {
-        return getAccountingReport({
+        return ln_getAccountingReport({
           after: dateRange.after,
           before: dateRange.before,
           category: categories[args.category],
           currency: args.currency || defaultCurrency,
-          fiat: !args.is_fiat_disabled ? (args.fiat || defaultFiat) : null,
+          fiat: args.is_fiat_disabled ? null : (args.fiat || defaultFiat),
           lnd: args.lnd,
           network: getNetwork.network,
           rate_provider: args.rate_provider || undefined,
@@ -154,7 +155,7 @@ export default (args, cbk) => {
               return round(col);
             }
 
-            return col.substring(0, 32);
+            return col.slice(0, 32);
           });
         });
 
@@ -169,3 +170,5 @@ export default (args, cbk) => {
     returnResult({reject, resolve, of: 'report'}, cbk));
   });
 };
+
+export { getAccountingReport }

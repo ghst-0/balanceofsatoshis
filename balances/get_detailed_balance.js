@@ -26,7 +26,7 @@ const {isArray} = Array;
     [utxos_count]: <Total UTXOs Count Number>
   }
 */
-export default (args, cbk) => {
+const getDetailedBalance = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -90,3 +90,5 @@ export default (args, cbk) => {
     returnResult({reject, resolve, of: 'balance'}, cbk));
   });
 };
+
+export { getDetailedBalance }

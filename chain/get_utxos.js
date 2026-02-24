@@ -7,7 +7,7 @@ import {
   getClosedChannels,
   getLockedUtxos,
   getPendingChannels,
-  getUtxos
+  getUtxos as ln_getUtxos
 } from 'ln-service';
 import moment from 'moment';
 import { returnResult } from 'asyncjs-util';
@@ -50,7 +50,7 @@ const uniq = arr => Array.from(new Set(arr));
   @returns via cbk or Promise
   <Count Number>
 */
-export default (args, cbk) => {
+const getUtxos = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -96,7 +96,7 @@ export default (args, cbk) => {
 
       // Get UTXOs
       getUtxos: ['validate', ({}, cbk) => {
-        return getUtxos({
+        return ln_getUtxos({
           lnd: args.lnd,
           min_confirmations: !args.is_confirmed ? 0 : 1,
         },
@@ -231,3 +231,5 @@ export default (args, cbk) => {
     returnResult({reject, resolve, of: 'utxos'}, cbk));
   });
 };
+
+export { getUtxos }

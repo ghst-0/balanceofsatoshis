@@ -1,7 +1,9 @@
 import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
-import { certExpiration, pemAsDer } from '../encryption/index.js';
-import lndCredentials from './lnd_credentials.js';
+
+import { certExpiration } from '../encryption/cert_expiration.js';
+import { pemAsDer } from '../encryption/pem_as_der.js';
+import { lndCredentials } from './lnd_credentials.js';
 
 const base64AsString = base64 => Buffer.from(base64, 'base64').toString();
 const bufferAsHex = buffer => buffer.toString('hex');
@@ -20,7 +22,7 @@ const {round} = Math;
     days: <Days Valid Number>
   }
 */
-export default ({below, node}, cbk) => {
+const getCertValidityDays = ({below, node}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Get the cert
@@ -44,3 +46,5 @@ export default ({below, node}, cbk) => {
     returnResult({reject, resolve, of: 'certValidity'}, cbk));
   });
 };
+
+export { getCertValidityDays }

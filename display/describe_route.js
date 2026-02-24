@@ -3,8 +3,9 @@ import asyncMap from 'async/map.js';
 import { getNode } from 'ln-service';
 import { gray, greenBright, redBright } from 'colorette';
 import { returnResult } from 'asyncjs-util';
-import describeConfidence from './describe_confidence.js';
-import formatFeeRate from './format_fee_rate.js';
+
+import { describeConfidence } from './describe_confidence.js';
+import { formatFeeRate } from './format_fee_rate.js';
 
 const aliasColor = n => n ? greenBright(n) : '';
 const effectiveFeeRate = (n, m) => Number(BigInt(1e6) * BigInt(n) / BigInt(m));
@@ -53,7 +54,7 @@ const pairEdgeIndex = (pair, key) => `x${Number(!pair.indexOf(key))}`;
     description: [<Hop Description String>]
   }
 */
-export default ({lnd, route, tagged}, cbk) => {
+const describeRoute = ({lnd, route, tagged}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -137,3 +138,5 @@ export default ({lnd, route, tagged}, cbk) => {
     returnResult({reject, resolve, of: 'description'}, cbk));
   });
 };
+
+export { describeRoute }

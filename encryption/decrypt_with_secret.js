@@ -1,4 +1,4 @@
-import { createDecipheriv, scrypt } from 'crypto';
+import { createDecipheriv, scrypt } from 'node:crypto';
 import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
 
@@ -30,7 +30,7 @@ const keyLength = 32;
     plain: <Decrypted Data Hex String>
   }
 */
-export default ({encrypted, iv, salt, secret, settings, tag}, cbk) => {
+const decryptWithSecret = ({encrypted, iv, salt, secret, settings, tag}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -109,3 +109,5 @@ export default ({encrypted, iv, salt, secret, settings, tag}, cbk) => {
     returnResult({reject, resolve, of: 'decrypt'}, cbk));
   });
 };
+
+export { decryptWithSecret }

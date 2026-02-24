@@ -44,7 +44,7 @@ const tokensAsBigToken = tokens => (tokens / 1e8).toFixed(8);
     }]
   }
 */
-export default ({backups, chain, channels, days, nodes, now}) => {
+const channelsAsReportActivity = ({backups, chain, channels, days, nodes, now}) => {
   const activity = [];
   const blocks = minutesPerDay / minutesPerBlock(chain.network) * days;
   const msPerBlock = msPerMinute * minutesPerBlock(chain.network);
@@ -102,3 +102,5 @@ export default ({backups, chain, channels, days, nodes, now}) => {
 
   return {activity};
 };
+
+export { channelsAsReportActivity }

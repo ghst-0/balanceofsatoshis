@@ -1,9 +1,10 @@
 import { join } from 'node:path';
 import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
-import { homePath } from '../storage/index.js';
+import { homePath } from '../storage/home_path.js';
 
 const credentials = 'credentials.json';
+
 const {isArray} = Array;
 const {parse} = JSON;
 
@@ -28,7 +29,7 @@ const {parse} = JSON;
     node: <Node Name String>
   }
 */
-export default ({fs, node}, cbk) => {
+const getSavedCredentials = ({fs, node}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -134,3 +135,5 @@ export default ({fs, node}, cbk) => {
     returnResult({reject, resolve, of: 'credentials'}, cbk));
   });
 };
+
+export { getSavedCredentials }

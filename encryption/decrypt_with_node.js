@@ -2,7 +2,8 @@ import asyncAuto from 'async/auto.js';
 import cbor from 'cbor';
 import { diffieHellmanComputeSecret, getIdentity, getNode } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
-import decryptWithSecret from './decrypt_with_secret.js';
+
+import { decryptWithSecret } from './decrypt_with_secret.js';
 
 const { decodeFirst } = cbor;
 const hexAsBuf = hex => Buffer.from(hex, 'hex');
@@ -22,7 +23,7 @@ const {isArray} = Array;
     with_public_key: <With Public Key Hex String>
   }
 */
-export default ({encrypted, lnd}, cbk) => {
+const decryptWithNode = ({encrypted, lnd}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -133,3 +134,5 @@ export default ({encrypted, lnd}, cbk) => {
     returnResult({reject, resolve, of: 'clear'}, cbk));
   });
 };
+
+export { decryptWithNode }

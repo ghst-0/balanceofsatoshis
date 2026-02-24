@@ -34,7 +34,7 @@ const unreliableEmoji = '🤢';
     display: <Chart Alias String>
   }
 */
-export default args => {
+const chartAliasForPeer = args => {
   const downtime = args.downtime_percentage;
   const forwarding = args.is_forwarding ? forwardingEmoji : String();
   const inactive = args.is_inactive ?  inactiveEmoji : String();
@@ -70,3 +70,5 @@ export default args => {
 
   return {display: markers.concat(handle).filter(n => !!n).join(separator)};
 };
+
+export { chartAliasForPeer }

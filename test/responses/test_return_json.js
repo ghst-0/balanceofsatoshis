@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { equal } from 'node:assert/strict';
 
-import { returnJson } from '../../responses/index.js';
+import { returnJson } from '../../responses/return_json.js';
 
 const tests = [
   {

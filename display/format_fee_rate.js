@@ -13,7 +13,7 @@ const highRate = 5e5;
     display: <Display Formatted Rate String>
   }
 */
-export default ({rate}) => {
+const formatFeeRate = ({rate}) => {
   if (rate === undefined) {
     return {display: String()};
   }
@@ -24,3 +24,5 @@ export default ({rate}) => {
 
   return {display: asDisplay(rate)};
 };
+
+export { formatFeeRate }

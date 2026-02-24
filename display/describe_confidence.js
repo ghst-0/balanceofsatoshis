@@ -13,7 +13,7 @@ const bucketSize = 200000;
     [description]: <Confidence Score Text Description String>
   }
 */
-export default ({confidence}) => {
+const describeConfidence = ({confidence}) => {
   if (!confidence) {
     return {};
   }
@@ -38,3 +38,5 @@ export default ({confidence}) => {
     return {};
   }
 };
+
+export { describeConfidence }

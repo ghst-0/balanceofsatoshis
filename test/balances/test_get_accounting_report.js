@@ -1,8 +1,8 @@
 import test from 'node:test';
 import { deepEqual, rejects } from 'node:assert/strict';
 
-import { getAccountingReport } from '../../balances/index.js';
-import { getInfoResponse } from '../fixtures/index.js';
+import { getAccountingReport } from '../../balances/get_accounting_report.js';
+import getInfoResponse from '../fixtures/get_info_response.json' with { type: 'json' };
 
 const makeLnd = ({unconfirmedBalance}) => {
   return {

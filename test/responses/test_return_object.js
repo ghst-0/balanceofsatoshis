@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { equal, deepEqual } from 'node:assert/strict';
 
-import { returnObject } from '../../responses/index.js';
+import { returnObject } from '../../responses/return_object.js';
 
 const {nextTick} = process;
 

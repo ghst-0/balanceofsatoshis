@@ -15,7 +15,7 @@ const padLen = (lineLen, desc) => (Math.max(0, lineLen - desc.length) + 3) / 2;
   @returns
   <Standard Callback Function> (err, res) => {}
 */
-export default ({data, reject, resolve}) => {
+const returnChart = ({data, reject, resolve}) => {
   return (err, res) => {
     if (err) {
       console.error({err});
@@ -47,3 +47,5 @@ export default ({data, reject, resolve}) => {
     return resolve();
   };
 };
+
+export { returnChart }

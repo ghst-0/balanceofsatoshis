@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { deepEqual, rejects } from 'node:assert/strict';
 
-import method from '../../tags/get_tags.js';
+import { getTags } from '../../tags/get_tags.js';
 
 const makeArgs = overrides => {
   const args = {
@@ -88,9 +88,9 @@ const tests = [
 for (const { args, description, error, expected } of tests) {
   test(description, async () => {
     if (error) {
-      await rejects(method(args, args.test), error, 'Got error');
+      await rejects(getTags(args, args.test), error, 'Got error');
     } else {
-      const res = await method(args);
+      const res = await getTags(args);
 
       deepEqual(res, expected, 'Got expected res');
     }

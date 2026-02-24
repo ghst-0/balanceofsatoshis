@@ -4,9 +4,10 @@ import asyncMap from 'async/map.js';
 import { getWalletInfo } from 'ln-service';
 import { postNodesOffline } from 'ln-rocketchat';
 import { returnResult } from 'asyncjs-util';
-import { getLnds } from '../lnd/index.js';
+
+import { getLnds } from '../lnd/get_lnds.js';
 import { Bot } from './rocket_bot.js';
-import runRocketChatBot from './run_rocketchat_bot.js';
+import { runRocketChatBot } from './run_rocketchat_bot.js';
 
 const defaultPaymentsBudget = 0;
 const isNumber = n => !isNaN(n);
@@ -38,7 +39,7 @@ const smallUnitsType = 'full';
 
   @returns via cbk or Promise
 */
-export default (args, cbk) => {
+const connectToRocketChat = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -164,3 +165,5 @@ export default (args, cbk) => {
     returnResult({reject, resolve}, cbk));
   });
 };
+
+export { connectToRocketChat }

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { throws, deepEqual } from 'node:assert/strict';
 
-import { channelsFromHints } from '../../routing/index.js';
+import { channelsFromHints } from '../../routing/channels_from_hints.js';
 
 const tests = [
   {

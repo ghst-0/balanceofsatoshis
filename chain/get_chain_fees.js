@@ -27,7 +27,7 @@ const start = 2;
     min_relay_feerate: <Chain Backend Minimum KVbyte Fee Rate Number>
   }
 */
-export default ({blocks, lnd}, cbk) => {
+const getChainFees = ({blocks, lnd}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -96,3 +96,5 @@ export default ({blocks, lnd}, cbk) => {
     returnResult({reject, resolve, of :'chainFees'}, cbk));
   });
 };
+
+export { getChainFees }

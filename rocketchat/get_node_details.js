@@ -1,6 +1,6 @@
 import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
-import { getLnds } from '../lnd/index.js';
+import { getLnds } from '../lnd/get_lnds.js';
 
 const {isArray} = Array;
 
@@ -25,7 +25,7 @@ const {isArray} = Array;
     }]
   }
 */
-export default ({names, nodes}, cbk) => {
+const getNodeDetails = ({names, nodes}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -58,3 +58,5 @@ export default ({names, nodes}, cbk) => {
     returnResult({reject, resolve, of: 'nodes'}, cbk));
   });
 };
+
+export { getNodeDetails }

@@ -11,7 +11,7 @@ const spacer = '  ';
   @returns
   <Standard Callback Function> (err, res) => {}
 */
-export default ({reject, resolve}) => {
+const returnJson =  ({reject, resolve}) => {
   return (err, res) => {
     if (err) {
       console.error(err);
@@ -24,3 +24,5 @@ export default ({reject, resolve}) => {
     return resolve();
   };
 };
+
+export { returnJson }

@@ -14,7 +14,7 @@ const {stringify} = JSON;
 
   @returns via cbk or Promise
 */
-export default ({file, json, write}, cbk) => {
+const writeJsonFile = ({file, json, write}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -48,3 +48,5 @@ export default ({file, json, write}, cbk) => {
     returnResult({reject, resolve}, cbk));
   });
 };
+
+export { writeJsonFile }

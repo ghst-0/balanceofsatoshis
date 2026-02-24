@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { equal, deepEqual, rejects } from 'node:assert/strict';
 
-import { getSavedCredentials } from '../../nodes/index.js';
+import { getSavedCredentials } from '../../nodes/get_saved_credentials.js';
 
 const tests = [
   {

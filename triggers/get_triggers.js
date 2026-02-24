@@ -2,7 +2,8 @@ import asyncAuto from 'async/auto.js';
 import asyncUntil from 'async/until.js';
 import { getInvoices } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
-import decodeTrigger from './decode_trigger.js';
+
+import { decodeTrigger } from './decode_trigger.js';
 
 const defaultInvoicesLimit = 100;
 
@@ -25,7 +26,7 @@ const defaultInvoicesLimit = 100;
     }]
   }
 */
-export default ({lnd}, cbk) => {
+const getTriggers = ({lnd}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -89,3 +90,5 @@ export default ({lnd}, cbk) => {
     returnResult({reject, resolve, of: 'getTriggers'}, cbk));
   });
 };
+
+export { getTriggers }

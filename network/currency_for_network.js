@@ -19,7 +19,7 @@ const reversedBytes = hex => Buffer.from(hex, 'hex').reverse().toString('hex');
  currency: <Currency String>
  }
  */
-export default args => {
+const currencyForNetwork = args => {
   if (!isArray(args.chains)) {
     throw new Error('ExpectedArrayOfChainsToDetermineCurrencyForNetwork');
   }
@@ -40,3 +40,5 @@ export default args => {
 
   return {currency: currencySymbols[network]};
 };
+
+export { currencyForNetwork }

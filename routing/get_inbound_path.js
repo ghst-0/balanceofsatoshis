@@ -27,7 +27,7 @@ const tokensAsMtokens = tokens => BigInt(tokens) * BigInt(1e3);
     }]
   }
 */
-export default ({destination, identity, lnd, through, tokens}, cbk) => {
+const getInboundPath = ({destination, identity, lnd, through, tokens}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -144,3 +144,5 @@ export default ({destination, identity, lnd, through, tokens}, cbk) => {
     returnResult({reject, resolve, of: 'path'}, cbk));
   });
 };
+
+export { getInboundPath }

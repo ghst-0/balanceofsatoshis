@@ -4,8 +4,11 @@ import { findKey, getNodeAlias } from 'ln-sync';
 import { getChannel, getChannels, getFeeRates, getIdentity, getNode, getPendingChannels } from 'ln-service';
 import { gray, green } from 'colorette';
 import { returnResult } from 'asyncjs-util';
-import { chartAliasForPeer, formatFeeRate, getIcons } from '../display/index.js';
-import parseFeeRateFormula from './parse_fee_rate_formula.js';
+
+import { chartAliasForPeer} from '../display/chart_alias_for_peer.js';
+import { formatFeeRate } from '../display/format_fee_rate.js';
+import { getIcons } from '../display/get_icons.js';
+import { parseFeeRateFormula } from './parse_fee_rate_formula.js';
 
 const asRate = rate => formatFeeRate({rate}).display;
 const asTxOut = n => `${n.transaction_id}:${n.transaction_vout}`;
@@ -18,8 +21,8 @@ const {min} = Math;
 const minCltvDelta = 18;
 const nodeMatch = /\bFEE_RATE_OF_[0-9A-F]{66}\b/gim;
 const noFee = gray('Unknown Rate');
-const present = (arg, existing) => arg !== undefined ? arg : existing;
-const pubKeyForNodeMatch = n => n.substring(12).toLowerCase();
+const present = (arg, existing) => arg === undefined ? existing : arg;
+const pubKeyForNodeMatch = n => n.slice(12).toLowerCase();
 const sumOf = arr => arr.reduce((sum, n) => sum + n, 0);
 const uniq = arr => Array.from(new Set(arr));
 
@@ -41,7 +44,7 @@ const uniq = arr => Array.from(new Set(arr));
     rows: [[<Table Cell String>]]
   }
 */
-export default (args, cbk) => {
+const adjustFees = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -58,7 +61,7 @@ export default (args, cbk) => {
           return cbk([400, 'ExpectedArrayOfPeersToAdjustFeesTowards']);
         }
 
-        if (args.cltv_delta !== undefined && !args.to.length) {
+        if (args.cltv_delta !== undefined && args.to.length === 0) {
           return cbk([400, 'SettingGlobalCltvDeltaNotSupported']);
         }
 
@@ -66,11 +69,11 @@ export default (args, cbk) => {
           return cbk([400, 'SettingLowCltvDeltaIsNotSupported']);
         }
 
-        if (args.fee_rate !== undefined && !args.to.length) {
+        if (args.fee_rate !== undefined && args.to.length === 0) {
           return cbk([400, 'SettingGlobalFeeRateNotSupported']);
         }
 
-        if (args.inbound_rate_discount !== undefined && !args.to.length) {
+        if (args.inbound_rate_discount !== undefined && args.to.length === 0) {
           return cbk([400, 'SettingGlobalInboundRateDiscountNotSupported']);
         }
 
@@ -124,7 +127,7 @@ export default (args, cbk) => {
           const nodes = getIcons.nodes.filter(n => n.aliases.includes(query));
 
           // Exit early when there is a tag match
-          if (nodes.length) {
+          if (nodes.length > 0) {
             return cbk(null, nodes.map(n => ({public_key: n.public_key})));
           }
 
@@ -142,7 +145,7 @@ export default (args, cbk) => {
       // Get referenced other node rates
       getNodeRates: ['getPeers', ({getPeers}, cbk) => {
         // Exit early when not referencing another node's fee rate
-        if (!args.fee_rate || !args.fee_rate.match(nodeMatch)) {
+        if (!args.fee_rate || !nodeMatch.test(args.fee_rate)) {
           return cbk(null, []);
         }
 
@@ -415,3 +418,5 @@ export default (args, cbk) => {
     returnResult({reject, resolve, of: 'fees'}, cbk));
   });
 };
+
+export { adjustFees }

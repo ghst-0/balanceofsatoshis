@@ -1,13 +1,14 @@
 import asyncAuto from 'async/auto.js';
 import { generateKeyPair, privateDecrypt } from 'node:crypto';
 import { returnResult } from 'asyncjs-util';
-import decryptSavedMacaroons from './decrypt_saved_macaroons.js';
-import deleteNodeCredentials from './delete_node_credentials.js';
-import encryptSavedMacaroons from './encrypt_saved_macaroons.js';
-import getSavedCredentials from './get_saved_credentials.js';
-import getSavedNodes from './get_saved_nodes.js';
-import { homePath } from '../storage/index.js';
-import registerNode from './register_node.js';
+
+import { homePath } from '../storage/home_path.js';
+import { decryptSavedMacaroons } from './decrypt_saved_macaroons.js';
+import { deleteNodeCredentials } from './delete_node_credentials.js';
+import { encryptSavedMacaroons } from './encrypt_saved_macaroons.js';
+import { getSavedCredentials } from './get_saved_credentials.js';
+import { getSavedNodes } from './get_saved_nodes.js';
+import { registerNode } from './register_node.js';
 
 const {isArray} = Array;
 
@@ -44,7 +45,7 @@ const {isArray} = Array;
     }]
   }
 */
-export default (args, cbk) => {
+const manageSavedNodes = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -73,7 +74,7 @@ export default (args, cbk) => {
           return cbk([400, 'UnexpectedArgumentForUnlocking']);
         }
 
-        if (!!args.is_unlocking && !!args.lock_credentials_to.length) {
+        if (!!args.is_unlocking && args.lock_credentials_to.length > 0) {
           return cbk([400, 'CannotBothUnlockAndLockNodeCredentials']);
         }
 
@@ -148,7 +149,7 @@ export default (args, cbk) => {
       // Encrypt macaroons
       lock: ['getNodes', ({getNodes}, cbk) => {
         // Exit early when not locking credentials
-        if (!args.lock_credentials_to.length) {
+        if (args.lock_credentials_to.length === 0) {
           return cbk();
         }
 
@@ -156,7 +157,7 @@ export default (args, cbk) => {
 
         return encryptSavedMacaroons({
           fs: args.fs,
-          nodes: !args.node ? nodes.map(n => n.node_name) : [args.node],
+          nodes: args.node ? [args.node] : nodes.map(n => n.node_name),
           spawn: args.spawn,
           to: args.lock_credentials_to,
         },
@@ -174,7 +175,7 @@ export default (args, cbk) => {
 
         return decryptSavedMacaroons({
           fs: args.fs,
-          nodes: !args.node ? nodes.map(n => n.node_name) : [args.node],
+          nodes: args.node ? [args.node] : nodes.map(n => n.node_name),
           spawn: args.spawn,
         },
         cbk);
@@ -204,3 +205,5 @@ export default (args, cbk) => {
     returnResult({reject, resolve, of: 'nodes'}, cbk));
   });
 };
+
+export { manageSavedNodes }

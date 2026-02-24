@@ -1,7 +1,8 @@
 import asyncAuto from 'async/auto.js';
 import asyncMap from 'async/map.js';
 import { returnResult } from 'asyncjs-util';
-import authenticatedLnd from './authenticated_lnd.js';
+
+import { authenticatedLnd } from './authenticated_lnd.js';
 
 const flatten = arr => [].concat(...arr);
 const uniq = arr => Array.from(new Set(arr));
@@ -17,7 +18,7 @@ const uniq = arr => Array.from(new Set(arr));
     lnds: [<Authenticated LND API Object>]
   }
 */
-export default ({nodes}, cbk) => {
+const getLnds = ({nodes}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Default lnd
@@ -55,3 +56,5 @@ export default ({nodes}, cbk) => {
     returnResult({reject, resolve, of: 'lnds'}, cbk));
   });
 };
+
+export { getLnds }

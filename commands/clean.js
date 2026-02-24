@@ -22,7 +22,7 @@ const tokenize = command => command.split(' ');
     cleaned: <Cleaned Command String>
   }
 */
-export default ({command, lnd}, cbk) => {
+const clean = ({command, lnd}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -100,3 +100,5 @@ export default ({command, lnd}, cbk) => {
     returnResult({reject, resolve, of: 'revised'}, cbk));
   });
 };
+
+export { clean }

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { equal, throws } from 'node:assert/strict';
 
-import { balanceFromTokens } from '../../balances/index.js';
+import { balanceFromTokens } from '../../balances/balance_from_tokens.js';
 
 const tests = [
   // No tokens

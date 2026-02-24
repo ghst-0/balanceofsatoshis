@@ -23,7 +23,7 @@ const versionTaproot = 1;
     script: <Output Script Hex String>
   }
 */
-export default ({address, network}) => {
+const outputScriptForAddress = ({address, network}) => {
   try {
     return {
       script: bufferAsHex(toOutputScript(address, networks[names[network]])),
@@ -53,3 +53,5 @@ export default ({address, network}) => {
     return {script: `${prefixForP2tr}${bufferAsHex(data)}`};
   }
 };
+
+export { outputScriptForAddress }

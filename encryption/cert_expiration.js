@@ -1,4 +1,4 @@
-import certDetails from './cert_details.js';
+import { certDetails } from './cert_details.js';
 
 const getDay = n => n.slice(4, 6);
 const getHour = n => n.slice(6, 8);
@@ -23,7 +23,7 @@ const {isArray} = Array;
     expires_at: <Certificate Expires at ISO 8601 Date String>
   }
 */
-export default ({cert}) => {
+const certExpiration = ({cert}) => {
   if (!cert) {
     throw new Error('ExpectedCertificateToDeriveCertExpirationDate');
   }
@@ -63,3 +63,5 @@ export default ({cert}) => {
 
   return {expires_at: date.toISOString()};
 };
+
+export { certExpiration }

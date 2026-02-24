@@ -29,7 +29,7 @@ const uniq = arr => Array.from(new Set(arr));
     cipher: <CBOR Encoded Encrypted Hex String>
   }
 */
-export default ({encoding, from, plain, secret, to}, cbk) => {
+const encryptToSecret = ({encoding, from, plain, secret, to}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -94,3 +94,5 @@ export default ({encoding, from, plain, secret, to}, cbk) => {
     returnResult({reject, resolve, of: 'encrypt'}, cbk));
   });
 };
+
+export { encryptToSecret }

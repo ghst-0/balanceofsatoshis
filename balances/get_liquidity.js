@@ -1,8 +1,9 @@
 import asyncAuto from 'async/auto.js';
-import { getLiquidity } from 'ln-sync';
+import { getLiquidity as ln_getLiquidity } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
-import balanceFromTokens from './balance_from_tokens.js';
-import { getTags } from '../tags/index.js';
+
+import { balanceFromTokens } from './balance_from_tokens.js';
+import { getTags } from '../tags/get_tags.js';
 
 
 /** Get the channel available liquidity
@@ -28,7 +29,7 @@ import { getTags } from '../tags/index.js';
     balance: <Liquid Tokens Number>
   }
 */
-export default (args, cbk) => {
+const getLiquidity = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -98,7 +99,7 @@ export default (args, cbk) => {
 
       // Get liquidity
       getLiquidity: ['withNodes', ({withNodes}, cbk) => {
-        return getLiquidity({
+        return ln_getLiquidity({
           is_outbound: args.is_outbound,
           is_top: args.is_top,
           lnd: args.lnd,
@@ -122,3 +123,5 @@ export default (args, cbk) => {
     returnResult({reject, resolve, of: 'total'}, cbk));
   });
 };
+
+export { getLiquidity }

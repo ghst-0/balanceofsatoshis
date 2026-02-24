@@ -15,7 +15,7 @@ const noTokens = 0;
   @returns
   <Balance Number>
 */
-export default args => {
+const balanceFromTokens = args => {
   if (!isArray(args.tokens)) {
     throw new Error('ExpectedTokensToCalculateBalance');
   }
@@ -32,3 +32,5 @@ export default args => {
 
   return total;
 };
+
+export { balanceFromTokens }

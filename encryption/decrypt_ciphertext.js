@@ -13,7 +13,7 @@ import { returnResult } from 'asyncjs-util';
     clear: <Clear Text String>
   }
 */
-export default ({cipher, spawn}, cbk) => {
+const decryptCiphertext = ({cipher, spawn}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -57,3 +57,5 @@ export default ({cipher, spawn}, cbk) => {
     returnResult({reject, resolve, of: 'decrypt'}, cbk));
   });
 };
+
+export { decryptCiphertext }

@@ -2,10 +2,11 @@ import asyncAuto from 'async/auto.js';
 import asyncMap from 'async/map.js';
 import asyncMapSeries from 'async/mapSeries.js';
 import { returnResult } from 'asyncjs-util';
-import decryptSavedMacaroons from './decrypt_saved_macaroons.js';
-import { encryptToPublicKeys } from '../encryption/index.js';
-import getSavedCredentials from './get_saved_credentials.js';
-import putSavedCredentials from './put_saved_credentials.js';
+
+import { encryptToPublicKeys } from '../encryption/encrypt_to_public_keys.js';
+import { decryptSavedMacaroons } from './decrypt_saved_macaroons.js';
+import { getSavedCredentials } from './get_saved_credentials.js';
+import { putSavedCredentials } from './put_saved_credentials.js';
 
 const ids = n => n.slice().sort().join(',');
 const {isArray} = Array;
@@ -25,7 +26,7 @@ const notFoundIndex = -1;
 
   @returns via cbk or Promise
 */
-export default ({fs, nodes, spawn, to}, cbk) => {
+const encryptSavedMacaroons = ({fs, nodes, spawn, to}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -34,7 +35,7 @@ export default ({fs, nodes, spawn, to}, cbk) => {
           return cbk([400, 'ExpectedFilesystemMethodsToSaveEncrypted']);
         }
 
-        if (!isArray(nodes) || !nodes.length) {
+        if (!isArray(nodes) || nodes.length === 0) {
           return cbk([400, 'ExpectedNodesToEncryptSavedMacaroonsFor']);
         }
 
@@ -42,7 +43,7 @@ export default ({fs, nodes, spawn, to}, cbk) => {
           return cbk([400, 'ExpectedSpawnFunctionToEncryptSavedMacaroons']);
         }
 
-        if (!isArray(to) || !to.length) {
+        if (!isArray(to) || to.length === 0) {
           return cbk([400, 'ExpectedGpgKeyIdsToEncryptSavedMacaroonsTo']);
         }
 
@@ -68,7 +69,7 @@ export default ({fs, nodes, spawn, to}, cbk) => {
           .filter(n => ids(n.credentials.encrypted_to) !== ids(to))
           .map(n => n.node);
 
-        if (!nodes.length) {
+        if (nodes.length === 0) {
           return cbk();
         }
 
@@ -104,7 +105,7 @@ export default ({fs, nodes, spawn, to}, cbk) => {
 
       // Save the encrypted credentials over the existing credentials
       save: ['encrypt', ({encrypt}, cbk) => {
-        if (!encrypt.length) {
+        if (encrypt.length === 0) {
           return cbk();
         }
 
@@ -125,3 +126,5 @@ export default ({fs, nodes, spawn, to}, cbk) => {
     returnResult({reject, resolve}, cbk));
   });
 };
+
+export { encryptSavedMacaroons }

@@ -2,9 +2,10 @@ import asyncAuto from 'async/auto.js';
 import asyncMap from 'async/map.js';
 import asyncMapSeries from 'async/mapSeries.js';
 import { returnResult } from 'asyncjs-util';
-import { decryptCiphertext } from '../encryption/index.js';
-import getSavedCredentials from './get_saved_credentials.js';
-import putSavedCredentials from './put_saved_credentials.js';
+
+import { decryptCiphertext } from '../encryption/decrypt_ciphertext.js';
+import { getSavedCredentials } from './get_saved_credentials.js';
+import { putSavedCredentials } from './put_saved_credentials.js';
 
 const {isArray} = Array;
 
@@ -21,7 +22,7 @@ const {isArray} = Array;
 
   @returns via cbk or Promise
 */
-export default ({fs, nodes, spawn}, cbk) => {
+const decryptSavedMacaroons = ({fs, nodes, spawn}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -72,7 +73,7 @@ export default ({fs, nodes, spawn}, cbk) => {
 
       // Save the decrypted credentials over the existing credentials
       save: ['decrypt', ({decrypt}, cbk) => {
-        if (!decrypt.length) {
+        if (decrypt.length === 0) {
           return cbk();
         }
 
@@ -92,3 +93,5 @@ export default ({fs, nodes, spawn}, cbk) => {
     returnResult({reject, resolve}));
   });
 };
+
+export { decryptSavedMacaroons }

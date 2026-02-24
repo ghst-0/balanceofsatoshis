@@ -17,7 +17,7 @@ import { returnResult } from 'asyncjs-util';
     maximum: <Maximum Number>
   }
 */
-export default ({accuracy, from, to}, test, cbk) => {
+const getMaximum = ({accuracy, from, to}, test, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -91,3 +91,5 @@ export default ({accuracy, from, to}, test, cbk) => {
     returnResult({reject, resolve, of: 'search'}, cbk));
   });
 };
+
+export { getMaximum }

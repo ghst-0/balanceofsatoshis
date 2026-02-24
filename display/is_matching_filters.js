@@ -1,5 +1,6 @@
 import { Parser } from 'hot-formula-parser';
-import describeParseError from './describe_parse_error.js';
+
+import { describeParseError } from './describe_parse_error.js';
 
 const {assign} = Object;
 const defaultVariables = {btc: 1e8, k: 1e3, m: 1e6, mm: 1e6};
@@ -23,7 +24,7 @@ const {keys} = Object;
     [is_matching]: <Variables Are Consistent With Filters Bool>
   }
 */
-export default ({filters, variables}) => {
+const isMatchingFilters = ({filters, variables}) => {
   // Exit early when there is nothing to match on
   if (filters.length === 0) {
     return {is_matching: true};
@@ -66,3 +67,5 @@ export default ({filters, variables}) => {
 
   return {is_matching: true};
 };
+
+export { isMatchingFilters }

@@ -3,8 +3,8 @@ import asyncMap from 'async/map.js';
 import { getIdentity } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
 
-import { getLnds } from '../lnd/index.js';
-import startRocketChatBot from './start_rocketchat_bot.js';
+import { getLnds } from '../lnd/get_lnds.js';
+import { startRocketChatBot } from './start_rocketchat_bot.js';
 
 const {isArray} = Array;
 
@@ -37,7 +37,7 @@ const {isArray} = Array;
     }]
   }
 */
-export default (args, cbk) => {
+const runRocketChatBot = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -129,3 +129,5 @@ export default (args, cbk) => {
     returnResult({reject, resolve, of: 'online'}, cbk));
   });
 };
+
+export { runRocketChatBot }

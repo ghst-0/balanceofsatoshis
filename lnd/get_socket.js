@@ -30,7 +30,7 @@ const scheme = 'rpc://';
     [socket]: <RPC Socket String>
   }
 */
-export default ({fs, node, os, path}, cbk) => {
+const getSocket = ({fs, node, os, path}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -135,3 +135,5 @@ export default ({fs, node, os, path}, cbk) => {
     returnResult({reject, resolve, of: 'socket'}, cbk));
   });
 };
+
+export { getSocket }

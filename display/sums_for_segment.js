@@ -18,7 +18,7 @@ import moment from 'moment';
     sum: [<Sum In Segment Number>]
   }
 */
-export default ({end, measure, records, segments}) => {
+const sumsForSegment = ({end, measure, records, segments}) => {
   const sums = [...Array(segments)].map((_, i) => {
     const segment = moment(end).subtract(i, measure);
 
@@ -54,3 +54,5 @@ export default ({end, measure, records, segments}) => {
     sum: sums.map(({sum}) => sum).slice().reverse(),
   };
 };
+
+export { sumsForSegment }

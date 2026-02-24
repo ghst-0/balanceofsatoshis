@@ -5,14 +5,16 @@ import { formatTokens, getNodeAlias } from 'ln-sync';
 import {
   getChannels,
   getClosedChannels,
-  getForwards,
+  getForwards as ln_getForwards,
   getHeight,
   getPendingChannels
 } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
-import { chartAliasForPeer, getIcons } from './../display/index.js';
-import isRelevantForward from './is_relevant_forward.js';
-import isRelevantSource from './is_relevant_source.js';
+
+import { chartAliasForPeer } from './../display/chart_alias_for_peer.js';
+import { getIcons } from './../display/get_icons.js';
+import { isRelevantForward } from './is_relevant_forward.js';
+import { isRelevantSource } from './is_relevant_source.js';
 
 const {isArray} = Array;
 const lastTime = times => times.length === 0 ? null : new Date(max(...times));
@@ -56,7 +58,7 @@ const uniq = arr => Array.from(new Set(arr));
   }]
   }
  */
-export default (args, cbk) => {
+const getForwards = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -99,7 +101,7 @@ export default (args, cbk) => {
 
           const after = new Date(now() - pastMs).toISOString();
 
-          return getForwards({after, before, limit, lnd: args.lnd}, cbk);
+          return ln_getForwards({after, before, limit, lnd: args.lnd}, cbk);
         }],
 
         // Get current block height
@@ -390,3 +392,5 @@ export default (args, cbk) => {
       returnResult({reject, resolve, of: 'allForwards'}, cbk));
   });
 };
+
+export { getForwards }

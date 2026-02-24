@@ -129,7 +129,7 @@ class ApiClient {
     };
     this.fetch = this.options.fetch;
     if (this.options.apiRoot.endsWith("/")) {
-      throw new Error(`Remove the trailing '/' from the 'apiRoot' option (use '${this.options.apiRoot.substring(0, this.options.apiRoot.length - 1)}' instead of '${this.options.apiRoot}')`);
+      throw new Error(`Remove the trailing '/' from the 'apiRoot' option (use '${this.options.apiRoot.slice(0, this.options.apiRoot.length - 1)}' instead of '${this.options.apiRoot}')`);
     }
   }
   use(...transformers) {
@@ -257,11 +257,11 @@ function validateSignal(method, payload, signal) {
   }
   let payload0 = JSON.stringify(payload);
   if (payload0.length > 20) {
-    payload0 = payload0.substring(0, 16) + " ...";
+    payload0 = payload0.slice(0, 16) + " ...";
   }
   let payload1 = JSON.stringify(signal);
   if (payload1.length > 20) {
-    payload1 = payload1.substring(0, 16) + " ...";
+    payload1 = payload1.slice(0, 16) + " ...";
   }
   throw new Error(`Incorrect abort signal instance found! \
 You passed two payloads to '${method}' but you should merge \

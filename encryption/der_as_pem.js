@@ -18,7 +18,7 @@ const split = /.{0,64}/g;
     pem: <Pem Encoded Public Key String>
   }
 */
-export default ({cert, key}) => {
+const derAsPem = ({cert, key}) => {
   const base64Key = Buffer.from(cert || key, 'hex').toString('base64');
   const endMarkLen = endMarker.length;
 
@@ -39,3 +39,5 @@ export default ({cert, key}) => {
 
   return {pem};
 };
+
+export { derAsPem }

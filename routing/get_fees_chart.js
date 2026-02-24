@@ -4,9 +4,9 @@ import { formatTokens, getNodeAlias } from 'ln-sync';
 import moment from 'moment';
 import { returnResult } from 'asyncjs-util';
 
-import feesForSegment from './fees_for_segment.js';
-import { getTags } from '../tags/index.js';
-import getForwards from './get_forwards.js';
+import { feesForSegment } from './fees_for_segment.js';
+import { getTags } from '../tags/get_tags.js';
+import { getForwards } from './get_forwards.js';
 
 const asDate = n => n ? n.toISOString() : undefined;
 const daysBetween = (a, b) => moment(a).diff(b, 'days') + 1;
@@ -43,7 +43,7 @@ const parseDate = n => Date.parse(n);
     title: <Chart Title String>
   }
 */
-export default (args, cbk) => {
+const getFeesChart = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -356,3 +356,5 @@ export default (args, cbk) => {
     returnResult({reject, resolve, of: 'data'}, cbk));
   });
 };
+
+export { getFeesChart }

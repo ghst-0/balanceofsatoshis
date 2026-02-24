@@ -1,4 +1,5 @@
 import moment from 'moment';
+
 import constants from './constants.json' with { type: 'json' };
 
 const { monthNumbers, monthOffset, notFoundIndex } = constants;
@@ -20,7 +21,7 @@ const { monthNumbers, monthOffset, notFoundIndex } = constants;
     [before]: <Before ISO 8601 Date String>
   }
 */
-export default ({date, month, year}) => {
+const rangeForDate = ({date, month, year}) => {
   if (!date && !year && !month) {
     return {};
   }
@@ -73,3 +74,5 @@ export default ({date, month, year}) => {
 
   return {after: after.toISOString(), before: end.toISOString()};
 };
+
+export { rangeForDate }

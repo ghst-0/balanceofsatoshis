@@ -1,6 +1,7 @@
 import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
-import { homePath } from '../storage/index.js';
+
+import { homePath } from '../storage/home_path.js';
 
 const defaultTags = {tags: []};
 const {isArray} = Array;
@@ -25,7 +26,7 @@ const tagFilePath = () => homePath({file: 'tags.json'}).path;
     }]
   }
 */
-export default ({fs}, cbk) => {
+const getTags = ({fs}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -63,3 +64,5 @@ export default ({fs}, cbk) => {
     returnResult({reject, resolve, of: 'getTags'}, cbk));
   });
 };
+
+export { getTags }

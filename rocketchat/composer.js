@@ -33,7 +33,7 @@ function generateBotErrorMessage(error) {
         msg += `: ${error}`;
         break;
       case "string":
-        msg += `: ${String(error).substring(0, 50)}`;
+        msg += `: ${String(error).slice(0, 50)}`;
         break;
       default:
         msg += "!";

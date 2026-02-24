@@ -4,23 +4,44 @@ import { spawn } from 'child_process';
 import prog from 'caporal';
 import * as lnService from 'ln-service';
 import * as lnSync from 'ln-sync';
-import * as balances from './balances/index.js';
-import * as chain from './chain/index.js';
-import * as commands from './commands/index.js';
-import * as encryption from './encryption/index.js';
-import * as lnd from './lnd/index.js';
-import * as nodes from './nodes/index.js';
-import * as responses from './responses/index.js';
-import * as routing from './routing/index.js';
-import * as rocketchat from './rocketchat/index.js';
-import * as triggers from './triggers/index.js';
-import * as wallets from './wallets/index.js';
+
+import { getAccountingReport } from './balances/get_accounting_report.js';
+import { getDetailedBalance } from './balances/get_detailed_balance.js';
+import { getBalance } from './balances/get_balance.js';
+import { getLiquidity } from './balances/get_liquidity.js';
+import { getUtxos } from './chain/get_utxos.js';
+import { getChainFees } from './chain/get_chain_fees.js';
+import { splitUtxos } from './chain/split_utxos.js';
+import { simpleRequest } from './commands/simple_request.js';
+import { clean } from './commands/clean.js';
+import { interrogate } from './commands/interrogate.js';
+import { fetchRequest } from './commands/fetch_request.js';
+import { decryptWithNode } from './encryption/decrypt_with_node.js';
+import { encryptToNode } from './encryption/encrypt_to_node.js';
+import { authenticatedLnd } from './lnd/authenticated_lnd.js';
+import { findRecord } from './lnd/find_record.js';
+import { getLnds } from './lnd/get_lnds.js';
+import { getCertValidityDays } from './lnd/get_cert_validity_days.js';
+import { manageSavedNodes } from './nodes/manage_saved_nodes.js';
+import { adjustTags } from './nodes/adjust_tags.js';
+import { returnObject } from './responses/return_object.js';
+import { returnNumber } from './responses/return_number.js';
+import { returnOutput } from './responses/return_output.js';
+import { returnChart } from './responses/return_chart.js';
+import { getChainFeesChart } from './routing/get_chain_fees_chart.js';
+import { getFeesChart } from './routing/get_fees_chart.js';
+import { getFeesPaid } from './routing/get_fees_paid.js';
+import { adjustFees } from './routing/adjust_fees.js';
+import { connectToRocketChat } from './rocketchat/connect_to_rocketchat.js';
+import { manageTriggers } from './triggers/manage_triggers.js';
+import { getReceivedChart } from './wallets/get_received_chart.js';
+import { getReport } from './wallets/get_report.js';
 
 import PACKAGE_JSON from './package.json' with { type: 'json' };
 import commandConstants from './commands/constants.json' with { type: 'json' };
 
 const {version} = PACKAGE_JSON;
-const {accountingCategories, peerSortOptions} = commandConstants;
+const { accountingCategories, peerSortOptions } = commandConstants;
 
 
 const {BOOL} = prog;
@@ -29,7 +50,7 @@ const {exit} = process;
 const flatten = arr => [].concat(...arr);
 const {INT} = prog;
 const {keys} = Object;
-const lndForNode = (node) => lnd.authenticatedLnd({node});
+const lndForNode = (node) => authenticatedLnd({node});
 const months = [...Array(12).keys()].map(n => ++n);
 const {REPEATABLE} = prog;
 const {STRING} = prog;
@@ -54,18 +75,18 @@ prog
 
     return new Promise(async (resolve, reject) => {
       try {
-        return balances.getAccountingReport({
+        return getAccountingReport({
           category: args.category,
           date: options.date,
           is_csv: !!options.csv,
           is_fiat_disabled: options.disableFiat,
-          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
+          lnd: (await authenticatedLnd({node: options.node})).lnd,
           month: options.month,
           node: options.node,
-          request: commands.simpleRequest,
+          request: simpleRequest,
           year: options.year,
         },
-        responses.returnObject({reject, resolve, table}));
+        returnObject({reject, resolve, table}));
       } catch (err) {
         console.error({err}) && reject();
       }
@@ -88,14 +109,14 @@ prog
       try {
         // Exit early when detailed balance details are requested
         if (!!options.detailed) {
-          return balances.getDetailedBalance({
-            lnds: (await lnd.getLnds({nodes: options.node})).lnds,
+          return getDetailedBalance({
+            lnds: (await getLnds({nodes: options.node})).lnds,
             is_confirmed: options.confirmed,
           },
-          responses.returnObject({reject, resolve}));
+          returnObject({reject, resolve}));
         }
 
-        return balances.getBalance({
+        return getBalance({
           above: options.above,
           below: options.below,
           is_confirmed: !!options.confirmed,
@@ -103,7 +124,7 @@ prog
           is_onchain_only: !!options.onchain,
           lnd: (await lndForNode(options.node)).lnd,
         },
-        responses.returnNumber({reject, resolve, number: 'balance'}));
+        returnNumber({reject, resolve, number: 'balance'}));
       } catch (err) {
         console.error({err}) && reject();
       }
@@ -116,11 +137,11 @@ prog
   .option('--node <node_name>', 'Node to check cert on')
   .action((args, options) => {
     return new Promise(async (resolve, reject) => {
-      return lnd.getCertValidityDays({
+      return getCertValidityDays({
         below: options.below,
         node: options.node,
       },
-      responses.returnNumber({reject, resolve, number: 'days'}));
+      returnNumber({reject, resolve, number: 'days'}));
     });
   })
 
@@ -134,11 +155,11 @@ prog
   .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
-        return chain.getChainFees({
+        return getChainFees({
           blocks: options.blocks,
-          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
+          lnd: (await authenticatedLnd({node: options.node})).lnd,
         },
-        responses.returnObject({
+        returnObject({
           reject,
           resolve,
           file: options.file,
@@ -162,15 +183,15 @@ prog
   .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
-        return routing.getChainFeesChart({
+        return getChainFeesChart({
           days: options.days,
           end_date: options.end,
           is_monochrome: !!options.noColor,
-          lnds: (await lnd.getLnds({nodes: options.node})).lnds,
-          request: commands.simpleRequest,
+          lnds: (await getLnds({nodes: options.node})).lnds,
+          request: simpleRequest,
           start_date: options.start,
         },
-        responses.returnChart({reject, resolve, data: 'data'}));
+        returnChart({reject, resolve, data: 'data'}));
       } catch (err) {
         console.error({err}) && reject();
       }
@@ -190,17 +211,17 @@ prog
   .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
-        return routing.getFeesChart({
+        return getFeesChart({
           days: options.days,
           end_date: options.end,
           fs: {getFile: readFile},
           is_count: options.count,
           is_forwarded: options.forwarded,
-          lnds: (await lnd.getLnds({nodes: options.node})).lnds,
+          lnds: (await getLnds({nodes: options.node})).lnds,
           start_date: options.start,
           via: args.via || undefined,
         },
-        responses.returnChart({reject, resolve, data: 'data'}));
+        returnChart({reject, resolve, data: 'data'}));
       } catch (err) {
         console.error({err}) && reject();
       }
@@ -227,11 +248,11 @@ prog
       const data = 'data';
       const table = 'rows';
 
-      const asTable = responses.returnObject({reject, resolve, table});
-      const chart = responses.returnChart({data, reject, resolve});
+      const asTable = returnObject({reject, resolve, table});
+      const chart = returnChart({data, reject, resolve});
 
       try {
-        return routing.getFeesPaid({
+        return getFeesPaid({
           days: options.days,
           end_date: options.end,
           fs: {getFile: readFile},
@@ -241,7 +262,7 @@ prog
           is_network: options.network,
           is_peer: options.peers,
           is_rebalances_only: options.rebalances,
-          lnds: (await lnd.getLnds({nodes: options.node})).lnds,
+          lnds: (await getLnds({nodes: options.node})).lnds,
           out: options.out,
           start_date: options.start,
         },
@@ -264,15 +285,15 @@ prog
   .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
-        return wallets.getReceivedChart({
+        return getReceivedChart({
           days: options.days,
           end_date: options.end,
           is_count: options.count,
-          lnds: (await lnd.getLnds({nodes: options.node})).lnds,
+          lnds: (await getLnds({nodes: options.node})).lnds,
           query: options.for,
           start_date: options.start,
         },
-        responses.returnChart({reject, resolve, data: 'data'}));
+        returnChart({reject, resolve, data: 'data'}));
       } catch (err) {
         console.error({err}) && reject();
       }
@@ -287,11 +308,11 @@ prog
   .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
-        return commands.clean({
+        return clean({
           lnd: (await lndForNode(options.node)).lnd,
           command: args.command,
         },
-        responses.returnOutput({reject, resolve}));
+        returnOutput({reject, resolve}));
       } catch (err) {
         console.error({err}) && reject();
       }
@@ -307,11 +328,11 @@ prog
   .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
-        return encryption.decryptWithNode({
+        return decryptWithNode({
           encrypted: args.encrypted,
-          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
+          lnd: (await authenticatedLnd({node: options.node})).lnd,
         },
-        responses.returnObject({reject, resolve}));
+        returnObject({reject, resolve}));
       } catch (err) {
         console.error({err}) && reject();
       }
@@ -326,9 +347,9 @@ prog
     return new Promise(async (resolve, reject) => {
       try {
         return lnService.deletePayments({
-          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
+          lnd: (await authenticatedLnd({node: options.node})).lnd,
         },
-        responses.returnObject({reject, resolve}));
+        returnObject({reject, resolve}));
       } catch (err) {
         console.error({err}) && reject();
       }
@@ -345,12 +366,12 @@ prog
   .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
-        return encryption.encryptToNode({
-          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
+        return encryptToNode({
+          lnd: (await authenticatedLnd({node: options.node})).lnd,
           message: options.message,
           to: options.to,
         },
-        responses.returnObject({reject, resolve}));
+        returnObject({reject, resolve}));
       } catch (err) {
         console.error({err}) && reject();
       }
@@ -371,15 +392,15 @@ prog
   .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
-        return chain.splitUtxos({
+        return splitUtxos({
           count: args.count,
           is_confirmed: !!options.confirmed,
           is_dry_run: !!options.dryrun,
-          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
+          lnd: (await authenticatedLnd({node: options.node})).lnd,
           size: args.size,
           tokens_per_vbyte: options.feerate,
         },
-        responses.returnObject({reject, resolve}));
+        returnObject({reject, resolve}));
       } catch (err) {
         console.error({err}) && reject();
       }
@@ -405,15 +426,15 @@ prog
   .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
-        return routing.adjustFees({
+        return adjustFees({
           cltv_delta: options.setCltvDelta,
           fee_rate: options.setFeeRate,
           fs: {getFile: readFile},
           inbound_rate_discount: options.setInboundRateDiscount,
-          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
+          lnd: (await authenticatedLnd({node: options.node})).lnd,
           to: flatten([options.to].filter(n => !!n)),
         },
-        responses.returnObject({reject, resolve, table: 'rows'}));
+        returnObject({reject, resolve, table: 'rows'}));
       } catch (err) {
         console.error({err}) && reject();
       }
@@ -429,11 +450,11 @@ prog
   .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
-        return lnd.findRecord({
-          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
+        return findRecord({
+          lnd: (await authenticatedLnd({node: options.node})).lnd,
           query: args.query,
         },
-        responses.returnObject({reject, resolve}));
+        returnObject({reject, resolve}));
       } catch (err) {
         console.error({err}) && reject();
       }
@@ -469,7 +490,7 @@ prog
           tags: collect(options.tag),
           to: (await lnSync.findKey({lnd, query: options.out})).public_key,
         },
-        responses.returnObject({reject, resolve, table}));
+        returnObject({reject, resolve, table}));
       } catch (err) {
         console.error({err}) && reject();
       }
@@ -497,7 +518,7 @@ prog
           query: args.aliasOrPublicKey.trim(),
           sort: options.sort,
         },
-        responses.returnObject({reject, resolve, table: 'rows'}));
+        returnObject({reject, resolve, table: 'rows'}));
       } catch (err) {
         console.error({err}) && reject();
       }
@@ -515,17 +536,17 @@ prog
   .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
-        return balances.getLiquidity({
+        return getLiquidity({
           above: options.above || undefined,
           below: options.below || undefined,
           fs: {getFile: readFile},
           is_top: options.top || undefined,
-          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
+          lnd: (await authenticatedLnd({node: options.node})).lnd,
           max_fee_rate: options.maxFeeRate || undefined,
-          request: commands.simpleRequest,
+          request: simpleRequest,
           with: options.with,
         },
-        responses.returnNumber({reject, resolve, number: 'balance'}));
+        returnNumber({reject, resolve, number: 'balance'}));
       } catch (err) {
         console.error({err}) && reject();
       }
@@ -542,9 +563,9 @@ prog
   .option('--unlock', 'Remove encryption from auth macaroon')
   .action((args, options) => {
     return new Promise(async (resolve, reject) => {
-      return nodes.manageSavedNodes({
+      return manageSavedNodes({
         spawn,
-        ask: await commands.interrogate({}),
+        ask: await interrogate({}),
         fs: {
           writeFile,
           getDirectoryFiles: readdir,
@@ -560,7 +581,7 @@ prog
         lock_credentials_to: flatten([options.lock].filter(n => !!n)),
         node: args.node || undefined,
       },
-      responses.returnObject({reject, resolve}));
+      returnObject({reject, resolve}));
     });
   })
 
@@ -574,16 +595,16 @@ prog
   .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
-        return balances.getLiquidity({
+        return getLiquidity({
           above: options.above || undefined,
           below: options.below || undefined,
           fs: {getFile: readFile},
           is_outbound: true,
           is_top: options.top || undefined,
-          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
+          lnd: (await authenticatedLnd({node: options.node})).lnd,
           with: options.with,
         },
-        responses.returnNumber({reject, resolve, number: 'balance'}));
+        returnNumber({reject, resolve, number: 'balance'}));
       } catch (err) {
         console.error({err}) && reject();
       }
@@ -632,12 +653,12 @@ prog
           is_private: !!options.private,
           is_public: !!options.public,
           is_table: !options.complete,
-          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
+          lnd: (await authenticatedLnd({node: options.node})).lnd,
           omit: flatten([options.omit].filter(n => !!n)),
           sort_by: options.sort,
           tags: flatten([options.tag].filter(n => !!n)),
         },
-        responses.returnObject({reject, resolve, table}));
+        returnObject({reject, resolve, table}));
       } catch (err) {
         console.error({err}) && reject();
       }
@@ -650,13 +671,13 @@ prog
   .option('--styled', 'Add unicode styling to report')
   .action((args, options) => {
     return new Promise((resolve, reject) => {
-      return wallets.getReport({
+      return getReport({
         fs: {getFile: readFile},
         node: options.node,
-        request: commands.simpleRequest,
+        request: simpleRequest,
         style: !!options.styled ? 'styled' : undefined,
       },
-      responses.returnOutput({reject, resolve}));
+      returnOutput({reject, resolve}));
     });
   })
 
@@ -671,7 +692,7 @@ prog
   .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
-        return await nodes.adjustTags({
+        return await adjustTags({
           add: flatten([options.add].filter(n => !!n)),
           fs: {writeFile, getFile: readFile, makeDirectory: mkdir},
           icon: options.icon,
@@ -679,7 +700,7 @@ prog
           remove: flatten([options.remove].filter(n => !!n)),
           tag: !!args.tag ? args.tag.toLowerCase() : undefined,
         },
-        responses.returnObject({reject, resolve}));
+        returnObject({reject, resolve}));
       } catch (err) {
         console.error({err}) && reject();
       }
@@ -703,8 +724,8 @@ prog
   .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
-        return await rocketchat.connectToRocketChat({
-          ask: await commands.interrogate({}),
+        return await connectToRocketChat({
+          ask: await interrogate({}),
           fs: {
             writeFile,
             getFile: readFile,
@@ -719,7 +740,7 @@ prog
           min_rebalance_tokens: options.ignoreRebalancesBelow || undefined,
           nodes: flatten([options.node].filter(n => !!n)),
           payments: {limit: options.budget},
-          request: commands.fetchRequest({fetch}),
+          request: fetchRequest({fetch}),
         });
       } catch (err) {
         console.error({err}) && reject();
@@ -734,11 +755,11 @@ prog
   .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
-        return triggers.manageTriggers({
-          ask: await commands.interrogate({}),
+        return manageTriggers({
+          ask: await interrogate({}),
           lnd: (await lndForNode(options.node)).lnd,
         },
-        responses.returnObject({exit, reject, resolve}));
+        returnObject({exit, reject, resolve}));
       } catch (err) {
         console.error({err}) && reject();
       }
@@ -756,15 +777,15 @@ prog
   .action((args, options) => {
     return new Promise(async (resolve, reject) => {
       try {
-        return chain.getUtxos({
+        return getUtxos({
           count_below: options.countBelow,
           is_confirmed: !!options.confirmed,
           is_count: !!options.count,
-          lnd: (await lnd.authenticatedLnd({node: options.node})).lnd,
+          lnd: (await authenticatedLnd({node: options.node})).lnd,
           min_tokens: options.size || undefined,
           node: options.node,
         },
-        responses.returnObject({reject, resolve}));
+        returnObject({reject, resolve}));
       } catch (err) {
         console.error({err}) && reject();
       }

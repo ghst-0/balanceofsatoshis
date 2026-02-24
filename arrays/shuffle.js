@@ -13,7 +13,7 @@ const {random} = Math;
     shuffled: [<Shuffled Element Object>]
   }
 */
-export default ({array}) => {
+const shuffle = ({array}) => {
   if (!isArray(array)) {
     throw new Error('ExpectedArrayToShuffle');
   }
@@ -32,3 +32,5 @@ export default ({array}) => {
 
   return {shuffled};
 };
+
+export { shuffle }

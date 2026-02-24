@@ -58,7 +58,7 @@ const standardIdHexLength = Buffer.alloc(32).toString('hex').length;
     [payment_pending]: <Payment Pending Bool>
   }
 */
-export default ({lnd, query}, cbk) => {
+const findRecord = ({lnd, query}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -291,8 +291,8 @@ export default ({lnd, query}, cbk) => {
 
         return cbk(null, {
           chain_transaction: !!getTx && !!getTx.tx ? getTx : undefined,
-          channels: channels.length ? channels : undefined,
-          nodes: nodes.length ? nodes : undefined,
+          channels: channels.length > 0 ? channels : undefined,
+          nodes: nodes.length > 0 ? nodes : undefined,
           payment: getPayment.payment || undefined,
           payment_failed: getPayment.failed || undefined,
           payment_pending: getPayment.is_pending || undefined,
@@ -302,3 +302,5 @@ export default ({lnd, query}, cbk) => {
     returnResult({reject, resolve, of :'records'}, cbk));
   });
 };
+
+export { findRecord }

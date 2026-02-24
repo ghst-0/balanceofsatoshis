@@ -9,7 +9,7 @@
   @returns
   <Standard Callback Function> (err, res) => {}
 */
-export default ({number, reject, resolve}) => {
+const returnNumber = ({number, reject, resolve}) => {
   return (err, res) => {
     if (err) {
       console.error(err);
@@ -22,3 +22,6 @@ export default ({number, reject, resolve}) => {
     return resolve();
   };
 };
+
+export { returnNumber }
+

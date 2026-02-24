@@ -18,7 +18,7 @@ const {parse} = JSON;
   <Response Object>
   <Response Body>
 */
-export default (args, cbk) => {
+const simpleRequest = (args, cbk) => {
   if (!args.url) {
     return cbk([400, 'ExpectedUrlToExecuteSimpleRequest']);
   }
@@ -81,3 +81,5 @@ export default (args, cbk) => {
 
   req.end();
 };
+
+export { simpleRequest }

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { throws, deepEqual } from 'node:assert/strict';
 
-import method from '../../routing/parse_fee_rate_formula.js';
+import { parseFeeRateFormula } from '../../routing/parse_fee_rate_formula.js';
 
 const makeArgs = overrides => {
   const args = {
@@ -60,9 +60,9 @@ const tests = [
 for (const { args, description, error, expected } of tests) {
   test(description, (t, end) => {
     if (error) {
-      throws(() => method(args), new Error(error), 'Got expected error');
+      throws(() => parseFeeRateFormula(args), new Error(error), 'Got expected error');
     } else {
-      deepEqual(method(args), expected, 'Got expected result');
+      deepEqual(parseFeeRateFormula(args), expected, 'Got expected result');
     }
 
     return end();

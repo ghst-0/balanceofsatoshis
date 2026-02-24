@@ -12,6 +12,8 @@ const defaultError = '#ERROR!';
   @returns
   <Display String>
 */
-export default ({error}) => {
+const describeParseError = ({error}) => {
   return parseErrors[error] || parseErrors[defaultError];
 };
+
+export { describeParseError }

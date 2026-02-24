@@ -19,7 +19,7 @@ const readPerms = permissionEntities.map(entity => `${entity}:read`);
     }
   }
 */
-export default args => {
+const credentialRestrictions = args => {
   const methods = args.methods || [];
 
   // Exit early when specific credentials are not requested
@@ -43,3 +43,5 @@ export default args => {
 
   return {allow: {methods, permissions}};
 };
+
+export { credentialRestrictions }

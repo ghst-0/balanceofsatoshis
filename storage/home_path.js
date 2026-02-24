@@ -14,8 +14,10 @@ const home = join(homedir(), '.bos');
     path: <Home Directory Path String>
   }
 */
-export default ({file}) => {
+const homePath = ({file}) => {
   const dir = process.env.BOS_DATA_PATH || home;
 
   return {path: join(...[dir, file].filter(n => !!n))};
 };
+
+export { homePath }

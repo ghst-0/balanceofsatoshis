@@ -26,7 +26,7 @@ const valueTypes = [1, 2, 5, 7, 12, 130];
     }]
   }
 */
-export default args => {
+const certDetails = args => {
   if (!isBuffer(args.data)) {
     throw new Error('ExpectedCertificateDataBufferObject');
   }
@@ -117,3 +117,5 @@ export default args => {
     return asn1;
   }
 };
+
+export { certDetails }

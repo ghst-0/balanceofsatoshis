@@ -17,7 +17,7 @@ const {isArray} = Array;
     cipher: <Armored Encrypted Text String>
   }
 */
-export default ({plain, spawn, to}, cbk) => {
+const encryptToPublicKeys = ({plain, spawn, to}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -67,3 +67,5 @@ export default ({plain, spawn, to}, cbk) => {
     returnResult({reject, resolve, of: 'encrypt'}, cbk));
   });
 };
+
+export { encryptToPublicKeys }

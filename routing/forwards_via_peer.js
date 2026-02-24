@@ -40,7 +40,7 @@ const uniq = arr => Array.from(new Set(arr));
     }]
   }
 */
-export default args => {
+const forwardsViaPeer = args => {
   if (!args.via) {
     return {forwards: args.forwards};
   }
@@ -76,3 +76,5 @@ export default args => {
 
   return {forwards};
 };
+
+export { forwardsViaPeer }

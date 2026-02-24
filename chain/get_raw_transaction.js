@@ -23,7 +23,7 @@ const isHex = n => !!n && !(n.length % 2) && /^[0-9A-F]*$/i.test(n);
     transaction: <Transaction Hex String>
   }
 */
-export default ({id, interval, network, request, retries}, cbk) => {
+const getMempoolSize = ({id, interval, network, request, retries}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -85,3 +85,5 @@ export default ({id, interval, network, request, retries}, cbk) => {
     returnResult({reject, resolve, of: 'getTransaction'}, cbk));
   });
 };
+
+export { getMempoolSize }

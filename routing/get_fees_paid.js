@@ -4,9 +4,11 @@ import { findKey, getNodeAlias, getPayments, getRebalancePayments } from 'ln-syn
 import { getNode, getChannels } from 'ln-service';
 import moment from 'moment';
 import { returnResult } from 'asyncjs-util';
-import { chartAliasForPeer, getIcons } from '../display/index.js';
-import feesForSegment from './fees_for_segment.js';
-import { sortBy } from '../arrays/index.js';
+
+import { chartAliasForPeer } from '../display/chart_alias_for_peer.js';
+import { getIcons } from '../display/get_icons.js';
+import { sortBy } from '../arrays/sort_by.js';
+import { feesForSegment } from './fees_for_segment.js';
 
 const by = 'confirmed_at';
 const daysBetween = (a, b) => moment(a).diff(b, 'days') + 1;
@@ -57,7 +59,7 @@ const uniq = arr => Array.from(new Set(arr));
     title: <Chart Title String>
   }
 */
-export default (args, cbk) => {
+const getFeesPaid = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -595,3 +597,5 @@ export default (args, cbk) => {
     returnResult({reject, resolve, of: 'data'}, cbk));
   });
 };
+
+export { getFeesPaid }

@@ -28,7 +28,7 @@ const flatten = arr => [].concat(...arr);
     [macaroon]: <Base64 Encoded Macaroon String>
   }
 */
-export default ({fs, node, os, path}, cbk) => {
+const getMacaroon = ({fs, node, os, path}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -79,3 +79,5 @@ export default ({fs, node, os, path}, cbk) => {
     returnResult({reject, resolve, of: 'getMacaroon'}, cbk));
   });
 };
+
+export { getMacaroon }

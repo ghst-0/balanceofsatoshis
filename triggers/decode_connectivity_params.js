@@ -19,7 +19,7 @@ const typeVersion = '0';
     id: <Node Id Hex String>
   }
 */
-export default ({parameters}) => {
+const decodeConnectivityParams = ({parameters}) => {
   if (!parameters) {
     throw new Error('ExpectedEncodedParametersToDecodeConnectivityParameters');
   }
@@ -43,3 +43,5 @@ export default ({parameters}) => {
 
   return {id: idRecord.value};
 };
+
+export { decodeConnectivityParams }

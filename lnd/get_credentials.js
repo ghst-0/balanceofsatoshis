@@ -2,8 +2,9 @@ import asyncAuto from 'async/auto.js';
 import cbor from 'cbor';
 import moment from 'moment';
 import { returnResult } from 'asyncjs-util';
-import lndCredentials from './lnd_credentials.js';
-import { pemAsDer } from '../encryption/index.js';
+
+import { lndCredentials } from './lnd_credentials.js';
+import { pemAsDer } from '../encryption/pem_as_der.js';
 
 const { encode } = cbor;
 /** Get exported credentials
@@ -28,7 +29,7 @@ const { encode } = cbor;
     [credentials]: <Encrypted Node Credentials CBOR Hex String>
   }
 */
-export default (args, cbk) => {
+const getCredentials = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -112,3 +113,5 @@ export default (args, cbk) => {
     returnResult({reject, resolve, of: 'credentials'}, cbk));
   });
 };
+
+export { getCredentials }

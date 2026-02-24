@@ -29,7 +29,7 @@ const defaultCapacity = Number.MAX_SAFE_INTEGER;
     }]
   }
 */
-export default ({request}) => {
+const channelsFromHints = ({request}) => {
   const channels = [];
 
   // Exit early when there is no request to derive channels for
@@ -73,3 +73,5 @@ export default ({request}) => {
 
   return {channels};
 };
+
+export { channelsFromHints }

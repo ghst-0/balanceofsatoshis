@@ -4,8 +4,9 @@ import asyncMap from 'async/map.js';
 import { authenticatedLndGrpc, getWalletInfo } from 'ln-service';
 import { getNetwork } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
-import getSavedCredentials from './get_saved_credentials.js';
-import { homePath } from '../storage/index.js';
+
+import { getSavedCredentials } from './get_saved_credentials.js';
+import { homePath } from '../storage/home_path.js';
 
 /** Get a list of saved nodes
 
@@ -28,7 +29,7 @@ import { homePath } from '../storage/index.js';
     }]
   }
 */
-export default ({fs, network}, cbk) => {
+const getSavedNodes = ({fs, network}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -153,3 +154,5 @@ export default ({fs, network}, cbk) => {
     returnResult({reject, resolve, of: 'nodes'}, cbk));
   });
 };
+
+ export { getSavedNodes }

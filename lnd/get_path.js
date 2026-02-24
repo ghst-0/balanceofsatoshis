@@ -23,7 +23,7 @@ const certFile = '/opt/bos/config/tls.cert';
     [path]: <Found LND Directory Path String>
   }
 */
-export default ({fs, os}, cbk) => {
+const getPath = ({fs, os}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -63,3 +63,5 @@ export default ({fs, os}, cbk) => {
     returnResult({reject, resolve, of: 'path'}, cbk));
   });
 };
+
+export { getPath }

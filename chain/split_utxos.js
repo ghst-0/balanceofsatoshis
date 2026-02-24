@@ -22,7 +22,7 @@ const newArrayOfSize = n => Array.from(Array(n));
     [tokens_per_vbyte]: <Fee Tokens Per Virtual Byte Number>
   }
 */
-export default (args, cbk) => {
+const splitUtxos = (args, cbk) => {
   asyncAuto({
     // Check arguments
     validate: cbk => {
@@ -129,3 +129,5 @@ export default (args, cbk) => {
   },
   returnResult({of: 'utxos'}, cbk));
 };
+
+export { splitUtxos }

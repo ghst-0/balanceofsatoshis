@@ -9,7 +9,8 @@ import {
   subscribeToInvoices,
   subscribeToPeers
 } from 'ln-service';
-import decodeTrigger from './decode_trigger.js';
+
+import { decodeTrigger } from './decode_trigger.js';
 
 const defaultInvoicesLimit = 100;
 const {keys} = Object;
@@ -40,7 +41,7 @@ const {keys} = Object;
   @returns
   <Event Emitter Object>
 */
-export default ({lnds}) => {
+const subscribeToTriggers = ({lnds}) => {
   const channels = new Set();
   const emitter = new EventEmitter();
   const subs = [];
@@ -230,3 +231,5 @@ export default ({lnds}) => {
 
   return emitter;
 };
+
+export { subscribeToTriggers }

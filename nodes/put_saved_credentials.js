@@ -1,9 +1,10 @@
 import { join } from 'node:path';
 import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
-import { homePath } from '../storage/index.js';
+import { homePath } from '../storage/home_path.js';
 
 const credentials = 'credentials.json';
+
 const {isArray} = Array;
 const stringify = obj => JSON.stringify(obj, null, 2);
 
@@ -24,7 +25,7 @@ const stringify = obj => JSON.stringify(obj, null, 2);
 
   @returns via cbk or Promise
 */
-export default (args, cbk) => {
+const putSavedCredentials = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -88,3 +89,5 @@ export default (args, cbk) => {
     returnResult({reject, resolve, of: 'getCredentials'}, cbk));
   });
 };
+
+export { putSavedCredentials }

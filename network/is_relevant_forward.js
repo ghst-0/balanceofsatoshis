@@ -18,7 +18,7 @@
  @returns
  <Is Relevant Bool>
  */
-export default args => {
+const isRelevantForward = args => {
   const inChannel = args.all_channels.find(channel => {
     return channel.id === args.incoming_channel;
   });
@@ -45,3 +45,5 @@ export default args => {
 
   return inChannel.partner_public_key === args.from;
 };
+
+export { isRelevantForward }

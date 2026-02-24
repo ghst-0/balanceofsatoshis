@@ -20,10 +20,12 @@ const typeNodeId = '1';
     encoded: <Trigger Parameters Hex String>
   }
 */
-export default ({id}) => {
+const encodeConnectivityParams = ({id}) => {
   if (!isPublicKey(id)) {
     throw new Error('ExpectedPublicKeyToEncodeConnectivityParams');
   }
 
   return encodeTlvStream({records: [{type: typeNodeId, value: id}]});
 };
+
+export { encodeConnectivityParams }

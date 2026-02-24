@@ -1,7 +1,8 @@
 import asyncAuto from 'async/auto.js';
 import { authenticatedLndGrpc } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
-import lndCredentials from './lnd_credentials.js';
+
+import { lndCredentials } from './lnd_credentials.js';
 
 /** Authenticated LND
 
@@ -14,7 +15,7 @@ import lndCredentials from './lnd_credentials.js';
     lnd: <Authenticated LND gRPC API Object>
   }
 */
-export default ({node}, cbk) => {
+const authenticatedLnd = ({node}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Credentials
@@ -32,3 +33,5 @@ export default ({node}, cbk) => {
     returnResult({reject, resolve, of: 'lnd'}, cbk));
   });
 };
+
+export { authenticatedLnd }

@@ -1,7 +1,8 @@
 import { randomBytes } from 'node:crypto';
 import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
-import { homePath } from '../storage/index.js';
+
+import { homePath } from '../storage/home_path.js';
 
 const defaultTagsFile = {tags: []};
 const {isArray} = Array;
@@ -44,7 +45,7 @@ const uniq = arr => Array.from(new Set(arr));
     }]
   }
 */
-export default (args, cbk) => {
+const adjustTags = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -53,7 +54,7 @@ export default (args, cbk) => {
           return cbk([400, 'ExpectedArrayOfNodesToAddToTag']);
         }
 
-        if (args.add.filter(n => !isPublicKey(n)).length) {
+        if (args.add.some(n => !isPublicKey(n))) {
           return cbk([400, 'ExpectedPublicKeyOfNodeToAddToTag']);
         }
 
@@ -69,7 +70,7 @@ export default (args, cbk) => {
           return cbk([400, 'ExpectedArrayOfNodesToRemoveFromTag']);
         }
 
-        if (args.remove.filter(n => !isPublicKey(n)).length) {
+        if (args.remove.some(n => !isPublicKey(n))) {
           return cbk([400, 'ExpectedPublicKeyOfNodeToRemoveFromTag']);
         }
 
@@ -141,12 +142,12 @@ export default (args, cbk) => {
         });
 
         // Exit early with error when removing from a non-existent tag
-        if (!tagMatch && !!args.remove.length) {
+        if (!tagMatch && args.remove.length > 0) {
           return cbk([400, 'FailedToFindTheTagToRemoveFrom']);
         }
 
         // Exit early with error when there is more than one match
-        if (tagMatches.length) {
+        if (tagMatches.length > 0) {
           const matches = [].concat(tagMatch).concat(tagMatches);
 
           return cbk([400, 'AmbiguousTagToAdjustSpecified', {matches}]);
@@ -156,7 +157,7 @@ export default (args, cbk) => {
         const setIcon = args.icon !== undefined;
 
         // Exit early when not editing the tag
-        if (!args.add.length && !setAvoid && !setIcon && !args.remove.length) {
+        if (args.add.length === 0 && !setAvoid && !setIcon && args.remove.length === 0) {
           return cbk(null, tagMatch);
         }
 
@@ -198,10 +199,12 @@ export default (args, cbk) => {
         }
 
         return cbk(null, {
-          tags: parse(getTags).tags.filter(n => !!n.nodes && !!n.nodes.length),
+          tags: parse(getTags).tags.filter(n => !!n.nodes && n.nodes.length > 0),
         });
       }],
     },
     returnResult({reject, resolve, of: 'result'}, cbk));
   });
 };
+
+export { adjustTags }

@@ -18,7 +18,7 @@
  @returns
  <Is Relevant Bool>
  */
-export default args => {
+const isRelevantSource = args => {
   const inChannel = args.node_channels.find(chan => {
     return args.incoming_channel === chan.id;
   });
@@ -45,3 +45,5 @@ export default args => {
 
   return outChannel.partner_public_key === args.to;
 };
+
+export { isRelevantSource }

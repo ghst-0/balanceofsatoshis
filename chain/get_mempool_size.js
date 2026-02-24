@@ -18,7 +18,7 @@ const isNumber = n => !isNaN(n);
     [vbytes]: <Size of Mempool Virtual Bytes Number>
   }
 */
-export default ({network, request, retries}, cbk) => {
+const getMempoolSize =  ({network, request, retries}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -81,3 +81,5 @@ export default ({network, request, retries}, cbk) => {
     returnResult({reject, resolve, of: 'getMempool'}, cbk));
   });
 };
+
+export { getMempoolSize }

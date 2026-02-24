@@ -24,7 +24,7 @@ const certFile = '/opt/bos/config/tls.cert';
     [cert]: <Cert File Base64 Encoded String>
   }
 */
-export default ({fs, node, os, path}, cbk) => {
+const getCert = ({fs, node, os, path}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -65,3 +65,5 @@ export default ({fs, node, os, path}, cbk) => {
     returnResult({reject, resolve, of: 'cert'}, cbk));
   });
 };
+
+export { getCert }

@@ -1,7 +1,8 @@
 import asyncAuto from 'async/auto.js';
-import { getChainBalance, getChannelBalance, getChannels, getPendingChainBalance } from 'ln-service';
+import { getChainBalance as ln_getChainBalance, getChannelBalance, getChannels as ln_getChannels, getPendingChainBalance } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
-import balanceFromTokens from './balance_from_tokens.js';
+
+import { balanceFromTokens } from './balance_from_tokens.js';
 
 const none = 0;
 
@@ -22,7 +23,7 @@ const none = 0;
     channel_balance: <Channel Balance Minus Commit Fees Tokens Number>
   }
 */
-export default (args, cbk) => {
+const getBalance = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -38,13 +39,13 @@ export default (args, cbk) => {
       lnd: ['validate', ({}, cbk) => cbk(null, args.lnd)],
 
       // Get the chain balance
-      getChainBalance: ['lnd', ({lnd}, cbk) => getChainBalance({lnd}, cbk)],
+      getChainBalance: ['lnd', ({lnd}, cbk) => ln_getChainBalance({lnd}, cbk)],
 
       // Get the channel balance
       getChanBalance: ['lnd', ({lnd}, cbk) => getChannelBalance({lnd}, cbk)],
 
       // Get the initiator burden
-      getChannels: ['lnd', ({lnd}, cbk) => getChannels({lnd}, cbk)],
+      getChannels: ['lnd', ({lnd}, cbk) => ln_getChannels({lnd}, cbk)],
 
       // Get the pending balance
       getPending: ['lnd', ({lnd}, cbk) => getPendingChainBalance({lnd}, cbk)],
@@ -103,3 +104,5 @@ export default (args, cbk) => {
     returnResult({reject, resolve, of: 'balance'}, cbk));
   });
 };
+
+export { getBalance }

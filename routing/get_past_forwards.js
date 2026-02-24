@@ -27,7 +27,7 @@ const flatten = arr => [].concat(...arr);
     }]
   }
 */
-export default ({days, lnd}, cbk) => {
+const getPastForwards = ({days, lnd}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -81,3 +81,5 @@ export default ({days, lnd}, cbk) => {
     returnResult({reject, resolve, of: 'forwards'}, cbk));
   });
 };
+
+export { getPastForwards }

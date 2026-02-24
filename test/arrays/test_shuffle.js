@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { equal, throws } from 'node:assert/strict';
 
-import { shuffle } from '../../arrays/index.js';
+import { shuffle } from '../../arrays/shuffle.js';
 
 const tests = [
   {

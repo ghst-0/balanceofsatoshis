@@ -33,7 +33,7 @@ import { getTransactionRecord, subscribeToPendingChannels } from 'ln-sync';
 import { noLocktimeIdForTransaction } from '@alexbosworth/blockchain';
 import { returnResult } from 'asyncjs-util';
 
-import getNodeDetails from './get_node_details.js';
+import { getNodeDetails } from './get_node_details.js';
 import interaction from './interaction.json' with { type: 'json' };
 import PACKAGE_JSON from '../package.json' with { type: 'json' };
 
@@ -71,7 +71,7 @@ const sanitize = n => (n || '').replaceAll('_', '\\_').replaceAll(/[*~`]/g, '');
     failure: <Termination Error Object>
   }
 */
-export default (args, cbk) => {
+const startRocketChatBot = (args, cbk) => {
   let connectedId = args.id;
   let isStopped = false;
   const subscriptions = [];
@@ -698,3 +698,5 @@ export default (args, cbk) => {
     });
   });
 };
+
+export { startRocketChatBot }

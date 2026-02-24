@@ -8,7 +8,7 @@
   @returns
   <Standard Callback Function> (err, res) => {}
 */
-export default ({reject, resolve}) => {
+const returnOutput = ({reject, resolve}) => {
   return (err, res) => {
     if (err) {
       console.error(err);
@@ -21,3 +21,5 @@ export default ({reject, resolve}) => {
     return resolve();
   };
 };
+
+export { returnOutput }

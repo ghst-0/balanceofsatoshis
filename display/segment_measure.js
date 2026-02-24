@@ -21,7 +21,7 @@ const maxChartDays = 90;
     segments: <Count of Segments In Window Number>
   }
 */
-export default ({days, end, start}) => {
+const segmentMeasure = ({days, end, start}) => {
   // A chart with a lot of days should be seen as weeks
   if (days > maxChartDays) {
     return {measure: 'week', segments: floor(days / daysPerWeek)};
@@ -40,3 +40,5 @@ export default ({days, end, start}) => {
   // The standard chart is just by day
   return {measure: 'day', segments: days};
 };
+
+export { segmentMeasure }

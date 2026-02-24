@@ -4,7 +4,8 @@ import { formatTokens, getNetwork } from 'ln-sync';
 import { getChainTransactions } from 'ln-accounting';
 import moment from 'moment';
 import { returnResult } from 'asyncjs-util';
-import feesForSegment from './fees_for_segment.js';
+
+import { feesForSegment } from './fees_for_segment.js';
 
 const daysBetween = (a, b) => moment(a).diff(b, 'days') + 1;
 const daysPerWeek = 7;
@@ -38,7 +39,7 @@ const parseDate = n => Date.parse(n);
     title: <Chart Title String>
   }
 */
-export default (args, cbk) => {
+const getChainFeesChart = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
@@ -268,3 +269,5 @@ export default (args, cbk) => {
     returnResult({reject, resolve, of: 'data'}, cbk));
   });
 };
+
+export { getChainFeesChart }

@@ -5,14 +5,16 @@ import { spawn } from 'node:child_process';
 import asyncAuto from 'async/auto.js';
 import { authenticatedLndGrpc, grantAccess, restrictMacaroon } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
-import credentialRestrictions from './credential_restrictions.js';
-import { decryptCiphertext, derAsPem } from '../encryption/index.js';
-import getCert from './get_cert.js';
-import getMacaroon from './get_macaroon.js';
-import getPath from './get_path.js';
-import { getSavedCredentials } from '../nodes/index.js';
-import getSocket from './get_socket.js';
-import { homePath } from '../storage/index.js';
+
+import { decryptCiphertext } from '../encryption/decrypt_ciphertext.js';
+import { getSavedCredentials } from '../nodes/get_saved_credentials.js';
+import { homePath } from '../storage/home_path.js';
+import { derAsPem } from '../encryption/der_as_pem.js';
+import { credentialRestrictions } from './credential_restrictions.js';
+import { getCert } from './get_cert.js';
+import { getMacaroon } from './get_macaroon.js';
+import { getPath } from './get_path.js';
+import { getSocket } from './get_socket.js';
 
 const config = 'config.json';
 const defaultLndDirPath = process.env.BOS_DEFAULT_LND_PATH;
@@ -42,7 +44,7 @@ const socket = 'localhost:10009';
     socket: <Socket String>
   }
 */
-export default (args, cbk) => {
+const lndCredentials = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Figure out which node the credentials are for
@@ -262,3 +264,5 @@ export default (args, cbk) => {
     returnResult({reject, resolve, of: 'finalCredentials'}, cbk));
   });
 };
+
+export { lndCredentials }

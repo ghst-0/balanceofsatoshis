@@ -16,11 +16,12 @@ import { getNetwork, getPayments } from 'ln-sync';
 import moment from 'moment';
 import { returnResult } from 'asyncjs-util';
 
-import { authenticatedLnd } from '../lnd/index.js';
-import channelsAsReportActivity from './channels_as_report_activity.js';
-import { currencyForNetwork, getForwards } from '../network/index.js';
-import { getBalance } from '../balances/index.js';
-import reportOverview from './report_overview.js';
+import { authenticatedLnd } from '../lnd/authenticated_lnd.js';
+import { currencyForNetwork } from '../network/currency_for_network.js';
+import { getForwards } from '../network/get_forwards.js';
+import { getBalance as balances_getBalance } from '../balances/get_balance.js';
+import { channelsAsReportActivity } from './channels_as_report_activity.js';
+import { reportOverview } from './report_overview.js';
 
 const afterMs = 1000 * 60 * 60 * 24;
 const defaultConfTarget = 6;
@@ -49,14 +50,14 @@ const italicize = (t) => `_{$t}_`
   @returns via cbk
   {}
 */
-export default ({fs, node, request, style}, cbk) => {
+const getReport = ({fs, node, request, style}, cbk) => {
   asyncAuto({
     // Get authenticated lnd connection
     getLnd: cbk => authenticatedLnd({node}, cbk),
 
     // Get balance
     getBalance: ['getLnd', ({getLnd}, cbk) => {
-      return getBalance({node, lnd: getLnd.lnd}, cbk);
+      return balances_getBalance({node, lnd: getLnd.lnd}, cbk);
     }],
 
     // Get forwards
@@ -483,3 +484,5 @@ export default ({fs, node, request, style}, cbk) => {
   },
   returnResult({of: 'report'}, cbk));
 };
+
+export { getReport }
