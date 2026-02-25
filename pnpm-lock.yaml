@@ -67,7 +67,7 @@ importers:
         version: 6.1.0
       ecpair:
         specifier: 3.0.1
-        version: 3.0.1
+        version: 3.0.1(typescript@5.9.3)
       hot-formula-parser:
         specifier: 4.0.0
         version: 4.0.0
@@ -321,7 +321,7 @@ importers:
         version: link:../asyncjs-util
       bip32:
         specifier: 5.0.1
-        version: 5.0.1
+        version: 5.0.1(typescript@5.9.3)
       bitcoinjs-lib:
         specifier: 6.1.7
         version: 6.1.7
@@ -333,7 +333,7 @@ importers:
         version: 4.0.0
       ecpair:
         specifier: 3.0.1
-        version: 3.0.1
+        version: 3.0.1(typescript@5.9.3)
       ln-docker-daemons:
         specifier: workspace:ln-docker-daemons
         version: link:../ln-docker-daemons
@@ -369,7 +369,7 @@ importers:
         version: 2.0.20
       ecpair:
         specifier: 3.0.1
-        version: 3.0.1
+        version: 3.0.1(typescript@5.9.3)
       lightning:
         specifier: workspace:lightning
         version: link:../lightning
@@ -1030,6 +1030,11 @@ packages:
   typeforce@1.18.0:
     resolution: {integrity: sha512-7uc1O8h1M1g0rArakJdf0uLRSSgFcYexrVoKo+bzJd32gd4gDy2L/Z+8/FjPnU9ydY3pEnVPtr9FyscYY60K1g==}
 
+  typescript@5.9.3:
+    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
   uint8array-tools@0.0.7:
     resolution: {integrity: sha512-vrrNZJiusLWoFWBqz5Y5KMCgP9W9hnjZHzZiZRT8oNAkq3d5Z5Oe76jAvVVSRh4U8GGR90N2X1dWtrhvx6L8UQ==}
     engines: {node: '>=14.0.0'}
@@ -1310,12 +1315,12 @@ snapshots:
 
   bip174@2.1.1: {}
 
-  bip32@5.0.1:
+  bip32@5.0.1(typescript@5.9.3):
     dependencies:
       '@noble/hashes': 1.8.0
       '@scure/base': 1.2.6
       uint8array-tools: 0.0.8
-      valibot: 1.2.0
+      valibot: 1.2.0(typescript@5.9.3)
       wif: 5.0.0
     transitivePeerDependencies:
       - typescript
@@ -1421,10 +1426,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ecpair@3.0.1:
+  ecpair@3.0.1(typescript@5.9.3):
     dependencies:
       uint8array-tools: 0.0.8
-      valibot: 1.2.0
+      valibot: 1.2.0(typescript@5.9.3)
       wif: 5.0.0
     transitivePeerDependencies:
       - typescript
@@ -1695,6 +1700,9 @@ snapshots:
 
   typeforce@1.18.0: {}
 
+  typescript@5.9.3:
+    optional: true
+
   uint8array-tools@0.0.7: {}
 
   uint8array-tools@0.0.8: {}
@@ -1705,7 +1713,9 @@ snapshots:
 
   uuid@10.0.0: {}
 
-  valibot@1.2.0: {}
+  valibot@1.2.0(typescript@5.9.3):
+    optionalDependencies:
+      typescript: 5.9.3
 
   varuint-bitcoin@1.1.2:
     dependencies:
