@@ -36,6 +36,9 @@ import { connectToRocketChat } from './rocketchat/connect_to_rocketchat.js';
 import { manageTriggers } from './triggers/manage_triggers.js';
 import { getReceivedChart } from './wallets/get_received_chart.js';
 import { getReport } from './wallets/get_report.js';
+import { getPeers } from './network/get_peers.js'
+import { getForwards } from './network/get_forwards.js'
+import { getGraphEntry } from './network/get_graph_entry.js'
 
 import PACKAGE_JSON from './package.json' with { type: 'json' };
 import commandConstants from './commands/constants.json' with { type: 'json' };
@@ -479,7 +482,7 @@ prog
         const {lnd} = await lndForNode(options.node);
         const table = !!options.complete ? undefined : 'rows';
 
-        return network.getForwards({
+        return getForwards({
           lnd,
           days: options.days,
           from: (await lnSync.findKey({lnd, query: options.in})).public_key,
@@ -511,7 +514,7 @@ prog
       try {
         const {lnd} = await lndForNode(options.node);
 
-        return network.getGraphEntry({
+        return getGraphEntry({
           lnd,
           filters: flatten([options.filter].filter(n => !!n)),
           fs: {getFile: readFile},
@@ -642,7 +645,7 @@ prog
 
     return new Promise(async (resolve, reject) => {
       try {
-        return network.getPeers({
+        return getPeers({
           earnings_days: options.feeDays,
           filters: flatten([options.filter].filter(n => !!n)),
           fs: {getFile: readFile},

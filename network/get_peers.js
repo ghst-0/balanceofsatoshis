@@ -1,0 +1,703 @@
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import asyncReflect from 'async/reflect.js';
+import asyncUntil from 'async/until.js';
+import { bold } from 'colorette';
+import { decodeChanId } from 'bolt07';
+import { formatTokens, getNetwork, getPayments } from 'ln-sync';
+import {
+  getChannel,
+  getChannels,
+  getClosedChannels,
+  getHeight,
+  getInvoices,
+  getNode,
+  getPeers as ln_getPeers,
+  getPendingChannels
+} from 'ln-service';
+import moment from 'moment';
+import { returnResult } from 'asyncjs-util';
+import { chartAliasForPeer } from './../display/chart_alias_for_peer.js';
+import { formatFeeRate } from './../display/format_fee_rate.js';
+import { getIcons } from './../display/get_icons.js';
+import { isMatchingFilters } from './../display/is_matching_filters.js';
+import { getPastForwards } from './../routing/get_past_forwards.js';
+import { sortBy } from './../arrays/sort_by.js';
+
+const closedSorts = ['fee_earnings', 'first_connected'];
+const defaultInvoicesLimit = 200;
+const defaultSort = 'first_connected';
+const estimateDiskFootprint = n => Math.round(n * 55 / 1e6 * 10) / 10;
+const fromNow = epoch => epoch ? moment(epoch * 1e3).fromNow() : undefined;
+const hasDiskFilter = filter => /disk_usage_mb/gim.test(filter);
+const {isArray} = Array;
+const {max} = Math;
+const minutesPerBlock = 10;
+const notNull = array => array.filter(n => n !== null);
+const notFoundIndex = -1;
+const {round} = Math;
+const sumOf = arr => arr.reduce((sum, n) => sum + n, Number());
+const sumMtokens = arr => arr.reduce((sum, n) => sum + BigInt(n), BigInt(0));
+const uniq = arr => Array.from(new Set(arr));
+
+const sumOfBig = a => a.reduce((sum, n) => sum + BigInt(n || '0'), BigInt(0));
+const mtokensAsTokens = mtokens => Number(mtokens / BigInt(1000));
+const isStandardMaxHtlc = (n, total) => !n || n === Math.ceil(total * 0.99);
+const maxPaySize = 4294967;
+
+/** Get channel-connected peers
+
+ {
+ [earnings_days]: <Routing Fee Earnings Days Number>
+ [filters]: [<Formula Expression String>]
+ fs: {
+ getFile: <Read File Contents Function> (path, cbk) => {}
+ }
+ [idle_days]: <Not Active For Days Number>
+ [is_active]: <Active Channels Only Bool>
+ [is_monochrome]: <Mute Colors Bool>
+ [is_offline]: <Offline Channels Only Bool>
+ [is_private]: <Private Channels Only Bool>
+ [is_public]: <Public Channels Only Bool>
+ [is_table]: <Peers As Table Bool>
+ lnd: <Authenticated LND gRPC API Object>
+ omit: [<Omit Peer With Public Key Hex String>]
+ [sort_by]: <Sort Results By Attribute String>
+ [tags]: [<Tag Identifier String>]
+ }
+
+ @returns via cbk or Promise
+  {
+  peers: [{
+  alias: <Node Alias String>
+  [fee_earnings]: <Fees Earned Via Peer Tokens Number>
+  first_connected: <Oldest Channel With Peer String>
+  [last_activity]: <Last Activity String>
+  inbound_fee_rate: <Inbound Fee Rate String>
+  inbound_liquidity: <Inbound Liquidity Amount Number>
+  outbound_liquidity: <Outbound Liquidity Amount Number>
+  public_key: <Public Key Hex String>
+  }]
+  }
+ */
+const getPeers = (args, cbk) => {
+  return new Promise((resolve, reject) => {
+    asyncAuto({
+        // Check arguments
+        validate: cbk => {
+          if (!args.fs) {
+            return cbk([400, 'ExpectedFsToGetPeers']);
+          }
+
+          if (!args.lnd) {
+            return cbk([400, 'ExpectedLndToGetPeers']);
+          }
+
+          if (!isArray(args.omit)) {
+            return cbk([400, 'ExpectedOmitArrayToGetPeers']);
+          }
+
+          if (isArray(args.sort_by)) {
+            return cbk([400, 'SortingByMultipleFieldsNotSupported']);
+          }
+
+          return cbk();
+        },
+
+        // Get node icons
+        getIcons: ['validate', ({}, cbk) => getIcons({fs: args.fs}, cbk)],
+
+        // Determine if closed channels should be included
+        isIncludingClosed: ['validate', ({}, cbk) => {
+          if (!!args.earnings_days || !!args.idle_days) {
+            return cbk(null, true);
+          }
+
+          if (closedSorts.includes(args.sort_by)) {
+            return cbk(null, true);
+          }
+
+          return cbk(null, false);
+        }],
+
+        // Get closed channels
+        getClosed: ['isIncludingClosed', ({isIncludingClosed}, cbk) => {
+          // Exit early when no closed channel data is needed
+          if (!isIncludingClosed) {
+            return cbk(null, {channels: []});
+          }
+
+          return getClosedChannels({lnd: args.lnd}, cbk);
+        }],
+
+        // Get fee earnings
+        getForwards: ['validate', ({}, cbk) => {
+          const dayFilters = [args.earnings_days, args.idle_days];
+
+          // Exit early when there are no days to get forwards over
+          if (dayFilters.filter(n => !!n).length === 0) {
+            return cbk(null, {forwards: []});
+          }
+
+          const days = max(...dayFilters.filter(n => !!n));
+
+          return getPastForwards({days, lnd: args.lnd}, cbk);
+        }],
+
+        // Get invoices
+        getInvoices: ['validate', ({}, cbk) => {
+          const invoices = [];
+          let token;
+
+          if (args.idle_days === undefined) {
+            return cbk(null, invoices);
+          }
+
+          const after = moment().subtract(args.idle_days, 'days').toISOString();
+
+          return asyncUntil(
+            cbk => cbk(null, token === false),
+            cbk => {
+              return getInvoices({
+                  token,
+                  limit: token ? undefined : defaultInvoicesLimit,
+                  lnd: args.lnd,
+                },
+                (err, res) => {
+                  if (err) {
+                    return cbk(err);
+                  }
+
+                  token = res.next || false;
+
+                  // When there is a too-old invoice returned, stop paging
+                  if (!!after && res.invoices.some(n => n.created_at < after)) {
+                    token = false;
+                  }
+
+                  for (const n of res.invoices) {
+                    invoices.push(n)
+                  }
+
+                  return cbk();
+                });
+            },
+            err => {
+              if (err) {
+                return cbk(err);
+              }
+
+              return cbk(null, invoices.filter(n => !!n.is_confirmed));
+            }
+          );
+        }],
+
+        // Get the network name
+        getNetwork: ['validate', asyncReflect(({}, cbk) => {
+          return getNetwork({lnd: args.lnd}, cbk);
+        })],
+
+        // Get payments
+        getPayments: ['validate', ({}, cbk) => {
+          // Exit early and skip long payments lookup when idle days not needed
+          if (args.idle_days === undefined) {
+            return cbk(null, {payments: []})
+          }
+
+          const after = moment().subtract(args.idle_days, 'days').toISOString();
+
+          return getPayments({after, lnd: args.lnd}, cbk);
+        }],
+
+        // Get connected peers
+        getPeers: ['validate', ({}, cbk) => ln_getPeers({lnd: args.lnd}, cbk)],
+
+        // Get pending channels
+        getPending: ['validate', ({}, cbk) => {
+          return getPendingChannels({lnd: args.lnd}, cbk);
+        }],
+
+        // Check tags
+        checkTags: ['getIcons', ({getIcons}, cbk) => {
+          // Exit early when there are no tags
+          if (!args.tags || args.tags.length === 0) {
+            return cbk();
+          }
+
+          const unknown = args.tags.filter(tag => {
+            return !getIcons.nodes.some(node => {
+              return node.aliases.includes(tag);
+            });
+          });
+
+          if (unknown.length > 0) {
+            return cbk([400, 'UnknownTagSpecified', {unknown}]);
+          }
+
+          return cbk();
+        }],
+
+        // Get channels
+        getChannels: ['getIcons', ({getIcons}, cbk) => {
+          return getChannels({
+              is_active: args.is_active,
+              is_offline: args.is_offline,
+              is_private: args.is_private,
+              is_public: args.is_public,
+              lnd: args.lnd,
+            },
+            (err, res) => {
+              if (err) {
+                return cbk(err);
+              }
+
+              // Filter the list of channels to satisfy tag search constraints
+              const channels = res.channels.filter(channel => {
+                // Exit early when there are no tag constraints
+                if (!isArray(args.tags) || args.tags.length === 0) {
+                  return true;
+                }
+
+                const key = channel.partner_public_key;
+
+                const node = getIcons.nodes.find(n => n.public_key === key);
+
+                // Exit early when there is no matching tagged node
+                if (!node) {
+                  return false;
+                }
+
+                return !!args.tags.some(tag => node.aliases.includes(tag));
+              });
+
+              return cbk(null, {channels});
+            });
+        }],
+
+        // Get policies
+        getPolicies: ['getChannels', ({getChannels}, cbk) => {
+          return asyncMap(getChannels.channels, ({id}, cbk) => {
+              return getChannel({id, lnd: args.lnd}, (err, res) => {
+                const [errorCode] = err || [];
+
+                // Exit early when the policy is unknown
+                if (errorCode === 404) {
+                  return cbk();
+                }
+
+                if (err) {
+                  return cbk(err);
+                }
+
+                return cbk(null, {policies: res.policies});
+              });
+            },
+            cbk);
+        }],
+
+        // All channels
+        allChannels: [
+          'getChannels',
+          'getClosed',
+          ({getChannels, getClosed}, cbk) =>
+          {
+            const closedChannels = getClosed.channels
+              .filter(({id}) => !!id)
+              .map(n => ({id: n.id, key: n.partner_public_key}));
+
+            const openChannels = getChannels.channels.map(channel => {
+              return {id: channel.id, key: channel.partner_public_key};
+            });
+
+            return cbk(null, [].concat(closedChannels).concat(openChannels));
+          }],
+
+        // Forwards
+        forwards: [
+          'allChannels',
+          'getForwards',
+          ({allChannels, getForwards}, cbk) =>
+          {
+            const channels = allChannels;
+
+            const forwards = getForwards.forwards.map(forward => {
+              const inKey = channels.find(n => n.id === forward.incoming_channel);
+              const outKey = channels.find(n => n.id === forward.outgoing_channel);
+
+              return {
+                created_at: forward.created_at,
+                fee_mtokens: forward.fee_mtokens,
+                inbound: inKey ? inKey.key : null,
+                outbound: outKey ? outKey.key : null,
+              };
+            });
+
+            return cbk(null, forwards);
+          }],
+
+        // Peers
+        peers: [
+          'allChannels',
+          'forwards',
+          'getChannels',
+          'getInvoices',
+          'getNetwork',
+          'getPayments',
+          'getPeers',
+          'getPending',
+          'getPolicies',
+          async ({
+                   allChannels,
+                   forwards,
+                   getChannels,
+                   getInvoices,
+                   getNetwork,
+                   getPayments,
+                   getPeers,
+                   getPending,
+                   getPolicies,
+                 }) =>
+          {
+            const lastForwardedPayment = forwards.reduce((sum, forward) => {
+                for (const publicKey of [forward.inbound, forward.outbound]
+                  .filter(n => !!n)) {
+                    const last = sum[publicKey];
+
+                    // Exit early when the last forward is later than this forward
+                    if (!!last && last > forward.created_at) {
+                      continue
+                    }
+
+                    sum[publicKey] = forward.created_at
+                  }
+
+                return sum;
+              },
+              {});
+
+            const lastPaidOut = getPayments.payments.reduce((sum, n) => {
+                const [through] = n.hops;
+
+                if (!!through && (!sum[through] || sum[through] < n.created_at)) {
+                  sum[through] = n.created_at;
+                }
+
+                return sum;
+              },
+              {});
+
+            const lastReceivedPayment = getInvoices.reduce((sum, n) => {
+                for (const payment of n.payments) {
+                  const {channels} = getChannels;
+
+                  const channel = channels.find(n => n.id === payment.in_channel);
+
+                  if (!channel) {
+                    continue
+                  }
+
+                  const last = sum[channel.partner_public_key];
+
+                  // Exit early when the last payment is later than this payment
+                  if (!!last && last > payment.confirmed_at) {
+                    continue
+                  }
+
+                  sum[channel.partner_public_key] = payment.confirmed_at
+                }
+
+                return sum;
+              },
+              {});
+
+            const peerKeys = getChannels.channels.map(n => n.partner_public_key);
+            const wallet = await getHeight({lnd: args.lnd});
+
+            const heights = allChannels.map(({id, key}) => {
+              return {key, height: decodeChanId({channel: id}).block_height};
+            });
+
+            const peers = (await asyncMap(uniq(peerKeys), async publicKey => {
+              const forwarded = lastForwardedPayment[publicKey];
+              const gotLast = lastReceivedPayment[publicKey];
+              const peer = getPeers.peers.find(n => n.public_key === publicKey);
+              const lastPaidThrough = lastPaidOut[publicKey];
+
+              const feeEarnings = forwards.filter(fwd => {
+                return fwd.inbound === publicKey || fwd.outbound === publicKey;
+              });
+
+              const channelHeights = sortBy({
+                array: heights.filter(({key}) => key === publicKey),
+                attribute: 'height',
+              });
+
+              const feeMtokens = sumMtokens(feeEarnings.map(n => n.fee_mtokens));
+              const [newest] = channelHeights.sorted.slice().reverse();
+              const [oldest] = channelHeights.sorted;
+
+              const blocks = wallet.current_block_height - oldest.height;
+              const newBlocks = wallet.current_block_height - newest.height;
+
+              const active = getChannels.channels.filter(channel => {
+                return channel.partner_public_key === publicKey;
+              });
+
+              // A thaw channel cannot be cooperatively closed until a block height
+              const hasThawChannel = active
+                .map(n => n.cooperative_close_delay_height)
+                .filter(n => !!n)
+                .find(n => n > wallet.current_block_height);
+
+              const hasHtlcChannel = active
+                .find(n => n.pending_payments.length > 0);
+
+              const isHidden = !active.some(n => !n.is_private) && active.length > 0;
+
+              const uptime = sumOf(active
+                .filter(n => !!n.time_online)
+                .map(n => n.time_online));
+
+              const downtime = sumOf(active
+                .filter(n => !!n.time_offline)
+                .map(n => n.time_offline));
+
+              const pendingChannels = getPending.pending_channels.filter(chan => {
+                return !!chan.is_opening && chan.partner_public_key === publicKey;
+              });
+
+              const channels = [].concat(active).concat(pendingChannels);
+
+              const policies = getPolicies
+                .filter(n => !!n)
+                .map(n => n.policies.find(n => n.public_key === publicKey))
+                .filter(n => !!n);
+
+              const feeRates = policies
+                .map(n => n.fee_rate)
+                .filter(n => n !== undefined);
+
+              const disabled = policies.map(n => !!n.is_disabled).filter(n => !!n);
+              const feeRate = feeRates.length === 0 ? undefined : max(...feeRates);
+              const maxHtlcSizes = policies.map(n => n.max_htlc_mtokens);
+              const pastStates = sumOf(active.map(n => n.past_states));
+
+              const totalCapacity = sumOf(active.map(n => n.capacity));
+
+              const totalMaxHtlc = mtokensAsTokens(sumOfBig(maxHtlcSizes));
+
+              const isCustomMax = !isStandardMaxHtlc(totalMaxHtlc, totalCapacity);
+
+              const isSmallMaxHtlc = !!isCustomMax && totalMaxHtlc < maxPaySize;
+
+              let node = {alias: String(), public_key: publicKey};
+
+              // Check if the peer matches filters
+              const matching = isMatchingFilters({
+                filters: args.filters || [],
+                variables: {
+                  age: blocks,
+                  capacity: totalCapacity,
+                  blocks_since_last_channel: newBlocks,
+                  disk_usage_mb: estimateDiskFootprint(pastStates),
+                  fee_earnings: mtokensAsTokens(feeMtokens),
+                  inbound_fee_rate: feeRate,
+                  inbound_liquidity: sumOf(channels.map(n => n.remote_balance)),
+                  outbound_liquidity: sumOf(channels.map(n => n.local_balance)),
+                },
+              });
+
+              // Exit early when there is a filter error
+              if (matching.failure) {
+                throw new Error(matching.failure.error);
+              }
+
+              // Exit early when the peer is not matching provided filters
+              if (!matching.is_matching) {
+                return;
+              }
+
+              const lastActivity = max(...[
+                moment().subtract(blocks * minutesPerBlock, 'minutes').unix(),
+                moment().subtract(newBlocks * minutesPerBlock, 'minutes').unix(),
+                !gotLast ? Number() : moment(gotLast).unix(),
+                !forwarded ? Number() : moment(forwarded).unix(),
+                !lastPaidThrough ? Number() : moment(lastPaidThrough).unix(),
+              ].filter(n => !!n));
+
+              try {
+                node = await getNode({
+                  is_omitting_channels: true,
+                  lnd: args.lnd,
+                  public_key: publicKey,
+                });
+              } catch {}
+
+              return {
+                alias: node.alias,
+                downtime_percentage: round(100 * (downtime / (downtime + uptime))),
+                est_disk_usage_mb: estimateDiskFootprint(pastStates),
+                fee_earnings: mtokensAsTokens(feeMtokens),
+                first_connected: moment().subtract(blocks * minutesPerBlock, 'minutes').unix(),
+                inbound_fee_rate: feeRate,
+                inbound_liquidity: sumOf(channels.map(n => n.remote_balance)),
+                is_forwarding: hasHtlcChannel || undefined,
+                is_inbound_disabled: disabled.length > 0 || undefined,
+                is_offline: !peer || undefined,
+                is_pending: pendingChannels.length > 0 || undefined,
+                is_private: isHidden || undefined,
+                is_small_max_htlc: isSmallMaxHtlc || undefined,
+                is_thawing: hasThawChannel || undefined,
+                last_activity: args.idle_days === undefined ? null : lastActivity,
+                outbound_liquidity: sumOf(channels.map(n => n.local_balance)),
+                public_key: publicKey,
+              };
+            })).filter(n => !!n);
+
+            return {
+              peers: sortBy({array: peers, attribute: args.sort_by || defaultSort})
+                .sorted
+                .filter(n => args.omit.indexOf(n.public_key) === notFoundIndex)
+                .filter(n => {
+                  // Always return peer when no idle days are specified
+                  if (!args.idle_days) {
+                    return true;
+                  }
+
+                  const hasPendingChan = getPending.pending_channels.find(chan => {
+                    return chan.partner_public_key === n.public_key;
+                  });
+
+                  if (hasPendingChan) {
+                    return false;
+                  }
+
+                  const after = moment().subtract(args.idle_days, 'days').unix();
+
+                  if (n.last_activity > after) {
+                    return false;
+                  }
+
+                  return true;
+                })
+                .map(peer => {
+                  const rate = peer.inbound_fee_rate;
+
+                  return {
+                    alias: peer.alias,
+                    downtime_percentage: peer.downtime_percentage,
+                    est_disk_usage_mb: peer.est_disk_usage_mb,
+                    fee_earnings: peer.fee_earnings,
+                    first_connected: fromNow(peer.first_connected),
+                    last_activity: fromNow(peer.last_activity),
+                    inbound_fee_rate: formatFeeRate({rate}).display,
+                    inbound_liquidity: peer.inbound_liquidity,
+                    is_forwarding: peer.is_forwarding,
+                    is_inbound_disabled: peer.is_inbound_disabled,
+                    is_offline: peer.is_offline,
+                    is_pending: peer.is_pending,
+                    is_private: peer.is_private,
+                    is_small_max_htlc: peer.is_small_max_htlc || undefined,
+                    is_thawing: peer.is_thawing,
+                    outbound_liquidity: peer.outbound_liquidity,
+                    public_key: peer.public_key,
+                  };
+                }),
+            };
+          }],
+
+        // Final peers and table
+        allPeers: ['getIcons', 'peers', ({getIcons, peers}, cbk) => {
+          if (!args.is_table) {
+            return cbk(null, {
+              peers: peers.peers.map(n => ({
+                alias: n.alias,
+                est_disk_usage_mb: n.est_disk_usage_mb || undefined,
+                fee_earnings: n.fee_earnings || undefined,
+                downtime_percentage: n.downtime_percentage || undefined,
+                first_connected: n.first_connected || undefined,
+                last_activity: n.last_activity || undefined,
+                inbound_fee_rate: n.inbound_fee_rate || undefined,
+                inbound_liquidity: n.inbound_liquidity || undefined,
+                is_forwarding: n.is_forwarding || undefined,
+                is_inbound_disabled: n.is_inbound_disabled || undefined,
+                is_offline: n.is_offline || undefined,
+                is_pending: n.is_pending || undefined,
+                is_private: n.is_private || undefined,
+                is_small_max_htlc: n.is_small_max_htlc || undefined,
+                is_thawing: n.is_thawing || undefined,
+                outbound_liquidity: n.outbound_liquidity || undefined,
+                public_key: n.public_key || undefined,
+              })),
+            });
+          }
+
+          const isDiskFilter = (args.filters || []).find(n => hasDiskFilter(n));
+          const isDiskSort = args.sort_by === 'est_disk_usage_mb';
+          const isWideSize = true;
+
+          const isShowingDisk = isDiskFilter || isDiskSort;
+
+          return cbk(null, {
+            peers: peers.peers,
+            rows: []
+              .concat([notNull([
+                'Alias',
+                isShowingDisk ? 'Disk Mb' : null,
+                'Inbound',
+                'In Fee',
+                'Outbound',
+                args.earnings_days ? 'Earned' : null,
+                isWideSize ? 'Public Key' : null,
+              ]).map(n => args.is_monochrome ? n : bold(n))])
+              .concat(peers.peers.map(peer => {
+                const earnings = formatTokens({
+                  is_monochrome: args.is_monochrome,
+                  tokens: peer.fee_earnings,
+                });
+
+                const inbound = formatTokens({
+                  is_monochrome: args.is_monochrome,
+                  tokens: peer.inbound_liquidity,
+                });
+
+                const outbound = formatTokens({
+                  is_monochrome: args.is_monochrome,
+                  tokens: peer.outbound_liquidity,
+                });
+
+                const nodeIcons = getIcons.nodes
+                  .find(n => n.public_key === peer.public_key);
+
+                const alias = chartAliasForPeer({
+                  alias: peer.alias,
+                  downtime_percentage: peer.downtime_percentage,
+                  icons: nodeIcons ? nodeIcons.icons : undefined,
+                  is_forwarding: peer.is_forwarding,
+                  is_inactive: peer.is_offline,
+                  is_inbound_disabled: peer.is_inbound_disabled,
+                  is_pending: peer.is_pending,
+                  is_private: peer.is_private,
+                  is_small_max_htlc: peer.is_small_max_htlc,
+                  is_thawing: peer.is_thawing,
+                  public_key: peer.public_key,
+                });
+
+                return notNull([
+                  alias.display,
+                  isShowingDisk ? peer.est_disk_usage_mb || ' ' : null,
+                  inbound.display || ' ',
+                  peer.inbound_fee_rate || ' ',
+                  outbound.display || ' ',
+                  args.earnings_days ? earnings.display : null,
+                  isWideSize ? peer.public_key : null,
+                ]);
+              })),
+          });
+        }],
+      },
+      returnResult({reject, resolve, of: 'allPeers'}, cbk));
+  });
+};
+
+export { getPeers }
