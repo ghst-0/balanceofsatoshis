@@ -13,9 +13,6 @@ const certFile = '/opt/bos/config/tls.cert';
     fs: {
       getFile: <Get File Function>
     }
-    os: {
-      userInfo: <Get User Info Function>
-    }
   }
 
   @returns via cbk or Promise
@@ -23,17 +20,13 @@ const certFile = '/opt/bos/config/tls.cert';
     [path]: <Found LND Directory Path String>
   }
 */
-const getPath = ({fs, os}, cbk) => {
+const getPath = ({fs}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
       validate: cbk => {
         if (!fs) {
           return cbk([400, 'ExpectedFileSystemMethodsToGetPath']);
-        }
-
-        if (!os) {
-          return cbk([400, 'ExpectedOperatingSystemMethodsToGetPath']);
         }
 
         return cbk();

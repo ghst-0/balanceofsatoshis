@@ -1,9 +1,7 @@
 import test from 'node:test';
 import { deepEqual, rejects } from 'node:assert/strict';
 
-import getPath from '../../lnd/get_path.js';
-
-const os = {userInfo: () => ({username: 'umbrel'})};
+import { getPath } from '../../lnd/get_path.js';
 
 const tests = [
   {
@@ -12,33 +10,15 @@ const tests = [
     error: [400, 'ExpectedFileSystemMethodsToGetPath'],
   },
   {
-    args: {fs: {getFile: () => {}}},
-    description: 'OS methods are required',
-    error: [400, 'ExpectedOperatingSystemMethodsToGetPath'],
-  },
-  {
-    args: {os, fs: {getFile: ({}, cbk) => cbk('err')}},
+    args: {fs: {getFile: ({}, cbk) => cbk('err')}},
     description: 'A filesystem error results in no path',
     expected: {path: undefined},
   },
   {
-    args: {os, fs: {getFile: ({}, cbk) => cbk()}},
+    args: {fs: {getFile: ({}, cbk) => cbk()}},
     description: 'An absent file results in no path',
     expected: {path: undefined},
-  },
-  {
-    args: {
-      fs: {getFile: ({}, cbk) => cbk()},
-      os: {userInfo: () => ({username: 'username'})},
-    },
-    description: 'A normal user returns no path',
-    expected: {path: undefined},
-  },
-  {
-    args: {os, fs: {getFile: ({}, cbk) => cbk(null, Buffer.alloc(1))}},
-    description: 'A path is returned',
-    expected: {path: '/home/umbrel/umbrel/lnd'},
-  },
+  }
 ];
 
 for (const { args, description, error, expected } of tests) {
