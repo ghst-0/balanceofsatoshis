@@ -46,8 +46,8 @@ const tokensAsBigToken = tokens => (tokens / 1e8).toFixed(8);
 */
 const channelsAsReportActivity = ({backups, chain, channels, days, nodes, now}) => {
   const activity = [];
-  const blocks = minutesPerDay / minutesPerBlock(chain.network) * days;
-  const msPerBlock = msPerMinute * minutesPerBlock(chain.network);
+  const blocks = minutesPerDay / minutesPerBlock * days;
+  const msPerBlock = msPerMinute * minutesPerBlock;
 
   for (const channel of channels
     .filter(({ id }) => {
