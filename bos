@@ -19,7 +19,6 @@ import { fetchRequest } from './commands/fetch_request.js';
 import { decryptWithNode } from './encryption/decrypt_with_node.js';
 import { encryptToNode } from './encryption/encrypt_to_node.js';
 import { authenticatedLnd } from './lnd/authenticated_lnd.js';
-import { findRecord } from './lnd/find_record.js';
 import { getLnds } from './lnd/get_lnds.js';
 import { getCertValidityDays } from './lnd/get_cert_validity_days.js';
 import { manageSavedNodes } from './nodes/manage_saved_nodes.js';
@@ -401,26 +400,6 @@ prog
           lnd: (await authenticatedLnd({node: options.node})).lnd,
           size: args.size,
           tokens_per_vbyte: options.feerate,
-        },
-        returnObject({reject, resolve}));
-      } catch (err) {
-        console.error({err}) && reject();
-      }
-    });
-  })
-
-  // Query the node to search for something
-  .command('find', 'Find a record')
-  .help('Look for something in the node db that matches a query')
-  .argument('<query>', 'Query for a record')
-  .option('--no-color', 'Mute all colors')
-  .option('--node <node_name>', 'Node to find record on')
-  .action((args, options) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        return findRecord({
-          lnd: (await authenticatedLnd({node: options.node})).lnd,
-          query: args.query,
         },
         returnObject({reject, resolve}));
       } catch (err) {
