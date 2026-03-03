@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { rejects } from 'node:assert/strict';
 
-import deleteNodeCredentials from '../../nodes/delete_node_credentials.js';
+import { deleteNodeCredentials } from '../../nodes/delete_node_credentials.js';
 
 const tests = [
   {

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { throws, deepEqual } from 'node:assert/strict';
 
-import method from '../../lnd/credential_restrictions.js';
+import { credentialRestrictions } from '../../lnd/credential_restrictions.js';
 
 const tests = [
   {
@@ -63,9 +63,9 @@ const tests = [
 for (const { args, description, error, expected } of tests) {
   test(description, (t, end) => {
     if (error) {
-      throws(() => method(args), new Error(error), 'Got expected error');
+      throws(() => credentialRestrictions(args), new Error(error), 'Got expected error');
     } else {
-      const res = method(args);
+      const res = credentialRestrictions(args);
 
       deepEqual(res, expected, 'Got expected result');
     }

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { deepEqual, rejects } from 'node:assert/strict';
 
-import adjustTags from '../../nodes/adjust_tags.js';
+import { adjustTags } from '../../nodes/adjust_tags.js';
 
 const makeArgs = overrides => {
   const args = {

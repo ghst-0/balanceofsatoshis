@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { deepEqual } from 'node:assert/strict';
 
-import method from '../../wallets/report_overview.js';
+import { reportOverview } from '../../wallets/report_overview.js';
 
 const report = [
   {
@@ -64,7 +64,7 @@ const tests = [
 
 for (const { args, description, error, expected } of tests) {
   test(description, (t, end) => {
-    const {report} = method(args);
+    const {report} = reportOverview(args);
 
     deepEqual(report, expected.report, 'Got expected report');
 

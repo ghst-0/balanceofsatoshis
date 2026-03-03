@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { equal, throws, deepEqual } from 'node:assert/strict';
 
-import rangeForDate from '../../balances/range_for_date.js';
+import { rangeForDate } from '../../balances/range_for_date.js';
 
 const tests = [
   {
