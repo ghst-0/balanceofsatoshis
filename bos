@@ -22,7 +22,6 @@ import { authenticatedLnd } from './lnd/authenticated_lnd.js';
 import { getLnds } from './lnd/get_lnds.js';
 import { getCertValidityDays } from './lnd/get_cert_validity_days.js';
 import { manageSavedNodes } from './nodes/manage_saved_nodes.js';
-import { adjustTags } from './nodes/adjust_tags.js';
 import { returnObject } from './responses/return_object.js';
 import { returnNumber } from './responses/return_number.js';
 import { returnOutput } from './responses/return_output.js';
@@ -625,32 +624,6 @@ prog
         style: !!options.styled ? 'styled' : undefined,
       },
       returnOutput({reject, resolve}));
-    });
-  })
-
-  // Adjust the set of tagged nodes
-  .command('tags', 'View or adjust the set of tagged nodes')
-  .help('Tags can be used in other commands via --tag and --avoid options')
-  .argument('[tag]', 'Adjust or view a specific tag')
-  .option('--add <public_key', 'Add a public key to a tag', REPEATABLE)
-  .option('--avoid', 'Mark to globally avoid all tagged nodes', BOOL, true)
-  .option('--icon <icon>', 'Icon to use for the tag')
-  .option('--remove <public_key>', 'Remove a public key from a tag', REPEATABLE)
-  .action((args, options) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        return await adjustTags({
-          add: flatten([options.add].filter(n => !!n)),
-          fs: {writeFile, getFile: readFile, makeDirectory: mkdir},
-          icon: options.icon,
-          is_avoided: options.avoid,
-          remove: flatten([options.remove].filter(n => !!n)),
-          tag: !!args.tag ? args.tag.toLowerCase() : undefined,
-        },
-        returnObject({reject, resolve}));
-      } catch (err) {
-        console.error({err}) && reject();
-      }
     });
   })
 

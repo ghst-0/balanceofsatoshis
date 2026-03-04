@@ -53,89 +53,89 @@ const italicize = (t) => `_{$t}_`
 const getReport = ({fs, node, request, style}, cbk) => {
   asyncAuto({
     // Get authenticated lnd connection
-    getLnd: cbk => authenticatedLnd({node}, cbk),
+    getLnd: _cbk => authenticatedLnd({node}, _cbk),
 
     // Get balance
-    getBalance: ['getLnd', ({getLnd}, cbk) => {
-      return balances_getBalance({node, lnd: getLnd.lnd}, cbk);
+    getBalance: ['getLnd', ({getLnd}, _cbk) => {
+      return balances_getBalance({node, lnd: getLnd.lnd}, _cbk);
     }],
 
     // Get forwards
-    getForwards: ['getLnd', ({getLnd}, cbk) => {
-      return getForwards({fs, lnd: getLnd.lnd, tags: []}, cbk);
+    getForwards: ['getLnd', ({getLnd}, _cbk) => {
+      return getForwards({fs, lnd: getLnd.lnd, tags: []}, _cbk);
     }],
 
     // Get autopilot status
-    getAutopilot: ['getLnd', ({getLnd}, cbk) => {
+    getAutopilot: ['getLnd', ({getLnd}, _cbk) => {
       return getAutopilot({lnd: getLnd.lnd}, (err, res) => {
         if (err) {
-          return cbk(null, {});
+          return _cbk(null, {});
         }
 
-        return cbk(null, res);
+        return _cbk(null, res);
       });
     }],
 
     // Get channels
-    getChannels: ['getLnd', ({getLnd}, cbk) => {
-      return getChannels({lnd: getLnd.lnd}, cbk);
+    getChannels: ['getLnd', ({getLnd}, _cbk) => {
+      return getChannels({lnd: getLnd.lnd}, _cbk);
     }],
 
     // Get closed channels
-    getClosed: ['getLnd', ({getLnd}, cbk) => {
-      return getClosedChannels({lnd: getLnd.lnd}, cbk);
+    getClosed: ['getLnd', ({getLnd}, _cbk) => {
+      return getClosedChannels({lnd: getLnd.lnd}, _cbk);
     }],
 
     // Get chain fee rate
-    getChainFee: ['getLnd', ({getLnd}, cbk) => {
+    getChainFee: ['getLnd', ({getLnd}, _cbk) => {
       return getChainFeeRate({
         lnd: getLnd.lnd,
         confirmation_target: defaultConfTarget,
       },
       (err, res) => {
         if (err) {
-          return cbk();
+          return _cbk();
         }
 
-        return cbk(null, res);
+        return _cbk(null, res);
       });
     }],
 
     // Get network graph
-    getGraph: ['getLnd', ({getLnd}, cbk) => {
-      return getNetworkGraph({lnd: getLnd.lnd}, cbk);
+    getGraph: ['getLnd', ({getLnd}, _cbk) => {
+      return getNetworkGraph({lnd: getLnd.lnd}, _cbk);
     }],
 
     // Get wallet info
-    getInfo: ['getLnd', ({getLnd}, cbk) => {
-      return getWalletInfo({lnd: getLnd.lnd}, cbk);
+    getInfo: ['getLnd', ({getLnd}, _cbk) => {
+      return getWalletInfo({lnd: getLnd.lnd}, _cbk);
     }],
 
     // Get invoices
-    getInvoices: ['getLnd', ({getLnd}, cbk) => {
-      return getInvoices({lnd: getLnd.lnd}, cbk);
+    getInvoices: ['getLnd', ({getLnd}, _cbk) => {
+      return getInvoices({lnd: getLnd.lnd}, _cbk);
     }],
 
     // Get network
-    getNetwork: ['getLnd', ({getLnd}, cbk) => {
-      return getNetwork({lnd: getLnd.lnd}, cbk);
+    getNetwork: ['getLnd', ({getLnd}, _cbk) => {
+      return getNetwork({lnd: getLnd.lnd}, _cbk);
     }],
 
     // Get payments
-    getPayments: ['getLnd', ({getLnd}, cbk) => {
+    getPayments: ['getLnd', ({getLnd}, _cbk) => {
       return getPayments({
         limit,
         after: new Date(now() - afterMs).toISOString(),
         lnd: getLnd.lnd,
       },
-      cbk);
+      _cbk);
     }],
 
     // Currency
-    currency: ['getInfo', ({getInfo}, cbk) => {
+    currency: ['getInfo', ({getInfo}, _cbk) => {
       const {currency} = currencyForNetwork({chains: getInfo.chains});
 
-      return cbk(null, currency);
+      return _cbk(null, currency);
     }],
 
     // Get rebalances
@@ -143,16 +143,16 @@ const getReport = ({fs, node, request, style}, cbk) => {
       'getInfo',
       'getLnd',
       'getPayments',
-      ({getInfo, getLnd, getPayments}, cbk) =>
+      ({getInfo, getLnd, getPayments}, _cbk) =>
     {
       const rebalances = getPayments.payments.slice().reverse()
         .filter(payment => now() - Date.parse(payment.created_at) < afterMs)
         .filter(payment => payment.destination === getInfo.public_key);
 
-      return asyncMap(rebalances, (rebalance, cbk) => {
+      return asyncMap(rebalances, (rebalance, __cbk) => {
         return getInvoice({id: rebalance.id, lnd: getLnd.lnd}, (err, res) => {
           if (err) {
-            return cbk(err);
+            return __cbk(err);
           }
 
           const [outHop] = rebalance.hops;
@@ -160,7 +160,7 @@ const getReport = ({fs, node, request, style}, cbk) => {
           const [payment] = res.payments;
 
           if (!payment) {
-            return cbk(null, {
+            return __cbk(null, {
               created_at: rebalance.created_at,
               fee: rebalance.fee,
               out_peer: outHop,
@@ -174,7 +174,7 @@ const getReport = ({fs, node, request, style}, cbk) => {
           },
           (err, channel) => {
             if (err) {
-              return cbk(null, {
+              return __cbk(null, {
                 created_at: rebalance.created_at,
                 fee: rebalance.fee,
                 out_peer: outHop,
@@ -186,7 +186,7 @@ const getReport = ({fs, node, request, style}, cbk) => {
               return policy.public_key !== getInfo.public_key;
             });
 
-            return cbk(null, {
+            return __cbk(null, {
               created_at: rebalance.created_at,
               fee: rebalance.fee,
               in_peer: inPeer.public_key,
@@ -196,7 +196,7 @@ const getReport = ({fs, node, request, style}, cbk) => {
           });
         });
       },
-      cbk);
+      _cbk);
     }],
 
     report: [
@@ -226,7 +226,7 @@ const getReport = ({fs, node, request, style}, cbk) => {
         getNetwork,
         getPayments,
         getRebalances,
-      }, cbk) =>
+      }, _cbk) =>
     {
       const activity = [];
       const currentHeight = getInfo.current_block_height;
@@ -238,7 +238,7 @@ const getReport = ({fs, node, request, style}, cbk) => {
         currency,
         alias: getInfo.alias,
         balance: getBalance.balance,
-        chain_fee: !getChainFee ? undefined : getChainFee.tokens_per_vbyte,
+        chain_fee: getChainFee ? getChainFee.tokens_per_vbyte : undefined,
         channel_balance: getBalance.channel_balance,
         latest_block_at: getInfo.latest_block_at,
         public_key: getInfo.public_key,
@@ -479,7 +479,7 @@ const getReport = ({fs, node, request, style}, cbk) => {
           .join('\n');
       }
 
-      return cbk(null, renderReport(report));
+      return _cbk(null, renderReport(report));
     }],
   },
   returnResult({of: 'report'}, cbk));
