@@ -183,9 +183,8 @@ class Bot extends Composer {
    * plugin for an example that uses this method.
    *
    * @param update An update from the Telegram Bot API
-   * @param webhookReplyEnvelope An optional webhook reply envelope
    */
-  async handleUpdate(update, webhookReplyEnvelope) {
+  async handleUpdate(update) {
     if (this.me === undefined) {
       throw new Error("Bot not initialized! Either call `await bot.init()`, \
 or directly set the `botInfo` option in the `Bot` constructor to specify \
@@ -193,7 +192,7 @@ a known bot info object.");
     }
     console.debug(`Processing update ${update.update_id}`);
     // create API object
-    const api = new Api(this.token, this.clientConfig, webhookReplyEnvelope);
+    const api = new Api(this.token, this.clientConfig);
     // configure it with the same transformers as bot.api
     const t = this.api.config.installedTransformers();
     if (t.length > 0)

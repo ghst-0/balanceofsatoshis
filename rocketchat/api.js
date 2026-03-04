@@ -25,12 +25,11 @@ class Api {
    *
    * @param token Bot API token obtained from [@BotFather](https://t.me/BotFather)
    * @param {{}} options Optional API client options for the underlying client instance
-   * @param webhookReplyEnvelope Optional envelope to handle webhook replies
    */
-  constructor(token, options, webhookReplyEnvelope) {
+  constructor(token, options) {
     this.token = token;
     this.options = options;
-    const { raw, use, installedTransformers } = (0, createRawApi)(token, options, webhookReplyEnvelope);
+    const { raw, use, installedTransformers } = (0, createRawApi)(token, options);
     this.raw = raw;
     this.config = {
       use,

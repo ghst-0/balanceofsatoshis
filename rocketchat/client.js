@@ -53,10 +53,9 @@ function concatTransformer(prev, trans) {
   return (method, payload, signal) => trans(prev, method, payload, signal);
 }
 class ApiClient {
-  constructor(token, options = {}, webhookReplyEnvelope = {}) {
+  constructor(token, options = {}) {
     let _a, _b, _c, _d, _e, _f;
     this.token = token;
-    this.webhookReplyEnvelope = webhookReplyEnvelope;
     this.hasUsedWebhookReply = false;
     this.installedTransformers = [];
     this.call = async (method, p, signal) => {
@@ -66,15 +65,6 @@ class ApiClient {
         validateSignal(method, payload, signal);
       // General config
       const opts = this.options;
-      // Short-circuit on webhook reply
-      if (this.webhookReplyEnvelope.send !== undefined &&
-        !this.hasUsedWebhookReply &&
-        opts.canUseWebhookReply(method)) {
-        this.hasUsedWebhookReply = true;
-        const config = (0, createJsonPayload)({ ...payload, method });
-        await this.webhookReplyEnvelope.send(config.body);
-        return { ok: true, result: true };
-      }
       // Handle timeouts and errors in the underlying form-data stream
       const controller = createAbortControllerFromSignal(signal);
       const timeout = createTimeout(controller, opts.timeoutSeconds, method);
@@ -156,10 +146,9 @@ class ApiClient {
  *
  * @param token The bot's token
  * @param {{}} options A number of options to pass to the created API client
- * @param webhookReplyEnvelope The webhook reply envelope that will be used
  */
-function createRawApi(token, options, webhookReplyEnvelope) {
-  const client = new ApiClient(token, options, webhookReplyEnvelope);
+function createRawApi(token, options) {
+  const client = new ApiClient(token, options);
   const proxyHandler = {
     get(_, m) {
       return m === "toJSON"
