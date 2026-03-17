@@ -18,7 +18,6 @@ const smallUnitsType = 'full';
 /** Connect nodes to RocketChat
 
   {
-    ask: <Ask Function>
     fs: {
       getFile: <Get File Contents Function>
       getFileStatus: <Get File Status Function>
@@ -46,10 +45,6 @@ const connectToRocketChat = (args, cbk) => {
       validate: cbk => {
         if (!Object.fromEntries) {
           return cbk([400, 'ExpectedLaterVersionOfNodeJsInstalled']);
-        }
-
-        if (!args.ask) {
-          return cbk([400, 'ExpectedAskFunctionToConnectToRocketChat']);
         }
 
         if (!args.fs) {
@@ -92,11 +87,9 @@ const connectToRocketChat = (args, cbk) => {
         });
       }],
 
-      // Get the telegram bot
+      // Get the RocketChat bot
       getBot: ['validate', async ({}, cbk) => {
         const bot = new Bot();
-        // Start the bot
-        return await bot.bot.init();
       }],
 
       // Set the units formatting
@@ -121,7 +114,6 @@ const connectToRocketChat = (args, cbk) => {
 
         return asyncForever(cbk => {
           return runRocketChatBot({
-            ask: args.ask,
             bot: getBot.bot,
             fs: args.fs,
             id: Number(args.id),

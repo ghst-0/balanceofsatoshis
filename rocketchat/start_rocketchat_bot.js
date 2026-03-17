@@ -23,7 +23,8 @@ import asyncEach from 'async/each.js';
 import asyncForever from 'async/forever.js';
 import asyncMap from 'async/map.js';
 import asyncRetry from 'async/retry.js';
-import { getForwards,
+import {
+  getForwards,
   getWalletInfo,
   subscribeToChannels,
   subscribeToPastPayments,
@@ -53,7 +54,6 @@ const sanitize = n => (n || '').replaceAll('_', '\\_').replaceAll(/[*~`]/g, '');
 /** Start a Telegram bot
 
   {
-    ask: <Ask Function>
     bot: <Telegram Bot Object>
     [id]: <Authorized User Id Number>
     key: <Telegram API Key String>
@@ -80,10 +80,6 @@ const startRocketChatBot = (args, cbk) => {
     asyncAuto({
       // Check arguments
       validate: cbk => {
-        if (!args.ask) {
-          return cbk([400, 'ExpectedAskFunctionToStartRocketChatBot']);
-        }
-
         if (!isArray(args.lnds) || args.lnds.length === 0) {
           return cbk([400, 'ExpectedLndsToStartRocketChatBot']);
         }
@@ -332,42 +328,8 @@ const startRocketChatBot = (args, cbk) => {
 
       // Ask the user to confirm their user id
       userId: ['initBot', ({}, cbk) => {
-        // Exit early when the id is specified
-        if (connectedId) {
-          return cbk();
-        }
-
-        return args.ask({
-          message: interaction.user_id_prompt.message,
-          name: 'code',
-          type: 'input',
-          validate: input => {
-            if (!input) {
-              return false;
-            }
-
-            // The connect code should be entirely numeric, not an API key
-            if (!isNumber(input)) {
-              return `Expected numeric connect code from /connect command`;
-            }
-
-            // the connect code number should not match bot id from the API key
-            if (args.key.startsWith(`${input}:`)) {
-              return `Expected /connect code, not bot id from API key`;
-            }
-
-            return true;
-          },
-        },
-        ({code}) => {
-          if (!code) {
-            return cbk([400, 'ExpectedConnectCodeToStartRocketChatBot']);
-          }
-
-          connectedId = Number(code);
-
-          return cbk();
-        });
+        // Exit early (we don't use this)
+        return cbk();
       }],
 
       // Setup the bot commands

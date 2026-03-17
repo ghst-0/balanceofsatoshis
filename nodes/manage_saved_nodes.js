@@ -1,5 +1,4 @@
 import asyncAuto from 'async/auto.js';
-import { generateKeyPair, privateDecrypt } from 'node:crypto';
 import { returnResult } from 'asyncjs-util';
 
 import { homePath } from '../storage/home_path.js';
@@ -8,14 +7,12 @@ import { deleteNodeCredentials } from './delete_node_credentials.js';
 import { encryptSavedMacaroons } from './encrypt_saved_macaroons.js';
 import { getSavedCredentials } from './get_saved_credentials.js';
 import { getSavedNodes } from './get_saved_nodes.js';
-import { registerNode } from './register_node.js';
 
 const {isArray} = Array;
 
 /** Adjust or view the set of saved nodes
 
   {
-    ask: <Inquirer Function> ({message, name, type}, cbk) => {}
     fs: {
       getDirectoryFiles: <Read Directory Contents Function> (path, cbk) => {}
       getFile: <Read File Contents Function> (path, cbk) => {}
@@ -26,7 +23,6 @@ const {isArray} = Array;
       writeFile: <Write File Contents Function> (path, contents, cbk) => {}
     }
     [is_including_lnd_api]: <Include Node LND API Object Bool>
-    [is_registering]: <Add Node Credentials Bool>
     [is_removing]: <Remove Node Credentials Bool>
     [is_unlocking]: <Change Credentials To Decrypted Copy Bool>
     lock_credentials_to: [<Encrypt Macaroon to GPG Key With Id String>]
@@ -50,10 +46,6 @@ const manageSavedNodes = (args, cbk) => {
     asyncAuto({
       // Check arguments
       validate: cbk => {
-        if (!args.ask) {
-          return cbk([400, 'ExpectedAskMethodToAdjustSavedNodes']);
-        }
-
         if (!args.fs) {
           return cbk([400, 'ExpectedFilesystemMethodsToAdjustSavedNodes']);
         }
@@ -62,7 +54,7 @@ const manageSavedNodes = (args, cbk) => {
           return cbk([400, 'ExpectedArrayOfLockingCredentialGpgIds']);
         }
 
-        if (!!args.is_registering && !!args.is_removing) {
+        if (args.is_removing) {
           return cbk([400, 'CannotAddAndRemoveNodesAtTheSameTime']);
         }
 
@@ -95,17 +87,8 @@ const manageSavedNodes = (args, cbk) => {
 
       // Register node
       register: ['registerHomeDir', ({}, cbk) => {
-        if (!args.is_registering) {
-          return cbk();
-        }
-
-        return registerNode({
-          ask: args.ask,
-          cryptography: {generateKeyPair, privateDecrypt},
-          fs: args.fs,
-          node: args.node,
-        },
-        cbk);
+        // Return early (we don't use this)
+        return cbk();
       }],
 
       // Check specified node exists
@@ -183,7 +166,7 @@ const manageSavedNodes = (args, cbk) => {
 
       // Get saved nodes
       getSaved: ['getNodes', 'lock', 'unlock', ({getNodes}, cbk) => {
-        if (!args.is_registering && !args.is_removing && !args.is_unlocking) {
+        if (!args.is_removing && !args.is_unlocking) {
           return cbk(null, getNodes);
         }
 

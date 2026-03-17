@@ -511,7 +511,6 @@ prog
     return new Promise(async (resolve, reject) => {
       return manageSavedNodes({
         spawn,
-        ask: await interrogate({}),
         fs: {
           writeFile,
           getDirectoryFiles: readdir,
@@ -521,7 +520,6 @@ prog
           removeDirectory: rmdir,
           removeFile: unlink,
         },
-        is_registering: options.add || undefined,
         is_removing: options.remove || undefined,
         is_unlocking: options.unlock || undefined,
         lock_credentials_to: flatten([options.lock].filter(n => !!n)),
@@ -645,7 +643,6 @@ prog
     return new Promise(async (resolve, reject) => {
       try {
         return await connectToRocketChat({
-          ask: await interrogate({}),
           fs: {
             writeFile,
             getFile: readFile,
