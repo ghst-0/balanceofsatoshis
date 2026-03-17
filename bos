@@ -11,7 +11,6 @@ import { getBalance } from './balances/get_balance.js';
 import { getLiquidity } from './balances/get_liquidity.js';
 import { getUtxos } from './chain/get_utxos.js';
 import { getChainFees } from './chain/get_chain_fees.js';
-import { splitUtxos } from './chain/split_utxos.js';
 import { simpleRequest } from './commands/simple_request.js';
 import { clean } from './commands/clean.js';
 import { interrogate } from './commands/interrogate.js';
@@ -378,34 +377,6 @@ prog
     });
   })
 
-  // Fan out utxos
-  .command('fanout', 'Fan out utxos')
-  .visible(false)
-  .argument('<size>', 'UTXO minimum size', INT)
-  .argument('<count>', 'Desired number of total utxos', INT)
-  .help('Make a bunch of utxos by making a tx with a bunch of outputs')
-  .option('--confirmed', 'Only consider confirmed existing utxos')
-  .option('--dryrun', 'Execute a fan-out dry run')
-  .option('--feerate <feerate>', 'Feerate in per vbyte rate', INT)
-  .option('--no-color', 'Mute all colors')
-  .option('--node <node_name>', 'Node to do fan out for')
-  .action((args, options) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        return splitUtxos({
-          count: args.count,
-          is_confirmed: !!options.confirmed,
-          is_dry_run: !!options.dryrun,
-          lnd: (await authenticatedLnd({node: options.node})).lnd,
-          size: args.size,
-          tokens_per_vbyte: options.feerate,
-        },
-        returnObject({reject, resolve}));
-      } catch (err) {
-        console.error({err}) && reject();
-      }
-    });
-  })
 
   // Get forwards
   .command('forwards', 'Show recent forwarding earnings')
