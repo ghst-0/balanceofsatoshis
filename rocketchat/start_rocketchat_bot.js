@@ -1,6 +1,5 @@
 import {
   handleBalanceCommand,
-  handleConnectCommand,
   handleCostsCommand,
   handleEarningsCommand,
   handleInfoCommand,
@@ -35,7 +34,6 @@ import { noLocktimeIdForTransaction } from '@alexbosworth/blockchain';
 import { returnResult } from 'asyncjs-util';
 
 import { getNodeDetails } from './get_node_details.js';
-import interaction from './interaction.json' with { type: 'json' };
 import PACKAGE_JSON from '../package.json' with { type: 'json' };
 
 const { name: named, version } = PACKAGE_JSON ;
@@ -45,9 +43,7 @@ const getLnds = (y, z) => getNodeDetails({names: y, nodes: z});
 const hexAsBuffer = hex => Buffer.from(hex, 'hex');
 const {isArray} = Array;
 let isBotInit = false;
-const isNumber = n => !isNaN(n);
 const limit = 99999;
-const markdown = {parse_mode: 'Markdown'};
 const restartSubscriptionTimeMs = 1000 * 30;
 const sanitize = n => (n || '').replaceAll('_', '\\_').replaceAll(/[*~`]/g, '');
 
@@ -55,7 +51,6 @@ const sanitize = n => (n || '').replaceAll('_', '\\_').replaceAll(/[*~`]/g, '');
 
   {
     bot: <Telegram Bot Object>
-    [id]: <Authorized User Id Number>
     key: <Telegram API Key String>
     [min_forward_tokens]: <Minimum Forward Tokens To Notify Number>
     [min_rebalance_tokens]: <Minimum Rebalance Tokens To Notify Number>
@@ -66,12 +61,10 @@ const sanitize = n => (n || '').replaceAll('_', '\\_').replaceAll(/[*~`]/g, '');
 
   @returns via cbk or Promise
   {
-    [connected]: <Connected User Id Number>
     failure: <Termination Error Object>
   }
 */
 const startRocketChatBot = (args, cbk) => {
-  let connectedId = args.id;
   let isStopped = false;
   const subscriptions = [];
 
@@ -85,10 +78,6 @@ const startRocketChatBot = (args, cbk) => {
 
         if (!args.key) {
           return cbk([400, 'ExpectedApiKeyToStartRocketChatBot']);
-        }
-
-        if (!!args.id && args.key.startsWith(`${args.id}:`)){
-          return cbk([400, 'ExpectedConnectCodeFromConnectCommandNotBotId']);
         }
 
         if (!isArray(args.nodes)) {
@@ -146,9 +135,8 @@ const startRocketChatBot = (args, cbk) => {
           try {
             await handleBalanceCommand({
               from: ctx.message.from.id,
-              id: connectedId,
               nodes: (await getLnds(names, args.nodes)).nodes,
-              reply: (n, opt) => ctx.reply(n, opt),
+              reply: (n) => ctx.reply(n),
               working: () => ctx.replyWithChatAction('typing'),
             });
           } catch (err) {
@@ -156,23 +144,13 @@ const startRocketChatBot = (args, cbk) => {
           }
         });
 
-        // Handle command to get the connect id
-        args.bot.command('connect', ctx => {
-          handleConnectCommand({
-            from: ctx.from.id,
-            id: connectedId,
-            reply: n => ctx.reply(n, markdown),
-          });
-        });
-
         // Handle command to view costs over the past week
         args.bot.command('costs', async ctx => {
           try {
             await handleCostsCommand({
               from: ctx.message.from.id,
-              id: connectedId,
               nodes: (await getLnds(names, args.nodes)).nodes,
-              reply: n => ctx.reply(n, markdown),
+              reply: n => ctx.reply(n),
               request: args.request,
               working: () => ctx.replyWithChatAction('typing'),
             });
@@ -186,9 +164,8 @@ const startRocketChatBot = (args, cbk) => {
           try {
             await handleEarningsCommand({
               from: ctx.message.from.id,
-              id: connectedId,
               nodes: (await getLnds(names, args.nodes)).nodes,
-              reply: n => ctx.reply(n, markdown),
+              reply: n => ctx.reply(n),
               working: () => ctx.replyWithChatAction('typing'),
             });
           } catch (err) {
@@ -201,10 +178,9 @@ const startRocketChatBot = (args, cbk) => {
           try {
             await handleInfoCommand({
               from: ctx.message.from.id,
-              id: connectedId,
               nodes: (await getLnds(names, args.nodes)).nodes,
               remove: () => ctx.deleteMessage(),
-              reply: (message, options) => ctx.reply(message, options),
+              reply: (message) => ctx.reply(message),
             });
           } catch (err) {
             console.error({err});
@@ -216,8 +192,7 @@ const startRocketChatBot = (args, cbk) => {
           try {
             return await handleMempoolCommand({
               from: ctx.message.from.id,
-              id: connectedId,
-              reply: n => ctx.reply(n, markdown),
+              reply: n => ctx.reply(n),
               request: args.request,
             });
           } catch (err) {
@@ -239,9 +214,8 @@ const startRocketChatBot = (args, cbk) => {
             }, async () => {
               await handleLiquidityCommand({
                 from: ctx.message.from.id,
-                id: connectedId,
                 nodes: (await getLnds(names, args.nodes)).nodes,
-                reply: (n, opt) => ctx.reply(n, opt),
+                reply: (n) => ctx.reply(n),
                 text: ctx.message.text,
                 working: () => ctx.replyWithChatAction('typing'),
               });
@@ -256,9 +230,8 @@ const startRocketChatBot = (args, cbk) => {
           try {
             await handlePendingCommand({
               from: ctx.message.from.id,
-              id: connectedId,
               nodes: (await getLnds(names, args.nodes)).nodes,
-              reply: (message, options) => ctx.reply(message, options),
+              reply: (message) => ctx.reply(message),
               working: () => ctx.replyWithChatAction('typing'),
             });
           } catch (err) {
@@ -269,8 +242,7 @@ const startRocketChatBot = (args, cbk) => {
         // Handle command to start the bot
         args.bot.command('start', ctx => {
           handleStartCommand({
-            id: connectedId,
-            reply: n => ctx.reply(n, markdown),
+            reply: n => ctx.reply(n),
           });
         });
 
@@ -281,9 +253,8 @@ const startRocketChatBot = (args, cbk) => {
               named,
               version,
               from: ctx.message.from.id,
-              id: connectedId,
               request: args.request,
-              reply: n => ctx.reply(n, markdown),
+              reply: n => ctx.reply(n),
             });
           } catch (err) {
             console.error({err});
@@ -329,7 +300,7 @@ const startRocketChatBot = (args, cbk) => {
 
       // Setup the bot commands
       setCommands: ['validate', async ({}) => {
-        return await args.bot.api.setMyCommands([
+        return await args.bot.setMyCommands([
           {command: 'balance', description: 'Show funds on the node'},
           {command: 'blocknotify', description: 'Get notified on next block'},
           {command: 'connect', description: 'Get connect code for the bot'},
@@ -358,13 +329,12 @@ const startRocketChatBot = (args, cbk) => {
                 from,
                 lnd,
                 capacity: update.capacity,
-                id: connectedId,
                 is_breach_close: update.is_breach_close,
                 is_cooperative_close: update.is_cooperative_close,
                 is_local_force_close: update.is_local_force_close,
                 is_remote_force_close: update.is_remote_force_close,
                 partner_public_key: update.partner_public_key,
-                send: (id, msg, opt) => args.bot.api.sendMessage(id, msg, opt),
+                send: (msg) => args.bot.sendMessage(msg),
               });
             } catch (err) {
               console.error({from, post_closed_message_error: err});
@@ -377,11 +347,10 @@ const startRocketChatBot = (args, cbk) => {
                 from,
                 lnd,
                 capacity: update.capacity,
-                id: connectedId,
                 is_partner_initiated: update.is_partner_initiated,
                 is_private: update.is_private,
                 partner_public_key: update.partner_public_key,
-                send: (id, msg, opt) => args.bot.api.sendMessage(id, msg, opt),
+                send: (msg) => args.bot.sendMessage(msg),
               });
             } catch (err) {
               console.error({from, post_open_message_error: err});
@@ -403,9 +372,8 @@ const startRocketChatBot = (args, cbk) => {
         console.info({is_connected: true});
 
         return postNodesOnline({
-          id: connectedId,
           nodes: getNodes.map(n => ({alias: n.alias, id: n.public_key})),
-          send: (id, msg, opt) => args.bot.api.sendMessage(id, msg, opt),
+          send: (msg) => args.bot.sendMessage(msg),
         },
         cbk);
       }],
@@ -444,10 +412,9 @@ const startRocketChatBot = (args, cbk) => {
 
                   return forward.tokens >= args.min_forward_tokens;
                 }),
-                id: connectedId,
                 node: node.public_key,
                 nodes: getNodes,
-                send: (id, msg, opt) => args.bot.api.sendMessage(id, msg, opt),
+                send: (msg) => args.bot.sendMessage(msg),
               },
               err => {
                 if (err) {
@@ -479,7 +446,6 @@ const startRocketChatBot = (args, cbk) => {
             try {
               await postSettledPayment({
                 from: node.from,
-                id: connectedId,
                 lnd: node.lnd,
                 nodes: getNodes.map(n => n.public_key),
                 payment: {
@@ -489,7 +455,7 @@ const startRocketChatBot = (args, cbk) => {
                   safe_fee: payment.safe_fee,
                   safe_tokens: payment.safe_tokens,
                 },
-                send: (id, m, opts) => args.bot.api.sendMessage(id, m, opts),
+                send: (msg) => args.bot.sendMessage(msg),
               });
             } catch (err) {
               console.error({post_payment_error: err});
@@ -520,9 +486,8 @@ const startRocketChatBot = (args, cbk) => {
                 from,
                 lnd,
                 closing: update.channels,
-                id: connectedId,
                 nodes: getNodes,
-                send: (id, msg, opt) => args.bot.api.sendMessage(id, msg, opt),
+                send: (msg) => args.bot.sendMessage(msg),
               });
             } catch (err) {
               console.error({from, post_closing_message_error: err});
@@ -535,9 +500,8 @@ const startRocketChatBot = (args, cbk) => {
               await postOpeningMessage({
                 from,
                 lnd,
-                id: connectedId,
                 opening: update.channels,
-                send: (id, msg, opt) => args.bot.api.sendMessage(id, msg, opt),
+                send: (msg) => args.bot.sendMessage(msg),
               });
             } catch (err) {
               console.error({from, post_opening_message_error: err});
@@ -603,9 +567,8 @@ const startRocketChatBot = (args, cbk) => {
               return await postChainTransaction({
                 from,
                 confirmed: transaction.is_confirmed,
-                id: connectedId,
                 nodes: getNodes,
-                send: (id, msg, opt) => args.bot.api.sendMessage(id, msg, opt),
+                send: (msg) => args.bot.sendMessage(msg),
                 transaction: record,
               });
             } catch (err) {
@@ -649,7 +612,7 @@ const startRocketChatBot = (args, cbk) => {
         n.removeAllListeners()
       }
 
-      const result = {result: {connected: connectedId, failure: err}};
+      const result = {result: {failure: err}};
 
       return returnResult({reject, resolve, of: 'result'}, cbk)(null, result);
     });
