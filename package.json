@@ -20,7 +20,6 @@
     "bolt01": "workspace:bolt01",
     "bolt07": "workspace:bolt07",
     "caporal": "workspace:caporal",
-    "cbor": "10.0.12",
     "colorette": "2.0.20",
     "csv-parse": "6.1.0",
     "ecpair": "3.0.1",
