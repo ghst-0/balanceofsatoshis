@@ -1,47 +1,5 @@
 import { Context } from './context.js';
 
-// === Middleware errors
-/**
- * This error is thrown when middleware throws. It simply wraps the original
- * error (accessible via the `error` property), but also provides access to the
- * respective context object that was processed while the error occurred.
- */
-class BotError extends Error {
-  constructor(error, ctx) {
-    super(generateBotErrorMessage(error));
-    this.error = error;
-    this.ctx = ctx;
-    this.name = "BotError";
-    if (error instanceof Error)
-      this.stack = error.stack;
-  }
-}
-
-function generateBotErrorMessage(error) {
-  let msg;
-  if (error instanceof Error) {
-    msg = `${error.name} in middleware: ${error.message}`;
-  }
-  else {
-    const type = typeof error;
-    msg = `Non-error value of type ${type} thrown in middleware`;
-    switch (type) {
-      case "bigint":
-      case "boolean":
-      case "number":
-      case "symbol":
-        msg += `: ${error}`;
-        break;
-      case "string":
-        msg += `: ${String(error).slice(0, 50)}`;
-        break;
-      default:
-        msg += "!";
-        break;
-    }
-  }
-  return msg;
-}
 // === Middleware base functions
 function flatten(mw) {
   return typeof mw === "function"
@@ -62,16 +20,6 @@ function concat(first, andThen) {
 }
 function pass(_ctx, next) {
   return next();
-}
-const leaf = () => Promise.resolve();
-/**
- * Runs some given middleware function with a given context object.
- *
- * @param middleware The middleware to run
- * @param ctx The context to use
- */
-async function run(middleware, ctx) {
-  await middleware(ctx, leaf);
 }
 // === Composer
 /**
@@ -283,7 +231,7 @@ class Composer {
    * // Create an inline keyboard
    * const keyboard = new InlineKeyboard().text('Go!', 'button-payload')
    * // Send a message with the keyboard
-   * await bot.api.sendMessage(chat_id, 'Press a button!', {
+   * await bot.sendMessage(chat_id, 'Press a button!', {
    *   reply_markup: keyboard
    * })
    * // Listen to users pressing buttons with that specific payload
@@ -501,4 +449,4 @@ class Composer {
   }
 }
 
-export { Composer, run, BotError };
+export { Composer };
