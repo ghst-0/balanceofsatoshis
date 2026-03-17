@@ -23,7 +23,7 @@ const getLnds = ({nodes}, cbk) => {
     asyncAuto({
       // Default lnd
       getLnd: cbk => {
-        if (!!nodes && !!nodes.length) {
+        if (!!nodes && nodes.length > 0) {
           return cbk();
         }
 
@@ -32,7 +32,7 @@ const getLnds = ({nodes}, cbk) => {
 
       // Authenticated LND Objects
       getLnds: cbk => {
-        if (!nodes || !nodes.length) {
+        if (!nodes || nodes.length === 0) {
           return cbk();
         }
 
@@ -46,7 +46,7 @@ const getLnds = ({nodes}, cbk) => {
 
       // Final lnds
       lnds: ['getLnd', 'getLnds', ({getLnd, getLnds}, cbk) => {
-        if (!nodes || !nodes.length) {
+        if (!nodes || nodes.length === 0) {
           return cbk(null, {lnds: [getLnd.lnd]});
         }
 
