@@ -23,7 +23,6 @@ const {isArray} = Array;
     [min_forward_tokens]: <Minimum Forward Tokens To Notify Number>
     [min_rebalance_tokens]: <Minimum Rebalance Tokens To Notify Number>
     nodes: [<Node Name String>]
-    payments_limit: <Total Spendable Budget Tokens Limit Number>
     request: <Request Function>
   }
 
@@ -58,10 +57,6 @@ const runRocketChatBot = (args, cbk) => {
           return cbk([400, 'ExpectedArrayOfSavedNodesToRunRocketChatBot']);
         }
 
-        if (args.payments_limit === undefined) {
-          return cbk([400, 'ExpectedPaymentsLimitToRunRocketChatBot']);
-        }
-
         if (!args.request) {
           return cbk([400, 'ExpectedRequestFunctionToRunRocketChatBot']);
         }
@@ -87,7 +82,6 @@ const runRocketChatBot = (args, cbk) => {
           min_rebalance_tokens: args.min_rebalance_tokens,
           lnds: getLnds.lnds,
           nodes: args.nodes,
-          payments_limit: args.payments_limit,
           request: args.request,
         },
         cbk);

@@ -656,7 +656,6 @@ prog
           min_forward_tokens: options.ignoreForwardsBelow || undefined,
           min_rebalance_tokens: options.ignoreRebalancesBelow || undefined,
           nodes: flatten([options.node].filter(n => !!n)),
-          payments: {limit: options.budget},
           request: fetchRequest({fetch}),
         });
       } catch (err) {

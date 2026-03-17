@@ -61,7 +61,6 @@ const sanitize = n => (n || '').replaceAll('_', '\\_').replaceAll(/[*~`]/g, '');
     [min_rebalance_tokens]: <Minimum Rebalance Tokens To Notify Number>
     lnds: [<Authenticated LND API Object>]
     nodes: [<Saved Nodes String>]
-    payments_limit: <Total Spendable Budget Tokens Limit Number>
     request: <Request Function>
   }
 
@@ -94,10 +93,6 @@ const startRocketChatBot = (args, cbk) => {
 
         if (!isArray(args.nodes)) {
           return cbk([400, 'ExpectedArrayOfSavedNodesToStartRocketChatBot']);
-        }
-
-        if (!isNumber(args.payments_limit)) {
-          return cbk([400, 'ExpectedPaymentsLimitTokensNumberToStartBot']);
         }
 
         if (!args.request) {

@@ -9,7 +9,6 @@ import { getLnds } from '../lnd/get_lnds.js';
 import { Bot } from './rocket_bot.js';
 import { runRocketChatBot } from './run_rocketchat_bot.js';
 
-const defaultPaymentsBudget = 0;
 const isNumber = n => !isNaN(n);
 const restartDelayMs = 1000 * 60 * 3;
 const roundedUnitsType = 'rounded';
@@ -30,9 +29,6 @@ const smallUnitsType = 'full';
     [min_forward_tokens]: <Minimum Forward Tokens Number>
     [min_rebalance_tokens]: <Minimum Rebalance Tokens Number>
     [nodes]: [<Node Name String>]
-    payments: {
-      [limit]: <Total Spendable Budget Tokens Limit Number>
-    }
     request: <Request Function>
   }
 
@@ -53,10 +49,6 @@ const connectToRocketChat = (args, cbk) => {
 
         if (!!args.id && !isNumber(args.id)) {
           return cbk([400, 'ExpectedNumericConnectCodeToConnectToRocketChat']);
-        }
-
-        if (!args.payments) {
-          return cbk([400, 'ExpectedPaymentInstructionsToConnectToRocketChat']);
         }
 
         if (!args.request) {
@@ -109,7 +101,6 @@ const connectToRocketChat = (args, cbk) => {
 
       // Start bot
       start: ['getBot', 'getNodes', 'setUnits', ({getBot, getNodes}, cbk) => {
-        let {limit} = args.payments;
         let online = getNodes.map(n => n.id);
 
         return asyncForever(cbk => {
@@ -121,7 +112,6 @@ const connectToRocketChat = (args, cbk) => {
             min_forward_tokens: args.min_forward_tokens,
             min_rebalance_tokens: args.min_rebalance_tokens,
             nodes: args.nodes,
-            payments_limit: limit || defaultPaymentsBudget,
             request: args.request,
           },
           (err, res) => {
@@ -133,9 +123,6 @@ const connectToRocketChat = (args, cbk) => {
 
             // Refresh the current online status
             online = res.online.slice();
-
-            // Reset payment budget
-            limit = Number();
 
             return postNodesOffline({
               bot: getBot.bot,
