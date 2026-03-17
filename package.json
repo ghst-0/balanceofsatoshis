@@ -17,16 +17,16 @@
     "async": "3.2.6",
     "asyncjs-util": "workspace:asyncjs-util",
     "bitcoinjs-lib": "6.1.7",
-    "bolt01": "2.0.0",
-    "bolt07": "1.9.4",
+    "bolt01": "workspace:bolt01",
+    "bolt07": "workspace:bolt07",
     "caporal": "workspace:caporal",
-    "cbor": "10.0.11",
+    "cbor": "10.0.12",
     "colorette": "2.0.20",
     "csv-parse": "6.1.0",
     "ecpair": "3.0.1",
     "hot-formula-parser": "4.0.0",
     "ini": "6.0.0",
-    "inquirer": "13.2.5",
+    "inquirer": "13.3.2",
     "ln-accounting": "workspace:ln-accounting",
     "ln-rocketchat": "workspace:ln-rocketchat",
     "ln-service": "workspace:ln-service",
@@ -38,7 +38,7 @@
   },
   "description": "Lightning balance CLI",
   "devDependencies": {
-    "oxlint": "^1.50.0"
+    "oxlint": "^1.56.0"
   },
   "engines": {
     "node": ">=20"
