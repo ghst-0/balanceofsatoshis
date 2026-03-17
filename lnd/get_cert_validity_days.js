@@ -26,10 +26,10 @@ const getCertValidityDays = ({below, node}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Get the cert
-      getCredentials: cbk => lndCredentials({node}, cbk),
+      getCredentials: _cbk => lndCredentials({node}, _cbk),
 
       // Determine the number of days remaining for the cert to be valid
-      certValidity: ['getCredentials', ({getCredentials}, cbk) => {
+      certValidity: ['getCredentials', ({getCredentials}, _cbk) => {
         const pem = base64AsString(getCredentials.cert);
 
         const cert = bufferAsHex(pemAsDer({pem}).der);
@@ -38,9 +38,9 @@ const getCertValidityDays = ({below, node}, cbk) => {
 
         const valid = round((expiryDate - new Date()) / msPerDay);
 
-        const days = !below ? valid : (valid < below ? below - valid : 0);
+        const days = below ? (valid < below ? below - valid : 0) : valid;
 
-        return cbk(null, {days: round(days)});
+        return _cbk(null, {days: round(days)});
       }],
     },
     returnResult({reject, resolve, of: 'certValidity'}, cbk));

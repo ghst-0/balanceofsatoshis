@@ -62,111 +62,111 @@ const getForwards = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
-        validate: cbk => {
+        validate: _cbk => {
           if (!args.fs) {
-            return cbk([400, 'ExpectedFsMethodsToGetForwardingInformation']);
+            return _cbk([400, 'ExpectedFsMethodsToGetForwardingInformation']);
           }
 
           if (!args.lnd) {
-            return cbk([400, 'ExpectedLndToGetForwardingInformation']);
+            return _cbk([400, 'ExpectedLndToGetForwardingInformation']);
           }
 
           const sorts = [].concat(sortsForCapital).concat(sortsForEarning);
 
           if (!!args.sort && !sorts.includes(args.sort)) {
-            return cbk([400, 'ExpectedKnownSortToSortForwards', {sorts}]);
+            return _cbk([400, 'ExpectedKnownSortToSortForwards', {sorts}]);
           }
 
           if (!isArray(args.tags)) {
-            return cbk([400, 'ExpectedArrayOfTagsToGetForwardingRecords']);
+            return _cbk([400, 'ExpectedArrayOfTagsToGetForwardingRecords']);
           }
 
-          return cbk();
+          return _cbk();
         },
 
         // Get channels
-        getChannels: ['validate', ({}, cbk) => {
-          return getChannels({lnd: args.lnd}, cbk);
+        getChannels: ['validate', ({}, _cbk) => {
+          return getChannels({lnd: args.lnd}, _cbk);
         }],
 
         // Get closed channels
-        getClosed: ['validate', ({}, cbk) => {
-          return getClosedChannels({lnd: args.lnd}, cbk);
+        getClosed: ['validate', ({}, _cbk) => {
+          return getClosedChannels({lnd: args.lnd}, _cbk);
         }],
 
         // Get forwards
-        getForwards: ['validate', ({}, cbk) => {
+        getForwards: ['validate', ({}, _cbk) => {
           const before = new Date().toISOString();
           const pastMs = (args.days || numDays) * msPerDay;
 
           const after = new Date(now() - pastMs).toISOString();
 
-          return ln_getForwards({after, before, limit, lnd: args.lnd}, cbk);
+          return ln_getForwards({after, before, limit, lnd: args.lnd}, _cbk);
         }],
 
         // Get current block height
-        getHeight: ['validate', ({}, cbk) => getHeight({lnd: args.lnd}, cbk)],
+        getHeight: ['validate', ({}, _cbk) => getHeight({lnd: args.lnd}, _cbk)],
 
         // Get node icons
-        getIcons: ['validate', ({}, cbk) => getIcons({fs: args.fs}, cbk)],
+        getIcons: ['validate', ({}, _cbk) => getIcons({fs: args.fs}, _cbk)],
 
         // Get pending channels
-        getPending: ['validate', ({}, cbk) => {
-          return getPendingChannels({lnd: args.lnd}, cbk);
+        getPending: ['validate', ({}, _cbk) => {
+          return getPendingChannels({lnd: args.lnd}, _cbk);
         }],
 
         // Consolidate closed and open channels
         channels: [
           'getChannels',
           'getClosed',
-          ({getChannels, getClosed}, cbk) =>
+          ({getChannels, getClosed}, _cbk) =>
           {
             const channels = []
               .concat(getChannels.channels)
               .concat(getClosed.channels)
               .filter(n => !!n.id && !!n.partner_public_key);
 
-            return cbk(null, channels);
+            return _cbk(null, channels);
           }],
 
         // Forwards from peers
         sendingFromPeers: [
           'channels',
           'getForwards',
-          ({channels, getForwards}, cbk) =>
+          ({channels, getForwards}, _cbk) =>
           {
             const forwardingChannels = channels.filter(({id}) => {
               return !!getForwards.forwards.some(n => n.incoming_channel === id);
             });
 
-            return cbk(null, forwardingChannels.map(n => n.partner_public_key));
+            return _cbk(null, forwardingChannels.map(n => n.partner_public_key));
           }],
 
         // Forwards to peers
         sendingToPeers: [
           'channels',
           'getForwards',
-          ({channels, getForwards}, cbk) =>
+          ({channels, getForwards}, _cbk) =>
           {
             const forwardingChannels = channels.filter(({id}) => {
               return !!getForwards.forwards.some(n => n.outgoing_channel === id);
             });
 
-            return cbk(null, forwardingChannels.map(n => n.partner_public_key));
+            return _cbk(null, forwardingChannels.map(n => n.partner_public_key));
           }],
 
         // Node metadata
         nodes: [
           'sendingFromPeers',
           'sendingToPeers',
-          ({sendingFromPeers, sendingToPeers}, cbk) =>
+          ({sendingFromPeers, sendingToPeers}, _cbk) =>
           {
             const nodes = uniq([].concat(sendingFromPeers).concat(sendingToPeers));
 
-            return asyncMap(nodes, (id, cbk) => {
-                return getNodeAlias({id, lnd: args.lnd}, cbk);
+            return asyncMap(nodes, (id, __cbk) => {
+                return getNodeAlias({id, lnd: args.lnd}, __cbk);
               },
-              cbk);
+              _cbk);
           }],
 
         // Forwards
@@ -185,7 +185,7 @@ const getForwards = (args, cbk) => {
              getPending,
              nodes,
            },
-           cbk) =>
+           _cbk) =>
           {
             const peers = nodes.map(node => {
               // Get the channels that are associated with this peer
@@ -333,18 +333,18 @@ const getForwards = (args, cbk) => {
                 return !!args.tags.some(tag => node.aliases.includes(tag));
               });
 
-            return cbk(null, {peers: sorted});
+            return _cbk(null, {peers: sorted});
           }],
 
         // Final forwards table
-        allForwards: ['forwards', ({forwards}, cbk) => {
+        allForwards: ['forwards', ({forwards}, _cbk) => {
           if (!args.is_table) {
-            return cbk(null, {peers: forwards.peers});
+            return _cbk(null, {peers: forwards.peers});
           }
 
           const isWideSize = true;
 
-          return cbk(null, {
+          return _cbk(null, {
             peers: forwards.peers,
             rows: []
               .concat([notNull([

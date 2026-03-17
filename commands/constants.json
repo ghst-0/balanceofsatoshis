@@ -7,12 +7,6 @@
     "invoices": "invoices",
     "payments": "payments"
   },
-  "lnurlFunctions": {
-    "auth": "auth",
-    "channel": "channel",
-    "pay": "pay",
-    "withdraw": "withdraw"
-  },
   "peerSortOptions": [
     "alias",
     "est_disk_usage_mb",
@@ -22,7 +16,5 @@
     "inbound_liquidity",
     "outbound_liquidity",
     "public_key"
-  ],
-  "process": "bos",
-  "rateProviders": ["coindesk", "coingecko"]
+  ]
 }

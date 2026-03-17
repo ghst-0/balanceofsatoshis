@@ -22,35 +22,35 @@ const getLnds = ({nodes}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Default lnd
-      getLnd: cbk => {
+      getLnd: _cbk => {
         if (!!nodes && nodes.length > 0) {
-          return cbk();
+          return _cbk();
         }
 
-        return authenticatedLnd({}, cbk);
+        return authenticatedLnd({}, _cbk);
       },
 
       // Authenticated LND Objects
-      getLnds: cbk => {
+      getLnds: _cbk => {
         if (!nodes || nodes.length === 0) {
-          return cbk();
+          return _cbk();
         }
 
         const nodesList = uniq(flatten([nodes].filter(n => !!n)));
 
-        return asyncMap(nodesList, (node, cbk) => {
-          return authenticatedLnd({node}, cbk);
+        return asyncMap(nodesList, (node, _cbk) => {
+          return authenticatedLnd({node}, _cbk);
         },
-        cbk);
+        _cbk);
       },
 
       // Final lnds
-      lnds: ['getLnd', 'getLnds', ({getLnd, getLnds}, cbk) => {
+      lnds: ['getLnd', 'getLnds', ({getLnd, getLnds}, _cbk) => {
         if (!nodes || nodes.length === 0) {
-          return cbk(null, {lnds: [getLnd.lnd]});
+          return _cbk(null, {lnds: [getLnd.lnd]});
         }
 
-        return cbk(null, {lnds: getLnds.map(n => n.lnd)});
+        return _cbk(null, {lnds: getLnds.map(n => n.lnd)});
       }],
     },
     returnResult({reject, resolve, of: 'lnds'}, cbk));

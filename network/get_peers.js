@@ -84,80 +84,80 @@ const getPeers = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
-        validate: cbk => {
+        validate: _cbk => {
           if (!args.fs) {
-            return cbk([400, 'ExpectedFsToGetPeers']);
+            return _cbk([400, 'ExpectedFsToGetPeers']);
           }
 
           if (!args.lnd) {
-            return cbk([400, 'ExpectedLndToGetPeers']);
+            return _cbk([400, 'ExpectedLndToGetPeers']);
           }
 
           if (!isArray(args.omit)) {
-            return cbk([400, 'ExpectedOmitArrayToGetPeers']);
+            return _cbk([400, 'ExpectedOmitArrayToGetPeers']);
           }
 
           if (isArray(args.sort_by)) {
-            return cbk([400, 'SortingByMultipleFieldsNotSupported']);
+            return _cbk([400, 'SortingByMultipleFieldsNotSupported']);
           }
 
-          return cbk();
+          return _cbk();
         },
 
         // Get node icons
-        getIcons: ['validate', ({}, cbk) => getIcons({fs: args.fs}, cbk)],
+        getIcons: ['validate', ({}, _cbk) => getIcons({fs: args.fs}, _cbk)],
 
         // Determine if closed channels should be included
-        isIncludingClosed: ['validate', ({}, cbk) => {
+        isIncludingClosed: ['validate', ({}, _cbk) => {
           if (!!args.earnings_days || !!args.idle_days) {
-            return cbk(null, true);
+            return _cbk(null, true);
           }
 
           if (closedSorts.includes(args.sort_by)) {
-            return cbk(null, true);
+            return _cbk(null, true);
           }
 
-          return cbk(null, false);
+          return _cbk(null, false);
         }],
 
         // Get closed channels
-        getClosed: ['isIncludingClosed', ({isIncludingClosed}, cbk) => {
+        getClosed: ['isIncludingClosed', ({isIncludingClosed}, _cbk) => {
           // Exit early when no closed channel data is needed
           if (!isIncludingClosed) {
-            return cbk(null, {channels: []});
+            return _cbk(null, {channels: []});
           }
 
-          return getClosedChannels({lnd: args.lnd}, cbk);
+          return getClosedChannels({lnd: args.lnd}, _cbk);
         }],
 
         // Get fee earnings
-        getForwards: ['validate', ({}, cbk) => {
+        getForwards: ['validate', ({}, _cbk) => {
           const dayFilters = [args.earnings_days, args.idle_days];
 
           // Exit early when there are no days to get forwards over
           if (dayFilters.filter(n => !!n).length === 0) {
-            return cbk(null, {forwards: []});
+            return _cbk(null, {forwards: []});
           }
 
           const days = max(...dayFilters.filter(n => !!n));
 
-          return getPastForwards({days, lnd: args.lnd}, cbk);
+          return getPastForwards({days, lnd: args.lnd}, _cbk);
         }],
 
         // Get invoices
-        getInvoices: ['validate', ({}, cbk) => {
+        getInvoices: ['validate', ({}, _cbk) => {
           const invoices = [];
           let token;
 
           if (args.idle_days === undefined) {
-            return cbk(null, invoices);
+            return _cbk(null, invoices);
           }
 
           const after = moment().subtract(args.idle_days, 'days').toISOString();
 
           return asyncUntil(
-            cbk => cbk(null, token === false),
-            cbk => {
+            _cbk => _cbk(null, token === false),
+            _cbk => {
               return getInvoices({
                   token,
                   limit: token ? undefined : defaultInvoicesLimit,
@@ -165,7 +165,7 @@ const getPeers = (args, cbk) => {
                 },
                 (err, res) => {
                   if (err) {
-                    return cbk(err);
+                    return _cbk(err);
                   }
 
                   token = res.next || false;
@@ -179,49 +179,49 @@ const getPeers = (args, cbk) => {
                     invoices.push(n)
                   }
 
-                  return cbk();
+                  return _cbk();
                 });
             },
             err => {
               if (err) {
-                return cbk(err);
+                return _cbk(err);
               }
 
-              return cbk(null, invoices.filter(n => !!n.is_confirmed));
+              return _cbk(null, invoices.filter(n => !!n.is_confirmed));
             }
           );
         }],
 
         // Get the network name
-        getNetwork: ['validate', asyncReflect(({}, cbk) => {
-          return getNetwork({lnd: args.lnd}, cbk);
+        getNetwork: ['validate', asyncReflect(({}, _cbk) => {
+          return getNetwork({lnd: args.lnd}, _cbk);
         })],
 
         // Get payments
-        getPayments: ['validate', ({}, cbk) => {
+        getPayments: ['validate', ({}, _cbk) => {
           // Exit early and skip long payments lookup when idle days not needed
           if (args.idle_days === undefined) {
-            return cbk(null, {payments: []})
+            return _cbk(null, {payments: []})
           }
 
           const after = moment().subtract(args.idle_days, 'days').toISOString();
 
-          return getPayments({after, lnd: args.lnd}, cbk);
+          return getPayments({after, lnd: args.lnd}, _cbk);
         }],
 
         // Get connected peers
-        getPeers: ['validate', ({}, cbk) => ln_getPeers({lnd: args.lnd}, cbk)],
+        getPeers: ['validate', ({}, _cbk) => ln_getPeers({lnd: args.lnd}, _cbk)],
 
         // Get pending channels
-        getPending: ['validate', ({}, cbk) => {
-          return getPendingChannels({lnd: args.lnd}, cbk);
+        getPending: ['validate', ({}, _cbk) => {
+          return getPendingChannels({lnd: args.lnd}, _cbk);
         }],
 
         // Check tags
-        checkTags: ['getIcons', ({getIcons}, cbk) => {
+        checkTags: ['getIcons', ({getIcons}, _cbk) => {
           // Exit early when there are no tags
           if (!args.tags || args.tags.length === 0) {
-            return cbk();
+            return _cbk();
           }
 
           const unknown = args.tags.filter(tag => {
@@ -231,14 +231,14 @@ const getPeers = (args, cbk) => {
           });
 
           if (unknown.length > 0) {
-            return cbk([400, 'UnknownTagSpecified', {unknown}]);
+            return _cbk([400, 'UnknownTagSpecified', {unknown}]);
           }
 
-          return cbk();
+          return _cbk();
         }],
 
         // Get channels
-        getChannels: ['getIcons', ({getIcons}, cbk) => {
+        getChannels: ['getIcons', ({getIcons}, _cbk) => {
           return getChannels({
               is_active: args.is_active,
               is_offline: args.is_offline,
@@ -248,7 +248,7 @@ const getPeers = (args, cbk) => {
             },
             (err, res) => {
               if (err) {
-                return cbk(err);
+                return _cbk(err);
               }
 
               // Filter the list of channels to satisfy tag search constraints
@@ -270,36 +270,36 @@ const getPeers = (args, cbk) => {
                 return !!args.tags.some(tag => node.aliases.includes(tag));
               });
 
-              return cbk(null, {channels});
+              return _cbk(null, {channels});
             });
         }],
 
         // Get policies
-        getPolicies: ['getChannels', ({getChannels}, cbk) => {
-          return asyncMap(getChannels.channels, ({id}, cbk) => {
+        getPolicies: ['getChannels', ({getChannels}, _cbk) => {
+          return asyncMap(getChannels.channels, ({id}, _cbk) => {
               return getChannel({id, lnd: args.lnd}, (err, res) => {
                 const [errorCode] = err || [];
 
                 // Exit early when the policy is unknown
                 if (errorCode === 404) {
-                  return cbk();
+                  return _cbk();
                 }
 
                 if (err) {
-                  return cbk(err);
+                  return _cbk(err);
                 }
 
-                return cbk(null, {policies: res.policies});
+                return _cbk(null, {policies: res.policies});
               });
             },
-            cbk);
+            _cbk);
         }],
 
         // All channels
         allChannels: [
           'getChannels',
           'getClosed',
-          ({getChannels, getClosed}, cbk) =>
+          ({getChannels, getClosed}, _cbk) =>
           {
             const closedChannels = getClosed.channels
               .filter(({id}) => !!id)
@@ -309,14 +309,14 @@ const getPeers = (args, cbk) => {
               return {id: channel.id, key: channel.partner_public_key};
             });
 
-            return cbk(null, [].concat(closedChannels).concat(openChannels));
+            return _cbk(null, [].concat(closedChannels).concat(openChannels));
           }],
 
         // Forwards
         forwards: [
           'allChannels',
           'getForwards',
-          ({allChannels, getForwards}, cbk) =>
+          ({allChannels, getForwards}, _cbk) =>
           {
             const channels = allChannels;
 
@@ -332,7 +332,7 @@ const getPeers = (args, cbk) => {
               };
             });
 
-            return cbk(null, forwards);
+            return _cbk(null, forwards);
           }],
 
         // Peers
@@ -390,7 +390,7 @@ const getPeers = (args, cbk) => {
                 for (const payment of n.payments) {
                   const {channels} = getChannels;
 
-                  const channel = channels.find(n => n.id === payment.in_channel);
+                  const channel = channels.find(_n => _n.id === payment.in_channel);
 
                   if (!channel) {
                     continue
@@ -607,9 +607,9 @@ const getPeers = (args, cbk) => {
           }],
 
         // Final peers and table
-        allPeers: ['getIcons', 'peers', ({getIcons, peers}, cbk) => {
+        allPeers: ['getIcons', 'peers', ({getIcons, peers}, _cbk) => {
           if (!args.is_table) {
-            return cbk(null, {
+            return _cbk(null, {
               peers: peers.peers.map(n => ({
                 alias: n.alias,
                 est_disk_usage_mb: n.est_disk_usage_mb || undefined,
@@ -638,7 +638,7 @@ const getPeers = (args, cbk) => {
 
           const isShowingDisk = isDiskFilter || isDiskSort;
 
-          return cbk(null, {
+          return _cbk(null, {
             peers: peers.peers,
             rows: []
               .concat([notNull([

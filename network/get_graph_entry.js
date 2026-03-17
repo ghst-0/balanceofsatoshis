@@ -58,51 +58,51 @@ const getGraphEntry = ({filters, fs, lnd, logger, query, sort}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
-        validate: cbk => {
+        validate: _cbk => {
           if (!isArray(filters)) {
-            return cbk([400, 'ExpectedArrayOfFiltersToGetGraphEntry']);
+            return _cbk([400, 'ExpectedArrayOfFiltersToGetGraphEntry']);
           }
 
           if (!fs) {
-            return cbk([400, 'ExpectedFsMethodsToGetGraphEntry']);
+            return _cbk([400, 'ExpectedFsMethodsToGetGraphEntry']);
           }
 
           if (!lnd) {
-            return cbk([400, 'ExpectedAuthenticatedLndToGetGraphEntry']);
+            return _cbk([400, 'ExpectedAuthenticatedLndToGetGraphEntry']);
           }
 
           if (!logger) {
-            return cbk([400, 'ExpectedWinstonLoggerToGetGraphEntry']);
+            return _cbk([400, 'ExpectedWinstonLoggerToGetGraphEntry']);
           }
 
           if (!query) {
-            return cbk([400, 'ExpectedQueryToGetGraphEntry']);
+            return _cbk([400, 'ExpectedQueryToGetGraphEntry']);
           }
 
           if (!!sort && !sorts.includes(sort)) {
-            return cbk([400, 'ExpectedKnownSortType', {sorts}]);
+            return _cbk([400, 'ExpectedKnownSortType', {sorts}]);
           }
 
-          return cbk();
+          return _cbk();
         },
 
         // Get the current block height to use for age calculations
-        getHeight: ['validate', ({}, cbk) => getHeight({lnd}, cbk)],
+        getHeight: ['validate', ({}, _cbk) => getHeight({lnd}, _cbk)],
 
         // Get the tagged node icons
-        getIcons: ['validate', ({}, cbk) => getIcons({fs}, cbk)],
+        getIcons: ['validate', ({}, _cbk) => getIcons({fs}, _cbk)],
 
         // Determine the public key to use
-        getKey: ['validate', ({}, cbk) => findKey({lnd, query}, cbk)],
+        getKey: ['validate', ({}, _cbk) => findKey({lnd, query}, _cbk)],
 
         // Pull out the public key from getKey result
-        key: ['getKey', ({getKey}, cbk) => cbk(null, getKey.public_key)],
+        key: ['getKey', ({getKey}, _cbk) => _cbk(null, getKey.public_key)],
 
         // Get the node details
-        getNode: ['key', ({key}, cbk) => getNode({lnd, public_key: key}, cbk)],
+        getNode: ['key', ({key}, _cbk) => getNode({lnd, public_key: key}, _cbk)],
 
         // Derive the set of keys of the peers of the node
-        peerKeys: ['getNode', 'key', ({getNode, key}, cbk) => {
+        peerKeys: ['getNode', 'key', ({getNode, key}, _cbk) => {
           const peerKeys = getNode.channels
             .filter(({policies}) => {
               const enabled = policies.filter(n => n.is_disabled !== true);
@@ -111,7 +111,7 @@ const getGraphEntry = ({filters, fs, lnd, logger, query, sort}, cbk) => {
             })
             .map(n => n.policies.find(n => n.public_key !== key).public_key);
 
-          return cbk(null, uniq(peerKeys));
+          return _cbk(null, uniq(peerKeys));
         }],
 
         // Log the high-level node details
@@ -120,7 +120,7 @@ const getGraphEntry = ({filters, fs, lnd, logger, query, sort}, cbk) => {
           'getNode',
           'key',
           'peerKeys',
-          ({getIcons, getNode, key, peerKeys}, cbk) =>
+          ({getIcons, getNode, key, peerKeys}, _cbk) =>
           {
             const mainIcons = getIcons.nodes.find(n => n.public_key === key);
 
@@ -141,17 +141,17 @@ const getGraphEntry = ({filters, fs, lnd, logger, query, sort}, cbk) => {
               peer_count: peerKeys.length,
             });
 
-            return cbk();
+            return _cbk();
           }],
 
         // Get distances
-        getDistances: ['peerKeys', ({peerKeys}, cbk) => {
+        getDistances: ['peerKeys', ({peerKeys}, _cbk) => {
           // Exit early when there is no distance filter
           if (!hasDistanceFilter(filters)) {
-            return cbk(null, peerKeys.map(destination => ({destination})));
+            return _cbk(null, peerKeys.map(destination => ({destination})));
           }
 
-          return asyncMap(peerKeys, (destination, cbk) => {
+          return asyncMap(peerKeys, (destination, _cbk) => {
               return getRouteToDestination({
                   destination,
                   lnd,
@@ -160,17 +160,17 @@ const getGraphEntry = ({filters, fs, lnd, logger, query, sort}, cbk) => {
                 },
                 (err, res) => {
                   if (err) {
-                    return cbk(err);
+                    return _cbk(err);
                   }
 
                   if (!res.route) {
-                    return cbk(null, {destination, hops: Infinity});
+                    return _cbk(null, {destination, hops: Infinity});
                   }
 
-                  return cbk(null, {destination, hops: --res.route.hops.length});
+                  return _cbk(null, {destination, hops: --res.route.hops.length});
                 });
             },
-            cbk);
+            _cbk);
         }],
 
         // Final set of peers
@@ -180,7 +180,7 @@ const getGraphEntry = ({filters, fs, lnd, logger, query, sort}, cbk) => {
           'getIcons',
           'getNode',
           'peerKeys',
-          ({getDistances, getHeight, getIcons, getNode, peerKeys}, cbk) =>
+          ({getDistances, getHeight, getIcons, getNode, peerKeys}, _cbk) =>
           {
             const sorting = sort || defaultSort;
 
@@ -274,17 +274,17 @@ const getGraphEntry = ({filters, fs, lnd, logger, query, sort}, cbk) => {
 
             // Exit early when there was an error in one of the filters
             if (peers.some(n => !!n.error)) {
-              return cbk([500, 'FailedToParseFilter', peers.find(n => n.error)]);
+              return _cbk([500, 'FailedToParseFilter', peers.find(n => n.error)]);
             }
 
             peers.sort((a, b) => sortBy(a.sorts[sorting], b.sorts[sorting]));
 
-            return cbk(null, peers.map(n => n.row));
+            return _cbk(null, peers.map(n => n.row));
           }],
 
         // Get rows with peer aliases
-        getRowsWithAliases: ['getIcons', 'peers', ({getIcons, peers}, cbk) => {
-          return asyncMap(peers, (peer, cbk) => {
+        getRowsWithAliases: ['getIcons', 'peers', ({getIcons, peers}, _cbk) => {
+          return asyncMap(peers, (peer, __cbk) => {
               // The public key is the final column
               const [id] = peer.slice().reverse();
 
@@ -292,7 +292,7 @@ const getGraphEntry = ({filters, fs, lnd, logger, query, sort}, cbk) => {
 
               return getNodeAlias({id, lnd}, (err, res) => {
                 if (err) {
-                  return cbk(err);
+                  return __cbk(err);
                 }
 
                 const chartAlias = chartAliasForPeer({
@@ -301,14 +301,14 @@ const getGraphEntry = ({filters, fs, lnd, logger, query, sort}, cbk) => {
                   public_key: id,
                 });
 
-                return cbk(null, [chartAlias.display].concat(peer));
+                return __cbk(null, [chartAlias.display].concat(peer));
               });
             },
-            cbk);
+            _cbk);
         }],
 
         // Final set of rows
-        rows: ['getRowsWithAliases', ({getRowsWithAliases}, cbk) => {
+        rows: ['getRowsWithAliases', ({getRowsWithAliases}, _cbk) => {
           const [titles] = header;
 
           const headers = titles.slice();
@@ -322,7 +322,7 @@ const getGraphEntry = ({filters, fs, lnd, logger, query, sort}, cbk) => {
 
           const rows = [].concat([headers]).concat(getRowsWithAliases);
 
-          return cbk(null, {rows});
+          return _cbk(null, {rows});
         }],
       },
       returnResult({reject, resolve, of: 'rows'}, cbk));

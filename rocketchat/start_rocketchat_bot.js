@@ -71,32 +71,32 @@ const startRocketChatBot = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
-      validate: cbk => {
+      validate: _cbk => {
         if (!isArray(args.lnds) || args.lnds.length === 0) {
-          return cbk([400, 'ExpectedLndsToStartRocketChatBot']);
+          return _cbk([400, 'ExpectedLndsToStartRocketChatBot']);
         }
 
         if (!args.key) {
-          return cbk([400, 'ExpectedApiKeyToStartRocketChatBot']);
+          return _cbk([400, 'ExpectedApiKeyToStartRocketChatBot']);
         }
 
         if (!isArray(args.nodes)) {
-          return cbk([400, 'ExpectedArrayOfSavedNodesToStartRocketChatBot']);
+          return _cbk([400, 'ExpectedArrayOfSavedNodesToStartRocketChatBot']);
         }
 
         if (!args.request) {
-          return cbk([400, 'ExpectedRequestMethodToStartRocketChatBot']);
+          return _cbk([400, 'ExpectedRequestMethodToStartRocketChatBot']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // Get node info
-      getNodes: ['validate', ({}, cbk) => {
-        return asyncMap(args.lnds, (lnd, cbk) => {
+      getNodes: ['validate', ({}, _cbk) => {
+        return asyncMap(args.lnds, (lnd, __cbk) => {
           return getWalletInfo({lnd}, (err, res) => {
             if (err) {
-              return cbk([503, 'FailedToGetNodeInfo', {err}]);
+              return __cbk([503, 'FailedToGetNodeInfo', {err}]);
             }
 
             const named = fromName({
@@ -104,7 +104,7 @@ const startRocketChatBot = (args, cbk) => {
               public_key: res.public_key,
             });
 
-            return cbk(null, {
+            return __cbk(null, {
               lnd,
               alias: res.alias,
               from: sanitize(named),
@@ -112,14 +112,14 @@ const startRocketChatBot = (args, cbk) => {
             });
           });
         },
-        cbk);
+        _cbk);
       }],
 
       // Setup the bot start action
-      initBot: ['getNodes', ({getNodes}, cbk) => {
+      initBot: ['getNodes', ({getNodes}, _cbk) => {
         // Exit early when the bot was already setup
         if (isBotInit) {
-          return cbk();
+          return _cbk();
         }
 
         const names = getNodes.map(node => ({
@@ -289,13 +289,13 @@ const startRocketChatBot = (args, cbk) => {
         // Avoid re-registering bot actions
         isBotInit = true;
 
-        return cbk();
+        return _cbk();
       }],
 
       // Ask the user to confirm their user id
-      userId: ['initBot', ({}, cbk) => {
+      userId: ['initBot', ({}, _cbk) => {
         // Exit early (we don't use this)
-        return cbk();
+        return _cbk();
       }],
 
       // Setup the bot commands
@@ -317,8 +317,8 @@ const startRocketChatBot = (args, cbk) => {
       }],
 
       // Channel status changes
-      channels: ['getNodes', 'userId', ({getNodes}, cbk) => {
-        return asyncEach(getNodes, ({from, lnd}, cbk) => {
+      channels: ['getNodes', 'userId', ({getNodes}, _cbk) => {
+        return asyncEach(getNodes, ({from, lnd}, __cbk) => {
           const sub = subscribeToChannels({lnd});
 
           subscriptions.push(sub);
@@ -361,26 +361,26 @@ const startRocketChatBot = (args, cbk) => {
             // Terminate subscription and restart after a delay
             sub.removeAllListeners();
 
-            return cbk([503, 'UnexpectedErrorInChannelsSubscription', {err}]);
+            return __cbk([503, 'UnexpectedErrorInChannelsSubscription', {err}]);
           });
         },
-        cbk);
+        _cbk);
       }],
 
       // Send connected message
-      connected: ['getNodes', 'userId', ({getNodes}, cbk) => {
+      connected: ['getNodes', 'userId', ({getNodes}, _cbk) => {
         console.info({is_connected: true});
 
         return postNodesOnline({
           nodes: getNodes.map(n => ({alias: n.alias, id: n.public_key})),
           send: (msg) => args.bot.sendMessage(msg),
         },
-        cbk);
+        _cbk);
       }],
 
       // Poll for forwards
-      forwards: ['getNodes', 'userId', ({getNodes}, cbk) => {
-        return asyncEach(getNodes, (node, cbk) => {
+      forwards: ['getNodes', 'userId', ({getNodes}, _cbk) => {
+        return asyncEach(getNodes, (node, __cbk) => {
           let after = new Date().toISOString();
           const {from} = node;
           const {lnd} = node;
@@ -425,14 +425,14 @@ const startRocketChatBot = (args, cbk) => {
               });
             });
           },
-          cbk);
+          __cbk);
         },
-        cbk);
+        _cbk);
       }],
 
       // Subscribe to past payments
-      payments: ['getNodes', 'userId', ({getNodes}, cbk) => {
-        return asyncEach(getNodes, (node, cbk) => {
+      payments: ['getNodes', 'userId', ({getNodes}, _cbk) => {
+        return asyncEach(getNodes, (node, __cbk) => {
           const sub = subscribeToPastPayments({lnd: node.lnd});
 
           subscriptions.push(sub);
@@ -466,15 +466,15 @@ const startRocketChatBot = (args, cbk) => {
             // Terminate subscription and restart after a delay
             sub.removeAllListeners();
 
-            return cbk([503, 'ErrorInPaymentsSub', {err}])
+            return __cbk([503, 'ErrorInPaymentsSub', {err}])
           });
         },
-        cbk);
+        _cbk);
       }],
 
       // Pending channels changes
-      pending: ['getNodes', 'userId', ({getNodes}, cbk) => {
-        return asyncEach(getNodes, ({from, lnd}, cbk) => {
+      pending: ['getNodes', 'userId', ({getNodes}, _cbk) => {
+        return asyncEach(getNodes, ({from, lnd}, __cbk) => {
           const sub = subscribeToPendingChannels({lnd});
 
           subscriptions.push(sub);
@@ -512,17 +512,17 @@ const startRocketChatBot = (args, cbk) => {
             // Terminate subscription and restart after a delay
             sub.removeAllListeners();
 
-            return cbk([503, 'UnexpectedErrorInPendingSubscription', {err}]);
+            return __cbk([503, 'UnexpectedErrorInPendingSubscription', {err}]);
           });
         },
-        cbk);
+        _cbk);
       }],
 
       // Subscribe to chain transactions
-      transactions: ['getNodes', 'userId', ({getNodes}, cbk) => {
+      transactions: ['getNodes', 'userId', ({getNodes}, _cbk) => {
         let isFinished = false;
 
-        return asyncEach(getNodes, ({from, lnd}, cbk) => {
+        return asyncEach(getNodes, ({from, lnd}, __cbk) => {
           const noLocktimeIds = [];
           const sub = subscribeToTransactions({lnd});
           const transactions = [];
@@ -582,7 +582,7 @@ const startRocketChatBot = (args, cbk) => {
 
               sub.removeAllListeners({});
 
-              return cbk(err);
+              return __cbk(err);
             }
           });
 
@@ -597,10 +597,10 @@ const startRocketChatBot = (args, cbk) => {
 
             console.error({from, chain_subscription_error: err});
 
-            return cbk(err);
+            return __cbk(err);
           });
         },
-        cbk);
+        _cbk);
       }],
     },
     (err, res) => {

@@ -24,33 +24,33 @@ const getPath = ({fs}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
-      validate: cbk => {
+      validate: _cbk => {
         if (!fs) {
-          return cbk([400, 'ExpectedFileSystemMethodsToGetPath']);
+          return _cbk([400, 'ExpectedFileSystemMethodsToGetPath']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // Paths to look for
-      paths: ['validate', ({}, cbk) => {
+      paths: ['validate', ({}, _cbk) => {
         // Exit early because we are not using umbrel
-        return cbk(null, []);
+        return _cbk(null, []);
     }],
 
       // Look through the paths to find a cert file
-      findCert: ['paths', ({paths}, cbk) => {
-        return asyncDetect(paths, (path, cbk) => {
+      findCert: ['paths', ({paths}, _cbk) => {
+        return asyncDetect(paths, (path, __cbk) => {
           return fs.getFile(join(...[path].concat(certFile)), (err, cert) => {
-            return cbk(null, !err && !!cert);
+            return __cbk(null, !err && !!cert);
           });
         },
-        cbk);
+        _cbk);
       }],
 
       // Final path result
-      path: ['findCert', ({findCert}, cbk) => {
-        return cbk(null, {path: findCert || undefined});
+      path: ['findCert', ({findCert}, _cbk) => {
+        return _cbk(null, {path: findCert || undefined});
       }],
     },
     returnResult({reject, resolve, of: 'path'}, cbk));

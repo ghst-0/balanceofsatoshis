@@ -30,33 +30,33 @@ const getTags = ({fs}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
-      validate: cbk => {
+      validate: _cbk => {
         if (!fs) {
-          return cbk([400, 'ExpectedFileSystemMethodsToGetTags']);
+          return _cbk([400, 'ExpectedFileSystemMethodsToGetTags']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // Fetch the tags
-      getTags: ['validate', ({}, cbk) => {
+      getTags: ['validate', ({}, _cbk) => {
         return fs.getFile(tagFilePath(), (err, res) => {
           // Fail back to no tags when there is an error
           if (err || !res) {
-            return cbk(null, defaultTags);
+            return _cbk(null, defaultTags);
           }
 
           try {
             const {tags} = parse(res.toString());
 
-            // Exit early when tags are not well formed
-            if (!isArray(tags) || !!tags.filter(n => !n).length) {
-              return cbk(null, defaultTags);
+            // Exit early when tags are not well-formed
+            if (!isArray(tags) || tags.filter(n => !n).length > 0) {
+              return _cbk(null, defaultTags);
             }
 
-            return cbk(null, {tags});
+            return _cbk(null, {tags});
           } catch {
-            return cbk(null, defaultTags);
+            return _cbk(null, defaultTags);
           }
         });
       }],

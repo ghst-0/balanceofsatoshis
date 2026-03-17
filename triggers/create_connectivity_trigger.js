@@ -21,37 +21,37 @@ const createConnectivityTrigger = ({id, lnd}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
-      validate: cbk => {
+      validate: _cbk => {
         if (!id) {
-          return cbk([400, 'ExpectedNodeIdToCreateConnectivityTrigger']);
+          return _cbk([400, 'ExpectedNodeIdToCreateConnectivityTrigger']);
         }
 
         if (!lnd) {
-          return cbk([400, 'ExpectedLndToCreateConnectivityTrigger']);
+          return _cbk([400, 'ExpectedLndToCreateConnectivityTrigger']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // Encode the trigger
-      description: ['validate', ({}, cbk) => {
+      description: ['validate', ({}, _cbk) => {
         try {
           const {encoded} = encodeTrigger({connectivity: {id}});
 
-          return cbk(null, encoded);
+          return _cbk(null, encoded);
         } catch (err) {
-          return cbk([400, err.message]);
+          return _cbk([400, err.message]);
         }
       }],
 
       // Add the trigger invoice
-      create: ['description', ({description}, cbk) => {
+      create: ['description', ({description}, _cbk) => {
         return createInvoice({
           description,
           lnd,
           expires_at: futureDate(daysAsMs(defaultTriggerDays)),
         },
-        cbk);
+        _cbk);
       }],
     },
     returnResult({reject, resolve}, cbk));

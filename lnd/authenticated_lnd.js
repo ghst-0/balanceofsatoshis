@@ -19,11 +19,11 @@ const authenticatedLnd = ({node}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Credentials
-      credentials: cbk => lndCredentials({node}, cbk),
+      credentials: _cbk => lndCredentials({node}, _cbk),
 
       // Lnd
-      lnd: ['credentials', ({credentials}, cbk) => {
-        return cbk(null, authenticatedLndGrpc({
+      lnd: ['credentials', ({credentials}, _cbk) => {
+        return _cbk(null, authenticatedLndGrpc({
           cert: credentials.cert,
           macaroon: credentials.macaroon,
           socket: credentials.socket,

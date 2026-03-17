@@ -33,72 +33,72 @@ const getLiquidity = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
-      validate: cbk => {
+      validate: _cbk => {
         if (!!args.is_outbound && args.max_fee_rate !== undefined) {
-          return cbk([400, 'MaxLiquidityFeeRateNotSupportedForOutbound']);
+          return _cbk([400, 'MaxLiquidityFeeRateNotSupportedForOutbound']);
         }
 
         if (!args.fs) {
-          return cbk([400, 'ExpectedFsMethodsToGetLiquidity']);
+          return _cbk([400, 'ExpectedFsMethodsToGetLiquidity']);
         }
 
         if (!args.lnd) {
-          return cbk([400, 'ExpectedLndToGetLiquidity']);
+          return _cbk([400, 'ExpectedLndToGetLiquidity']);
         }
 
         if (!!args.min_node_score && !args.request) {
-          return cbk([400, 'ExpectedRequestFunctionToFilterByNodeScore']);
+          return _cbk([400, 'ExpectedRequestFunctionToFilterByNodeScore']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // Get the list of tags to look for a with match
-      getTags: ['validate', ({}, cbk) => {
+      getTags: ['validate', ({}, _cbk) => {
         if (!args.with) {
-          return cbk();
+          return _cbk();
         }
 
-        return getTags({fs: args.fs}, cbk);
+        return getTags({fs: args.fs}, _cbk);
       }],
 
       // Determine with tag
-      withTag: ['getTags', ({getTags}, cbk) => {
+      withTag: ['getTags', ({getTags}, _cbk) => {
         // Exit early when there is no with filter
         if (!args.with) {
-          return cbk();
+          return _cbk();
         }
 
         const tagById = getTags.tags.find(({id}) => id === args.with);
 
         if (tagById) {
-          return cbk(null, tagById);
+          return _cbk(null, tagById);
         }
 
         const tagByAlias = getTags.tags.find(({alias}) => alias === args.with);
 
         if (tagByAlias) {
-          return cbk(null, tagByAlias);
+          return _cbk(null, tagByAlias);
         }
 
-        return cbk();
+        return _cbk();
       }],
 
       // Liquidity with nodes
-      withNodes: ['withTag', ({withTag}, cbk) => {
+      withNodes: ['withTag', ({withTag}, _cbk) => {
         if (withTag) {
-          return cbk(null, withTag.nodes);
+          return _cbk(null, withTag.nodes);
         }
 
         if (args.with) {
-          return cbk(null, [args.with]);
+          return _cbk(null, [args.with]);
         }
 
-        return cbk();
+        return _cbk();
       }],
 
       // Get liquidity
-      getLiquidity: ['withNodes', ({withNodes}, cbk) => {
+      getLiquidity: ['withNodes', ({withNodes}, _cbk) => {
         return ln_getLiquidity({
           is_outbound: args.is_outbound,
           is_top: args.is_top,
@@ -106,12 +106,12 @@ const getLiquidity = (args, cbk) => {
           request: args.request,
           with: withNodes,
         },
-        cbk);
+        _cbk);
       }],
 
       // Total balances
-      total: ['getLiquidity', ({getLiquidity}, cbk) => {
-        return cbk(null, {
+      total: ['getLiquidity', ({getLiquidity}, _cbk) => {
+        return _cbk(null, {
           balance: balanceFromTokens({
             above: args.above,
             below: args.below,

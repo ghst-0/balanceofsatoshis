@@ -7,7 +7,7 @@ const maxDowntime = 10;
 const pendingEmoji = '⏳';
 const privateEmoji = '🌚'
 const separator = ' ';
-const shortKey = key => key.substring(0, 16);
+const shortKey = key => key.slice(0, 16);
 const smallHtlc = '🦐';
 const thawingEmoji = '🧊';
 const unreliableEmoji = '🤢';
@@ -55,7 +55,7 @@ const chartAliasForPeer = args => {
   const unreliable = isOftenDown ? unreliableEmoji : String();
 
   const markers = []
-    .concat(!args.icons ? [] : args.icons)
+    .concat(args.icons ? args.icons : [])
     .concat([
       left,
       inactive,

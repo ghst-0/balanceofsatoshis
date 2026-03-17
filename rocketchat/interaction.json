@@ -1,7 +1,0 @@
-{
-  "user_id_prompt": {
-    "message": "Connection code? (Bot command: /connect)",
-    "name": "code",
-    "type": "number"
-  }
-}

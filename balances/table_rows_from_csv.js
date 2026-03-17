@@ -21,24 +21,24 @@ const tableRowsFromCsv = ({csv}, cbk) => {
       parse: async () => await csvParse,
 
       // Parse CSV
-      entries: ['parse', ({parse}, cbk) => {
+      entries: ['parse', ({parse}, _cbk) => {
         if (!csv) {
-          return cbk(null, []);
+          return _cbk(null, []);
         }
 
         return parse(csv, (err, entries) => {
           if (err) {
-            return cbk([400, 'FailedToParseCsv', {err}]);
+            return _cbk([400, 'FailedToParseCsv', {err}]);
           }
 
-          return cbk(null, entries);
+          return _cbk(null, entries);
         });
       }],
 
       // Arrange rows
-      rows: ['entries', ({entries}, cbk) => {
+      rows: ['entries', ({entries}, _cbk) => {
         if (entries.length === 0) {
-          return cbk(null, {rows: [[]]});
+          return _cbk(null, {rows: [[]]});
         }
 
         const [header] = entries;
@@ -57,7 +57,7 @@ const tableRowsFromCsv = ({csv}, cbk) => {
 
         const rows = [].concat([header]).concat(datedRecords);
 
-        return cbk(null, {rows});
+        return _cbk(null, {rows});
       }],
     },
     returnResult({reject, resolve, of: 'rows'}, cbk));

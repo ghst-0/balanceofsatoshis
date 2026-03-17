@@ -31,7 +31,7 @@ const certExpiration = ({cert}) => {
   // Parse out the details
   const details = certDetails({data: hexAsBuffer(cert)});
 
-  if (!details.children.length) {
+  if (details.children.length === 0) {
     throw new Error('ExpectedCertificateMetadataToGetCertExpiration');
   }
 

@@ -43,47 +43,47 @@ const getAccountingReport = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Validate
-      validate: cbk => {
+      validate: _cbk => {
         if (!args.category || !categories[args.category]) {
-          return cbk([400, 'ExpectedKnownAccountingRecordsCategory']);
+          return _cbk([400, 'ExpectedKnownAccountingRecordsCategory']);
         }
 
         if (!!args.date && !args.month) {
-          return cbk([400, 'ExpectedMonthForDateToGetAccountingReport']);
+          return _cbk([400, 'ExpectedMonthForDateToGetAccountingReport']);
         }
 
         if (!args.lnd) {
-          return cbk([400, 'ExpectedAuthenticatedLndToGetAccountingReport']);
+          return _cbk([400, 'ExpectedAuthenticatedLndToGetAccountingReport']);
         }
 
         if (!args.request) {
-          return cbk([400, 'ExpectedRequestFunctionToGetAccountingReport']);
+          return _cbk([400, 'ExpectedRequestFunctionToGetAccountingReport']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // Get date range
-      dateRange: ['validate', ({}, cbk) => {
+      dateRange: ['validate', ({}, _cbk) => {
         try {
-          return cbk(null, rangeForDate({
+          return _cbk(null, rangeForDate({
             date: args.date,
             month: args.month,
             year: args.year,
           }));
         } catch (err) {
-          return cbk([400, err.message]);
+          return _cbk([400, err.message]);
         }
       }],
 
       // Get the network name
-      getNetwork: ['validate', ({}, cbk) => ln_getNetwork({lnd: args.lnd}, cbk)],
+      getNetwork: ['validate', ({}, _cbk) => ln_getNetwork({lnd: args.lnd}, _cbk)],
 
       // Get accounting info
       getAccounting: [
         'dateRange',
         'getNetwork',
-        ({dateRange, getNetwork}, cbk) =>
+        ({dateRange, getNetwork}, _cbk) =>
       {
         return ln_getAccountingReport({
           after: dateRange.after,
@@ -96,26 +96,26 @@ const getAccountingReport = (args, cbk) => {
           rate_provider: args.rate_provider || undefined,
           request: args.request,
         },
-        cbk);
+        _cbk);
       }],
 
       // Convert the accounting CSV into rows for table display output
-      accounting: ['getAccounting', ({getAccounting}, cbk) => {
+      accounting: ['getAccounting', ({getAccounting}, _cbk) => {
         const csvType = `${categories[args.category]}_csv`;
 
         // Exit early when a CSV dump is requested
         if (args.is_csv) {
-          return cbk(null, getAccounting[csvType]);
+          return _cbk(null, getAccounting[csvType]);
         }
 
-        return tableRowsFromCsv({csv: getAccounting[csvType]}, cbk);
+        return tableRowsFromCsv({csv: getAccounting[csvType]}, _cbk);
       }],
 
       // Calculate total amounts
-      total: ['getAccounting', ({getAccounting}, cbk) => {
+      total: ['getAccounting', ({getAccounting}, _cbk) => {
         // Exit early when a CSV dump is requested
         if (args.is_csv) {
-          return cbk();
+          return _cbk();
         }
 
         const rows = getAccounting[categories[args.category]];
@@ -125,20 +125,20 @@ const getAccountingReport = (args, cbk) => {
 
         // Exit early when there is no fiat data
         if (args.is_fiat_disabled) {
-          return cbk(null, {tokens, fiat: empty});
+          return _cbk(null, {tokens, fiat: empty});
         }
 
         // Fiat values are represented as fiat amounts
         const fiat = round(sumOf(rows.map(n => n.fiat_amount)));
 
-        return cbk(null, {fiat, tokens});
+        return _cbk(null, {fiat, tokens});
       }],
 
       // Clean rows for display if necessary
-      report: ['accounting', 'total',({accounting, total}, cbk) => {
+      report: ['accounting', 'total',({accounting, total}, _cbk) => {
         // Exit early when there is no cleaning necessary
         if (args.is_csv) {
-          return cbk(null, accounting);
+          return _cbk(null, accounting);
         }
 
         const [header] = accounting.rows;
@@ -164,7 +164,7 @@ const getAccountingReport = (args, cbk) => {
           [total.tokens, assetType, currentDate, total.fiat],
         ];
 
-        return cbk(null, {rows, rows_summary: summary});
+        return _cbk(null, {rows, rows_summary: summary});
       }],
     },
     returnResult({reject, resolve, of: 'report'}, cbk));

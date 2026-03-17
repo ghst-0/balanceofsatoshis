@@ -28,39 +28,39 @@ const getCert = ({fs, node, os, path}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
-      validate: cbk => {
+      validate: _cbk => {
         if (!fs) {
-          return cbk([400, 'ExpectedFileSystemMethodsToGetCertForNode']);
+          return _cbk([400, 'ExpectedFileSystemMethodsToGetCertForNode']);
         }
 
         if (!os) {
-          return cbk([400, 'ExpectedOperatingSystemMethodsToGetCertForNode']);
+          return _cbk([400, 'ExpectedOperatingSystemMethodsToGetCertForNode']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // Get certificate
-      getCert: ['validate', ({}, cbk) => {
+      getCert: ['validate', ({}, _cbk) => {
         if (node) {
-          return cbk();
+          return _cbk();
         }
 
         return fs.getFile(certFile, (err, cert) => {
           if (err) {
-            return cbk([503, 'UnexpectedErrorGettingCertFileData', {err}]);
+            return _cbk([503, 'UnexpectedErrorGettingCertFileData', {err}]);
           }
 
           if (!cert) {
-            return cbk([503, 'LndCertNotFoundInDefaultLocation']);
+            return _cbk([503, 'LndCertNotFoundInDefaultLocation']);
           }
 
-          return cbk(null, cert.toString('base64'));
+          return _cbk(null, cert.toString('base64'));
         });
       }],
 
       // Cert
-      cert: ['getCert', ({getCert}, cbk) => cbk(null, {cert: getCert})],
+      cert: ['getCert', ({getCert}, _cbk) => _cbk(null, {cert: getCert})],
     },
     returnResult({reject, resolve, of: 'cert'}, cbk));
   });

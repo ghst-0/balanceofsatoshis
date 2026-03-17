@@ -63,207 +63,207 @@ const getFeesPaid = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
-      validate: cbk => {
+      validate: _cbk => {
         if (!args.fs) {
-          return cbk([400, 'ExpectedFsMethodsToGetRoutingFeesPaid']);
+          return _cbk([400, 'ExpectedFsMethodsToGetRoutingFeesPaid']);
         }
 
         if (!!args.is_network && !!args.is_peer) {
-          return cbk([400, 'ExpectedEitherNetworkOrPeersNotBoth']);
+          return _cbk([400, 'ExpectedEitherNetworkOrPeersNotBoth']);
         }
 
         if (!isArray(args.lnds) || args.lnds.length === 0) {
-          return cbk([400, 'ExpectedLndToGetRoutingFeesPaid']);
+          return _cbk([400, 'ExpectedLndToGetRoutingFeesPaid']);
         }
 
         // Exit early when there is no end date and no start date
         if (!args.end_date && !args.start_date) {
-          return cbk();
+          return _cbk();
         }
 
         if (args.days) {
-          return cbk([400, 'ExpectedEitherDaysOrDatesToGetRoutingFeesPaid']);
+          return _cbk([400, 'ExpectedEitherDaysOrDatesToGetRoutingFeesPaid']);
         }
 
         if (!!args.end_date && !args.start_date) {
-          return cbk([400, 'ExpectedStartDateToRangeToEndDateForPaidChart']);
+          return _cbk([400, 'ExpectedStartDateToRangeToEndDateForPaidChart']);
         }
 
         if (!isDate(args.start_date)) {
-          return cbk([400, 'ExpectedValidDateTypeForPaidChartStartDate']);
+          return _cbk([400, 'ExpectedValidDateTypeForPaidChartStartDate']);
         }
 
         if (!moment(args.start_date).isValid()) {
-          return cbk([400, 'ExpectedValidStartDateForPaidChartEndDate']);
+          return _cbk([400, 'ExpectedValidStartDateForPaidChartEndDate']);
         }
 
         if (parseDate(args.start_date) > now()) {
-          return cbk([400, 'ExpectedPastStartDateToGetRoutingFeesPaid']);
+          return _cbk([400, 'ExpectedPastStartDateToGetRoutingFeesPaid']);
         }
 
         // Exit early when there is no end date
         if (!args.end_date) {
-          return cbk();
+          return _cbk();
         }
 
         if (args.start_date > args.end_date) {
-          return cbk([400, 'ExpectedStartDateBeforeEndDateForPaidChart']);
+          return _cbk([400, 'ExpectedStartDateBeforeEndDateForPaidChart']);
         }
 
         if (!isDate(args.end_date)) {
-          return cbk([400, 'ExpectedValidDateFormatForPaidChartEndDate']);
+          return _cbk([400, 'ExpectedValidDateFormatForPaidChartEndDate']);
         }
 
         if (!moment(args.end_date).isValid()) {
-          return cbk([400, 'ExpectedValidEndDateForPaidChartEndDate']);
+          return _cbk([400, 'ExpectedValidEndDateForPaidChartEndDate']);
         }
 
         if (parseDate(args.end_date) > now()) {
-          return cbk([400, 'ExpectedPastEndDateToGetRoutingFeesPaid']);
+          return _cbk([400, 'ExpectedPastEndDateToGetRoutingFeesPaid']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // Determine how many days to chart over
-      days: ['validate', ({}, cbk) => {
+      days: ['validate', ({}, _cbk) => {
         // Exit early when not using a date range
         if (!args.start_date) {
-          return cbk(null, args.days || defaultDays);
+          return _cbk(null, args.days || defaultDays);
         }
 
-        return cbk(null, daysBetween(args.end_date, args.start_date));
+        return _cbk(null, daysBetween(args.end_date, args.start_date));
       }],
 
       // End date for getting fee earnings
-      end: ['validate', ({}, cbk) => {
+      end: ['validate', ({}, _cbk) => {
         if (!args.end_date) {
-          return cbk();
+          return _cbk();
         }
 
-        return cbk(null, moment(args.end_date).endOf('day'));
+        return _cbk(null, moment(args.end_date).endOf('day'));
       }],
 
       // Get channels
-      getChannels: ['validate', ({}, cbk) => {
-        return asyncMap(args.lnds, (lnd, cbk) => {
-          return getChannels({lnd}, cbk);
+      getChannels: ['validate', ({}, _cbk) => {
+        return asyncMap(args.lnds, (lnd, __cbk) => {
+          return getChannels({lnd}, __cbk);
         },
         (err, res) => {
           if (err) {
-            return cbk(err);
+            return _cbk(err);
           }
 
-          return cbk(null, flatten(res.map(n => n.channels)));
+          return _cbk(null, flatten(res.map(n => n.channels)));
         });
       }],
 
       // Get node icons
-      getIcons: ['validate', ({}, cbk) => getIcons({fs: args.fs}, cbk)],
+      getIcons: ['validate', ({}, _cbk) => getIcons({fs: args.fs}, _cbk)],
 
       // Determine the in public key to use
-      getInKey: ['validate', ({}, cbk) => {
+      getInKey: ['validate', ({}, _cbk) => {
         // Exit early when no in query is specified
         if (!args.in) {
-          return cbk();
+          return _cbk();
         }
 
-        return asyncMap(args.lnds, (lnd, cbk) => {
+        return asyncMap(args.lnds, (lnd, __cbk) => {
           return findKey({lnd, query: args.in}, (err, res) => {
             // Exit for ambiguous queries
             if (err && isAmbiguous(err)) {
-              return cbk(err);
+              return __cbk(err);
             }
 
             // Ignore all other errors, since a peer may not exist on all nodes
             if (err) {
-              return cbk();
+              return __cbk();
             }
 
-            return cbk(null, res.public_key);
+            return __cbk(null, res.public_key);
           });
         },
         (err, res) => {
           if (err) {
-            return cbk(err);
+            return _cbk(err);
           }
 
           const [key, otherKey] = uniq(res.filter(n => !!n));
 
           if (!key) {
-            return cbk([400, 'FailedToFindMatchesForInQueryAlias']);
+            return _cbk([400, 'FailedToFindMatchesForInQueryAlias']);
           }
 
           if (otherKey) {
-            return cbk([400, 'MultipleMatchesForInQueryAlias']);
+            return _cbk([400, 'MultipleMatchesForInQueryAlias']);
           }
 
-          return cbk(null, key);
+          return _cbk(null, key);
         });
       }],
 
       // Determine the out public key to use
-      getOutKey: ['validate', ({}, cbk) => {
+      getOutKey: ['validate', ({}, _cbk) => {
         // Exit early when no out query is specified
         if (!args.out) {
-          return cbk();
+          return _cbk();
         }
 
-        return asyncMap(args.lnds, (lnd, cbk) => {
+        return asyncMap(args.lnds, (lnd, _cbk) => {
           return findKey({lnd, query: args.out}, (err, res) => {
             // Exit for ambiguous queries
             if (err && isAmbiguous(err)) {
-              return cbk(err);
+              return _cbk(err);
             }
 
             // Ignore all other errors, since a peer may not exist on all nodes
             if (err) {
-              return cbk();
+              return _cbk();
             }
 
-            return cbk(null, res.public_key);
+            return _cbk(null, res.public_key);
           });
         },
         (err, res) => {
           if (err) {
-            return cbk(err);
+            return _cbk(err);
           }
 
           const [key, otherKey] = uniq(res.filter(n => !!n));
 
           if (!key) {
-            return cbk([400, 'FailedToFindMatchesForOutQueryAlias']);
+            return _cbk([400, 'FailedToFindMatchesForOutQueryAlias']);
           }
 
           if (otherKey) {
-            return cbk([400, 'MultipleMatchesForOutQueryAlias']);
+            return _cbk([400, 'MultipleMatchesForOutQueryAlias']);
           }
 
-          return cbk(null, key);
+          return _cbk(null, key);
         });
       }],
 
       // Calculate the start date
-      start: ['validate', ({}, cbk) => {
+      start: ['validate', ({}, _cbk) => {
         if (args.start_date) {
-          return cbk(null, moment(args.start_date));
+          return _cbk(null, moment(args.start_date));
         }
 
-        return cbk(null, moment().subtract(args.days || defaultDays, 'days'));
+        return _cbk(null, moment().subtract(args.days || defaultDays, 'days'));
       }],
 
       // Segment measure
-      measure: ['days', ({days}, cbk) => {
+      measure: ['days', ({days}, _cbk) => {
         if (days > maxChartDays) {
-          return cbk(null, 'week');
+          return _cbk(null, 'week');
         } else if (days < minChartDays) {
-          return cbk(null, 'hour');
+          return _cbk(null, 'hour');
         }
-        return cbk(null, 'day');
+        return _cbk(null, 'day');
       }],
 
       // Get payments
-      getPayments: ['start', 'validate', ({start}, cbk) => {
+      getPayments: ['start', 'validate', ({start}, _cbk) => {
         // Exit early when only considering rebalance payments
         if (args.is_rebalances_only) {
           return getRebalancePayments({
@@ -272,10 +272,10 @@ const getFeesPaid = (args, cbk) => {
           },
           (err, res) => {
             if (err) {
-              return cbk(err);
+              return _cbk(err);
             }
 
-            return cbk(null, res.payments.map(payment => ({
+            return _cbk(null, res.payments.map(payment => ({
               attempts: payment.paths.map(route => ({route})),
               confirmed_at: payment.confirmed_at,
               created_at: payment.created_at,
@@ -284,15 +284,15 @@ const getFeesPaid = (args, cbk) => {
           });
         }
 
-        return asyncMap(args.lnds, (lnd, cbk) => {
-          return getPayments({after: start.toISOString(), lnd}, cbk);
+        return asyncMap(args.lnds, (lnd, _cbk) => {
+          return getPayments({after: start.toISOString(), lnd}, _cbk);
         },
         (err, res) => {
           if (err) {
-            return cbk(err);
+            return _cbk(err);
           }
 
-          return cbk(null, flatten(res.map(n => n.payments)));
+          return _cbk(null, flatten(res.map(n => n.payments)));
         });
       }],
 
@@ -303,7 +303,7 @@ const getFeesPaid = (args, cbk) => {
         'getOutKey',
         'getPayments',
         'start',
-        ({end, getInKey, getOutKey, getPayments, start}, cbk) =>
+        ({end, getInKey, getOutKey, getPayments, start}, _cbk) =>
       {
         const payments = getPayments
           .filter(payment => payment.is_confirmed !== false)
@@ -376,7 +376,7 @@ const getFeesPaid = (args, cbk) => {
           })
           .filter(n => !!n);
 
-        return cbk(null, payments);
+        return _cbk(null, payments);
       }],
 
       // Fees paid to specific forwarding peers
@@ -384,10 +384,10 @@ const getFeesPaid = (args, cbk) => {
         'forwards',
         'getChannels',
         'getIcons',
-        ({forwards, getChannels, getIcons}, cbk) =>
+        ({forwards, getChannels, getIcons}, _cbk) =>
       {
         if (!args.is_most_forwarded_table && !args.is_most_fees_table) {
-          return cbk();
+          return _cbk();
         }
 
         const fees = forwards.reduce((sum, {attempts}) => {
@@ -434,7 +434,7 @@ const getFeesPaid = (args, cbk) => {
         },
         {});
 
-        return asyncMap(keys(fees), (key, cbk) => {
+        return asyncMap(keys(fees), (key, _cbk) => {
           const [lnd] = args.lnds;
 
           return getNode({
@@ -443,7 +443,7 @@ const getFeesPaid = (args, cbk) => {
             public_key: key,
           },
           (err, res) => {
-            return cbk(null, {
+            return _cbk(null, {
               alias: (res || {}).alias,
               fees_paid: fees[key],
               forwarded: forwarded[key] || BigInt(Number()),
@@ -453,7 +453,7 @@ const getFeesPaid = (args, cbk) => {
         },
         (err, array) => {
           if (err) {
-            return cbk(err);
+            return _cbk(err);
           }
 
           const sort = args.is_most_fees_table ? 'fees_paid' : 'forwarded';
@@ -490,37 +490,37 @@ const getFeesPaid = (args, cbk) => {
               ];
             });
 
-          return cbk(null, [].concat(heading).concat(rows));
+          return _cbk(null, [].concat(heading).concat(rows));
         });
       }],
 
       // Total number of segments
-      segments: ['days', 'end', 'measure', ({days, end, measure}, cbk) => {
+      segments: ['days', 'end', 'measure', ({days, end, measure}, _cbk) => {
         switch (measure) {
         case 'hour':
           // Exit early when using full days
           if (!args.start_date) {
-            return cbk(null, hoursPerDay * days);
+            return _cbk(null, hoursPerDay * days);
           }
 
-          return cbk(null, hoursCount(end, args.start_date));
+          return _cbk(null, hoursCount(end, args.start_date));
 
         case 'week':
-          return cbk(null, floor(days / daysPerWeek));
+          return _cbk(null, floor(days / daysPerWeek));
 
         default:
-          return cbk(null, days);
+          return _cbk(null, days);
         }
       }],
 
       // Total paid
-      total: ['forwards', ({forwards}, cbk) => {
+      total: ['forwards', ({forwards}, _cbk) => {
         const paid = forwards.reduce((sum, payment) => {
           return sum + BigInt(payment.fee_mtokens);
         },
         BigInt(Number()));
 
-        return cbk(null, mtokensAsTokens(paid));
+        return _cbk(null, mtokensAsTokens(paid));
       }],
 
       // Payments activity aggregated
@@ -529,9 +529,9 @@ const getFeesPaid = (args, cbk) => {
         'forwards',
         'measure',
         'segments',
-        ({end, forwards, measure, segments}, cbk) =>
+        ({end, forwards, measure, segments}, _cbk) =>
       {
-        return cbk(null, feesForSegment({
+        return _cbk(null, feesForSegment({
           by,
           forwards,
           measure,
@@ -548,14 +548,14 @@ const getFeesPaid = (args, cbk) => {
         'start',
         'sum',
         'total',
-        ({end, forwards, measure, start, sum, total}, cbk) =>
+        ({end, forwards, measure, start, sum, total}, _cbk) =>
       {
         const duration = `Fees paid in ${sum.fees.length} ${measure}s`;
         const paid = tokensAsBigUnit(total);
         const since = `from ${start.calendar().toLowerCase()}`;
         const to = end ? ` to ${end.calendar().toLowerCase()}` : '';
 
-        return cbk(null, `${duration} ${since}${to}. Total: ${paid}`);
+        return _cbk(null, `${duration} ${since}${to}. Total: ${paid}`);
       }],
 
       // Title for fees paid
@@ -582,7 +582,7 @@ const getFeesPaid = (args, cbk) => {
         'rows',
         'sum',
         'title',
-        ({description, rows, sum, title}, cbk) =>
+        ({description, rows, sum, title}, _cbk) =>
       {
         const isRows = args.is_most_fees_table || args.is_most_forwarded_table;
 
@@ -591,7 +591,7 @@ const getFeesPaid = (args, cbk) => {
           rows.unshift([String(), title, String(), String()]);
         }
 
-        return cbk(null, {description, rows, title, data: sum.fees});
+        return _cbk(null, {description, rows, title, data: sum.fees});
       }],
     },
     returnResult({reject, resolve, of: 'data'}, cbk));

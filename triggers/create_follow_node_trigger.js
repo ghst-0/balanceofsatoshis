@@ -34,24 +34,24 @@ const createFollowNodeTrigger = ({id, lnd}, cbk) => {
       },
 
       // Encode the trigger
-      description: ['validate', ({}, cbk) => {
+      description: ['validate', ({}, _cbk) => {
         try {
           const {encoded} = encodeTrigger({follow: {id}});
 
-          return cbk(null, encoded);
+          return _cbk(null, encoded);
         } catch (err) {
-          return cbk([400, err.message]);
+          return _cbk([400, err.message]);
         }
       }],
 
       // Add the trigger invoice
-      create: ['description', ({description}, cbk) => {
+      create: ['description', ({description}, _cbk) => {
         return createInvoice({
           description,
           lnd,
           expires_at: futureDate(daysAsMs(defaultTriggerDays)),
         },
-        cbk);
+        _cbk);
       }],
     },
     returnResult({reject, resolve}, cbk));

@@ -38,24 +38,24 @@ const connectToRocketChat = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
-      validate: cbk => {
+      validate: _cbk => {
         if (!Object.fromEntries) {
-          return cbk([400, 'ExpectedLaterVersionOfNodeJsInstalled']);
+          return _cbk([400, 'ExpectedLaterVersionOfNodeJsInstalled']);
         }
 
         if (!args.fs) {
-          return cbk([400, 'ExpectedFsToConnectToRocketChat']);
+          return _cbk([400, 'ExpectedFsToConnectToRocketChat']);
         }
 
         if (!!args.id && !isNumber(args.id)) {
-          return cbk([400, 'ExpectedNumericConnectCodeToConnectToRocketChat']);
+          return _cbk([400, 'ExpectedNumericConnectCodeToConnectToRocketChat']);
         }
 
         if (!args.request) {
-          return cbk([400, 'ExpectedRequestFunctionToConnectToRocketChat']);
+          return _cbk([400, 'ExpectedRequestFunctionToConnectToRocketChat']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // Get the nodes
@@ -80,12 +80,12 @@ const connectToRocketChat = (args, cbk) => {
       }],
 
       // Get the RocketChat bot
-      getBot: ['validate', async ({}, cbk) => {
+      getBot: ['validate', async ({}, _cbk) => {
         const bot = new Bot();
       }],
 
       // Set the units formatting
-      setUnits: ['validate', ({}, cbk) => {
+      setUnits: ['validate', ({}, _cbk) => {
         // Set rounded value formatting type
         if (args.is_rounded_units) {
           process.env.PREFERRED_TOKENS_TYPE = roundedUnitsType;
@@ -96,14 +96,14 @@ const connectToRocketChat = (args, cbk) => {
           process.env.PREFERRED_TOKENS_TYPE = smallUnitsType;
         }
 
-        return cbk();
+        return _cbk();
       }],
 
       // Start bot
-      start: ['getBot', 'getNodes', 'setUnits', ({getBot, getNodes}, cbk) => {
+      start: ['getBot', 'getNodes', 'setUnits', ({getBot, getNodes}, _cbk) => {
         let online = getNodes.map(n => n.id);
 
-        return asyncForever(cbk => {
+        return asyncForever(__cbk => {
           return runRocketChatBot({
             bot: getBot.bot,
             fs: args.fs,
@@ -116,7 +116,7 @@ const connectToRocketChat = (args, cbk) => {
           },
           (err, res) => {
             if (err) {
-              return cbk(err);
+              return __cbk(err);
             }
 
             const offline = online.filter(id => !res.online.includes(id));
@@ -134,11 +134,11 @@ const connectToRocketChat = (args, cbk) => {
                 console.error({post_nodes_offline_error: err});
               }
 
-              return setTimeout(cbk, restartDelayMs);
+              return setTimeout(__cbk, restartDelayMs);
             });
           });
         },
-        cbk);
+        _cbk);
       }],
     },
     returnResult({reject, resolve}, cbk));

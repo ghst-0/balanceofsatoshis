@@ -45,13 +45,13 @@ const lndCredentials = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Figure out which node the credentials are for
-      forNode: cbk => {
+      forNode: _cbk => {
         if (args.node) {
-          return cbk(null, args.node);
+          return _cbk(null, args.node);
         }
 
         if (defaultNodeName) {
-          return cbk(null, defaultNodeName);
+          return _cbk(null, defaultNodeName);
         }
 
         // Look for a config file to see if there is a default node
@@ -60,78 +60,78 @@ const lndCredentials = (args, cbk) => {
         return fs.getFile(path, (err, res) => {
           // Exit early on errors, there is no config found
           if (err || !res) {
-            return cbk();
+            return _cbk();
           }
 
           try {
             parse(res.toString());
           } catch (err) {
-            return cbk([400, 'ConfigurationFileIsInvalidFormat', {err}]);
+            return _cbk([400, 'ConfigurationFileIsInvalidFormat', {err}]);
           }
 
           const config = parse(res.toString());
 
           if (config.default_saved_node) {
-            return cbk(null, config.default_saved_node);
+            return _cbk(null, config.default_saved_node);
           }
 
-          return cbk();
+          return _cbk();
         });
       },
 
       // Look for a special path
-      getPath: ['forNode', ({forNode}, cbk) => {
+      getPath: ['forNode', ({forNode}, _cbk) => {
         // Exit early when a specific node is used
         if (forNode) {
-          return cbk(null, {});
+          return _cbk(null, {});
         }
 
         // Exit early when there is a default LND path
         if (defaultLndDirPath) {
-          return cbk(null, {path: defaultLndDirPath});
+          return _cbk(null, {path: defaultLndDirPath});
         }
 
-        return getPath({fs, os}, cbk);
+        return getPath({fs, os}, _cbk);
       }],
 
       // Get the default cert
-      getCert: ['forNode', 'getPath', ({forNode, getPath}, cbk) => {
-        return getCert({fs, os, node: forNode, path: getPath.path}, cbk);
+      getCert: ['forNode', 'getPath', ({forNode, getPath}, _cbk) => {
+        return getCert({fs, os, node: forNode, path: getPath.path}, _cbk);
       }],
 
       // Get the default macaroon
-      getMacaroon: ['forNode', 'getPath', ({forNode, getPath}, cbk) => {
-        return getMacaroon({fs, os, node: forNode, path: getPath.path}, cbk);
+      getMacaroon: ['forNode', 'getPath', ({forNode, getPath}, _cbk) => {
+        return getMacaroon({fs, os, node: forNode, path: getPath.path}, _cbk);
       }],
 
       // Get the node credentials, if applicable
-      getNodeCredentials: ['forNode', ({forNode}, cbk) => {
+      getNodeCredentials: ['forNode', ({forNode}, _cbk) => {
         // Disabled
-        return cbk();
+        return _cbk();
       }],
 
       // Get the socket out of the ini file
-      getSocket: ['forNode', 'getPath', ({forNode, getPath}, cbk) => {
-        return getSocket({fs, os, node: forNode, path: getPath.path}, cbk);
+      getSocket: ['forNode', 'getPath', ({forNode, getPath}, _cbk) => {
+        return getSocket({fs, os, node: forNode, path: getPath.path}, _cbk);
       }],
 
       // Node credentials
       nodeCredentials: [
         'forNode',
         'getNodeCredentials',
-        ({forNode, getNodeCredentials}, cbk) =>
+        ({forNode, getNodeCredentials}, _cbk) =>
       {
         if (!forNode) {
-          return cbk();
+          return _cbk();
         }
 
         if (!getNodeCredentials.credentials) {
-          return cbk([400, 'CredentialsForSpecifiedNodeNotFound']);
+          return _cbk([400, 'CredentialsForSpecifiedNodeNotFound']);
         }
 
         const {credentials} = getNodeCredentials;
 
-        return cbk(null, {
+        return _cbk(null, {
           cert: credentials.cert,
           macaroon: credentials.macaroon,
           socket: credentials.socket,
@@ -145,18 +145,18 @@ const lndCredentials = (args, cbk) => {
         'getMacaroon',
         'getSocket',
         'nodeCredentials',
-        ({forNode, getCert, getMacaroon, getSocket, nodeCredentials}, cbk) =>
+        ({forNode, getCert, getMacaroon, getSocket, nodeCredentials}, _cbk) =>
       {
         // Exit early with the default credentials when no node is specified
         if (!forNode) {
-          return cbk(null, {
+          return _cbk(null, {
             cert: getCert.cert,
             macaroon: getMacaroon.macaroon,
             socket: getSocket.socket || socket,
           });
         }
 
-        return cbk(null, {
+        return _cbk(null, {
           cert: nodeCredentials.cert,
           macaroon: nodeCredentials.macaroon,
           socket: getSocket.socket || nodeCredentials.socket,
@@ -164,9 +164,9 @@ const lndCredentials = (args, cbk) => {
       }],
 
       // Macaroon with restriction
-      macaroon: ['credentials', ({credentials}, cbk) => {
+      macaroon: ['credentials', ({credentials}, _cbk) => {
         if (!args.expiry) {
-          return cbk(null, credentials.macaroon);
+          return _cbk(null, credentials.macaroon);
         }
 
         const {macaroon} = restrictMacaroon({
@@ -174,14 +174,14 @@ const lndCredentials = (args, cbk) => {
           macaroon: credentials.macaroon,
         });
 
-        return cbk(null, macaroon);
+        return _cbk(null, macaroon);
       }],
 
       // Get read-only macaroon if necessary
       restrictMacaroon: [
         'credentials',
         'macaroon',
-        ({credentials, macaroon}, cbk) =>
+        ({credentials, macaroon}, _cbk) =>
       {
         const {allow} = credentialRestrictions({
           is_nospend: args.is_nospend,
@@ -191,7 +191,7 @@ const lndCredentials = (args, cbk) => {
 
         // Exit early when readonly credentials are not requested
         if (!allow) {
-          return cbk(null, {macaroon});
+          return _cbk(null, {macaroon});
         }
 
         const {lnd} = authenticatedLndGrpc({
@@ -205,7 +205,7 @@ const lndCredentials = (args, cbk) => {
           methods: allow.methods,
           permissions: allow.permissions,
         },
-        cbk);
+        _cbk);
       }],
 
       // Final credentials with encryption applied
@@ -213,11 +213,11 @@ const lndCredentials = (args, cbk) => {
         'credentials',
         'getSocket',
         'restrictMacaroon',
-        ({credentials, getSocket, restrictMacaroon}, cbk) =>
+        ({credentials, getSocket, restrictMacaroon}, _cbk) =>
       {
         // Exit early when the credentials are not encrypted
         if (!args.key) {
-          return cbk(null, {
+          return _cbk(null, {
             macaroon: restrictMacaroon.macaroon,
             cert: credentials.cert,
             socket: credentials.socket.trim(),
@@ -229,7 +229,7 @@ const lndCredentials = (args, cbk) => {
 
         const encrypted = publicEncrypt(pem, macaroonData);
 
-        return cbk(null, {
+        return _cbk(null, {
           cert: credentials.cert,
           encrypted_macaroon: encrypted.toString('base64'),
           external_socket: getSocket.socket,

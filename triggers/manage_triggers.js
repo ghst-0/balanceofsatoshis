@@ -27,20 +27,20 @@ const manageTriggers = ({ask, lnd}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
-      validate: cbk => {
+      validate: _cbk => {
         if (!ask) {
-          return cbk([400, 'ExpectedAskFunctionToManageTriggers']);
+          return _cbk([400, 'ExpectedAskFunctionToManageTriggers']);
         }
 
         if (!lnd) {
-          return cbk([400, 'ExpectedAuthenticatedLndToManageTriggers']);
+          return _cbk([400, 'ExpectedAuthenticatedLndToManageTriggers']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // Select trigger action
-      selectAction: ['validate', ({}, cbk) => {
+      selectAction: ['validate', ({}, _cbk) => {
         return ask({
           choices: [
             {
@@ -64,14 +64,14 @@ const manageTriggers = ({ask, lnd}, cbk) => {
           name: 'action',
           type: 'select',
         },
-        ({action}) => cbk(null, action));
+        ({action}) => _cbk(null, action));
       }],
 
       // Ask for details about a new connectivity trigger
-      askForConnectivityTrigger: ['selectAction', ({selectAction}, cbk) => {
+      askForConnectivityTrigger: ['selectAction', ({selectAction}, _cbk) => {
         // Exit early when not adding a trigger
         if (selectAction !== actionAddConnectivityTrigger) {
-          return cbk();
+          return _cbk();
         }
 
         return ask({
@@ -90,14 +90,14 @@ const manageTriggers = ({ask, lnd}, cbk) => {
             return true;
           },
         },
-        ({id}) => cbk(null, id));
+        ({id}) => _cbk(null, id));
       }],
 
       // Ask for details about a new follow trigger
-      askForFollowTrigger: ['selectAction', ({selectAction}, cbk) => {
+      askForFollowTrigger: ['selectAction', ({selectAction}, _cbk) => {
         // Exit early when not adding a trigger
         if (selectAction !== actionAddFollowTrigger) {
-          return cbk();
+          return _cbk();
         }
 
         return ask({
@@ -116,26 +116,26 @@ const manageTriggers = ({ask, lnd}, cbk) => {
             return true;
           },
         },
-        ({id}) => cbk(null, id));
+        ({id}) => _cbk(null, id));
       }],
 
       // Get the list of triggers
-      getTriggers: ['selectAction', ({selectAction}, cbk) => {
+      getTriggers: ['selectAction', ({selectAction}, _cbk) => {
         // Exit early when not listing triggers
         if (selectAction !== actionListTriggers) {
-          return cbk();
+          return _cbk();
         }
 
         console.info({finding_triggers: true});
 
-        return getTriggers({lnd}, cbk);
+        return getTriggers({lnd}, _cbk);
       }],
 
       // Subscribe to triggers
-      subscribeToTriggers: ['selectAction', ({selectAction}, cbk) => {
+      subscribeToTriggers: ['selectAction', ({selectAction}, _cbk) => {
         // Exit early when not subscribing
         if (selectAction !== actionSubscribeToTriggers) {
-          return cbk();
+          return _cbk();
         }
 
         const sub = subscribeToTriggers({lnds: [lnd]});
@@ -143,7 +143,7 @@ const manageTriggers = ({ask, lnd}, cbk) => {
         sub.on('channel_opened', opened => console.info({opened}));
         sub.on('peer_connected', connected => console.info({connected}));
         sub.on('peer_disconnected', disconnect => console.info({disconnect}));
-        sub.on('error', err => cbk(err));
+        sub.on('error', err => _cbk(err));
 
         console.info({listening_for_trigger_events: true});
       }],
@@ -151,39 +151,39 @@ const manageTriggers = ({ask, lnd}, cbk) => {
       // Create a new connectivity trigger
       createConnectivityTrigger: [
         'askForConnectivityTrigger',
-        ({askForConnectivityTrigger}, cbk) =>
+        ({askForConnectivityTrigger}, _cbk) =>
       {
         if (!askForConnectivityTrigger) {
-          return cbk();
+          return _cbk();
         }
 
         return createConnectivityTrigger({
           lnd,
           id: askForConnectivityTrigger,
         },
-        cbk);
+        _cbk);
       }],
 
       // Create a new follow trigger
       createFollowTrigger: [
         'askForFollowTrigger',
-        ({askForFollowTrigger}, cbk) =>
+        ({askForFollowTrigger}, _cbk) =>
       {
         if (!askForFollowTrigger) {
-          return cbk();
+          return _cbk();
         }
 
-        return createFollowNodeTrigger({lnd, id: askForFollowTrigger}, cbk);
+        return createFollowNodeTrigger({lnd, id: askForFollowTrigger}, _cbk);
       }],
 
       // Select a trigger from the list
-      selectTrigger: ['getTriggers', ({getTriggers}, cbk) => {
+      selectTrigger: ['getTriggers', ({getTriggers}, _cbk) => {
         if (!getTriggers) {
-          return cbk();
+          return _cbk();
         }
 
-        if (!getTriggers.length) {
-          return cbk([404, 'NoTriggersFound']);
+        if (getTriggers.length === 0) {
+          return _cbk([404, 'NoTriggersFound']);
         }
 
         return ask({
@@ -193,25 +193,24 @@ const manageTriggers = ({ask, lnd}, cbk) => {
                 name: `Connectivity with ${connectivity.id}`,
                 value: id,
               };
-            } else {
-              return {
-                name: `Following ${follow.id}`,
-                value: id,
-              };
             }
+            return {
+              name: `Following ${follow.id}`,
+              value: id,
+            };
           }),
           message: 'Triggers:',
           name: 'view',
           type: 'select',
         },
-        ({view}) => cbk(null, view));
+        ({view}) => _cbk(null, view));
       }],
 
       // Trigger actions
-      triggerAction: ['selectTrigger', ({selectTrigger}, cbk) => {
+      triggerAction: ['selectTrigger', ({selectTrigger}, _cbk) => {
         // Exit early when no trigger is selected to take actions against
         if (!selectTrigger) {
-          return cbk();
+          return _cbk();
         }
 
         return ask({
@@ -220,17 +219,17 @@ const manageTriggers = ({ask, lnd}, cbk) => {
           name: 'modify',
           type: 'select',
         },
-        ({modify}) => cbk(null, selectTrigger));
+        ({modify}) => _cbk(null, selectTrigger));
       }],
 
       // Delete a trigger
-      deleteTrigger: ['triggerAction', ({triggerAction}, cbk) => {
+      deleteTrigger: ['triggerAction', ({triggerAction}, _cbk) => {
         // Exit early when not deleting a triger
         if (!triggerAction) {
-          return cbk();
+          return _cbk();
         }
 
-        return cancelHodlInvoice({lnd, id: triggerAction}, cbk);
+        return cancelHodlInvoice({lnd, id: triggerAction}, _cbk);
       }],
     },
     returnResult({reject, resolve}, cbk));

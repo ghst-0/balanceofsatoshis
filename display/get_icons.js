@@ -30,20 +30,20 @@ const getIcons = ({fs}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
-      validate: cbk => {
+      validate: _cbk => {
         if (!fs) {
-          return cbk([400, 'ExpectedFileSystemMethodsToGetIconsForNodes']);
+          return _cbk([400, 'ExpectedFileSystemMethodsToGetIconsForNodes']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // Get icons from the tags file
-      getIcons: ['validate', ({}, cbk) => {
+      getIcons: ['validate', ({}, _cbk) => {
         return fs.getFile(tagFilePath(), (err, res) => {
           // Exit early when there is no tag file
           if (err || !res) {
-            return cbk(null, {nodes: []});
+            return _cbk(null, {nodes: []});
           }
 
           try {
@@ -64,9 +64,9 @@ const getIcons = ({fs}, cbk) => {
               };
             });
 
-            return cbk(null, {nodes});
+            return _cbk(null, {nodes});
           } catch {
-            return cbk(null, {nodes: []});
+            return _cbk(null, {nodes: []});
           }
         });
       }],

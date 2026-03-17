@@ -29,20 +29,20 @@ const getNodeDetails = ({names, nodes}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
-      validate: cbk => {
+      validate: _cbk => {
 
         if (!isArray(nodes)) {
-          return cbk([400, 'ExpectedArrayOfSavedNodesToGetNodeDetailsFor']);
+          return _cbk([400, 'ExpectedArrayOfSavedNodesToGetNodeDetailsFor']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // Get associated LNDs
-      getLnds: ['validate', ({}, cbk) => getLnds({nodes}, cbk)],
+      getLnds: ['validate', ({}, _cbk) => getLnds({nodes}, _cbk)],
 
       // Merge node info for the nodes
-      nodes: ['getLnds', ({getLnds}, cbk) => {
+      nodes: ['getLnds', ({getLnds}, _cbk) => {
         const nodes = getLnds.lnds.map((lnd, i) => {
           return {
             lnd,
@@ -52,7 +52,7 @@ const getNodeDetails = ({names, nodes}, cbk) => {
           };
         });
 
-        return cbk(null, {nodes});
+        return _cbk(null, {nodes});
       }],
     },
     returnResult({reject, resolve, of: 'nodes'}, cbk));

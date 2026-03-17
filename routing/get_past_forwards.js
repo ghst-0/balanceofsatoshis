@@ -31,19 +31,19 @@ const getPastForwards = ({days, lnd}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
-      validate: cbk => {
+      validate: _cbk => {
         if (!lnd) {
-          return cbk([400, 'ExpectedLndObjectToGetPastForwards']);
+          return _cbk([400, 'ExpectedLndObjectToGetPastForwards']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // Get past forwards
-      getForwards: ['validate', ({}, cbk) => {
+      getForwards: ['validate', ({}, _cbk) => {
         // Exit early when there are no days to get forwards over
         if (!days) {
-          return cbk(null, []);
+          return _cbk(null, []);
         }
 
         const after = moment().subtract(days, 'days').toISOString();
@@ -52,30 +52,30 @@ const getPastForwards = ({days, lnd}, cbk) => {
         const forwards = [];
 
         return asyncDoUntil(
-          cbk => {
-            return asyncRetry({}, cbk => {
+          __cbk => {
+            return asyncRetry({}, ___cbk => {
               return getForwards({after, before, lnd, token}, (err, res) => {
                 if (err) {
-                  return cbk(err);
+                  return ___cbk(err);
                 }
 
                 forwards.push(res.forwards);
 
                 token = res.next;
 
-                return cbk();
+                return ___cbk();
               });
             },
-            cbk);
+            __cbk);
           },
-          cbk => cbk(null, !token),
-          err => err ? cbk(err) : cbk(null, forwards)
+          __cbk => __cbk(null, !token),
+          err => err ? _cbk(err) : _cbk(null, forwards)
         );
       }],
 
       // Final set of forwards
-      forwards: ['getForwards', ({getForwards}, cbk) => {
-        return cbk(null, {forwards: flatten(getForwards)});
+      forwards: ['getForwards', ({getForwards}, _cbk) => {
+        return _cbk(null, {forwards: flatten(getForwards)});
       }],
     },
     returnResult({reject, resolve, of: 'forwards'}, cbk));

@@ -39,38 +39,38 @@ const runRocketChatBot = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
-      validate: cbk => {
+      validate: _cbk => {
 
         if (!args.bot) {
-          return cbk([400, 'ExpectedRocketChatBotToRunRocketChatBot']);
+          return _cbk([400, 'ExpectedRocketChatBotToRunRocketChatBot']);
         }
 
         if (!args.fs) {
-          return cbk([400, 'ExpectedFilesystemMethodsToRunRocketChatBot']);
+          return _cbk([400, 'ExpectedFilesystemMethodsToRunRocketChatBot']);
         }
 
         if (!args.key) {
-          return cbk([400, 'ExpectedApiKeyToRunRocketChatBot']);
+          return _cbk([400, 'ExpectedApiKeyToRunRocketChatBot']);
         }
 
         if (!isArray(args.nodes)) {
-          return cbk([400, 'ExpectedArrayOfSavedNodesToRunRocketChatBot']);
+          return _cbk([400, 'ExpectedArrayOfSavedNodesToRunRocketChatBot']);
         }
 
         if (!args.request) {
-          return cbk([400, 'ExpectedRequestFunctionToRunRocketChatBot']);
+          return _cbk([400, 'ExpectedRequestFunctionToRunRocketChatBot']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // Get associated LNDs
-      getLnds: ['validate', ({}, cbk) => {
-        return getLnds({nodes: args.nodes}, cbk);
+      getLnds: ['validate', ({}, _cbk) => {
+        return getLnds({nodes: args.nodes}, _cbk);
       }],
 
       // Start the bot going
-      startBot: ['getLnds', ({getLnds}, cbk) => {
+      startBot: ['getLnds', ({getLnds}, _cbk) => {
         console.info({connecting_to_rocketchat: args.nodes});
 
         return startRocketChatBot({
@@ -84,32 +84,32 @@ const runRocketChatBot = (args, cbk) => {
           nodes: args.nodes,
           request: args.request,
         },
-        cbk);
+        _cbk);
       }],
 
       // Check the LNDs that they can connect
-      getConnected: ['getLnds', 'startBot', ({getLnds}, cbk) => {
-        return asyncMap(getLnds.lnds, (lnd, cbk) => {
+      getConnected: ['getLnds', 'startBot', ({getLnds}, _cbk) => {
+        return asyncMap(getLnds.lnds, (lnd, __cbk) => {
           return getIdentity({lnd}, (err, res) => {
             // Return no id when there is an error getting the wallet info
             if (err) {
-              return cbk();
+              return __cbk();
             }
 
-            return cbk(null, res.public_key);
+            return __cbk(null, res.public_key);
           });
         },
-        cbk);
+        _cbk);
       }],
 
       // Final set of connected nodes
-      online: ['getConnected', 'startBot', ({getConnected, startBot}, cbk) => {
+      online: ['getConnected', 'startBot', ({getConnected, startBot}, _cbk) => {
         // Report the failure that killed the bot
         if (startBot.failure) {
           console.error({err: startBot.failure});
         }
 
-        return cbk(null, {
+        return _cbk(null, {
           connected: startBot.connected,
           online: getConnected.filter(n => !!n),
         });

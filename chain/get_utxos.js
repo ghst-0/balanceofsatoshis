@@ -54,57 +54,57 @@ const getUtxos = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
-      validate: cbk => {
+      validate: _cbk => {
         if (!args.lnd) {
-          return cbk([400, 'ExpectedLndObjectToGetUtxos']);
+          return _cbk([400, 'ExpectedLndObjectToGetUtxos']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // Get channels
-      getChannels: ['validate', ({}, cbk) => {
-        return getChannels({lnd: args.lnd}, cbk);
+      getChannels: ['validate', ({}, _cbk) => {
+        return getChannels({lnd: args.lnd}, _cbk);
       }],
 
       // Get closed channels
-      getClosed: ['validate', ({}, cbk) => {
-        return getClosedChannels({lnd: args.lnd}, cbk);
+      getClosed: ['validate', ({}, _cbk) => {
+        return getClosedChannels({lnd: args.lnd}, _cbk);
       }],
 
       // Get locked UTXOs
-      getLocked: ['validate', ({}, cbk) => {
+      getLocked: ['validate', ({}, _cbk) => {
         return getLockedUtxos({lnd: args.lnd}, (err, res) => {
           // Ignore errors
           if (err) {
-            return cbk(null, []);
+            return _cbk(null, []);
           }
 
-          return cbk(null, res.utxos);
+          return _cbk(null, res.utxos);
         });
       }],
 
       // Get pending transactions
-      getPending: ['validate', ({}, cbk) => {
-        return getPendingChannels({lnd: args.lnd}, cbk);
+      getPending: ['validate', ({}, _cbk) => {
+        return getPendingChannels({lnd: args.lnd}, _cbk);
       }],
 
       // Get transactions
-      getTx: ['validate', ({}, cbk) => {
-        return getChainTransactions({lnd: args.lnd}, cbk);
+      getTx: ['validate', ({}, _cbk) => {
+        return getChainTransactions({lnd: args.lnd}, _cbk);
       }],
 
       // Get UTXOs
-      getUtxos: ['validate', ({}, cbk) => {
+      getUtxos: ['validate', ({}, _cbk) => {
         return ln_getUtxos({
           lnd: args.lnd,
-          min_confirmations: !args.is_confirmed ? 0 : 1,
+          min_confirmations: args.is_confirmed ? 1 : 0,
         },
-        cbk);
+        _cbk);
       }],
 
       // Cross reference locked transactions to UTXO data
-      locked: ['getLocked', 'getTx', ({getLocked, getTx}, cbk) => {
+      locked: ['getLocked', 'getTx', ({getLocked, getTx}, _cbk) => {
         const {transactions} = getTx;
 
         const utxos = getLocked.map(locked => {
@@ -137,7 +137,7 @@ const getUtxos = (args, cbk) => {
           };
         });
 
-        return cbk(null, utxos.filter(n => !!n));
+        return _cbk(null, utxos.filter(n => !!n));
       }],
 
       // Get related channels to UTXOs
@@ -148,18 +148,18 @@ const getUtxos = (args, cbk) => {
         'getTx',
         'getUtxos',
         'locked',
-        ({getChannels, getClosed, getPending, getTx, getUtxos, locked}, cbk) =>
+        ({getChannels, getClosed, getPending, getTx, getUtxos, locked}, _cbk) =>
       {
         // Exit early when only a count is required
         if (!!args.count_below || !!args.is_count) {
-          return cbk();
+          return _cbk();
         }
 
         const utxos = [].concat(getUtxos.utxos).concat(locked);
 
         const txIds = uniq(utxos.map(n => n.transaction_id));
 
-        return asyncMapSeries(txIds, (id, cbk) => {
+        return asyncMapSeries(txIds, (id, __cbk) => {
           return getTransactionRecord({
             id,
             lnd: args.lnd,
@@ -168,9 +168,9 @@ const getUtxos = (args, cbk) => {
             closed_channels: getClosed.channels,
             pending_channels: getPending.pending_channels,
           },
-          cbk);
+          __cbk);
         },
-        cbk);
+        _cbk);
       }],
 
       // Utxos with added context or counted
@@ -179,7 +179,7 @@ const getUtxos = (args, cbk) => {
         'getTx',
         'getUtxos',
         'locked',
-        ({getRelated, getTx, getUtxos, locked}, cbk) =>
+        ({getRelated, getTx, getUtxos, locked}, _cbk) =>
       {
         const utxos = [].concat(getUtxos.utxos).concat(locked).filter(utxo => {
           if (args.min_tokens) {
@@ -195,12 +195,12 @@ const getUtxos = (args, cbk) => {
 
           const total = utxos.length < below ? below - utxos.length : none;
 
-          return cbk(null, total);
+          return _cbk(null, total);
         }
 
         // Exit early when looking for a simple UTXO count
         if (!!args.is_count) {
-          return cbk(null, utxos.length);
+          return _cbk(null, utxos.length);
         }
 
         const unspent = utxos.map(utxo => {
@@ -219,13 +219,13 @@ const getUtxos = (args, cbk) => {
             is_unconfirmed: !utxo.confirmation_count || undefined,
             address: utxo.address || undefined,
             related_description: (t || {}).description || undefined,
-            related_channels: related.length ? flatten(related) : undefined,
+            related_channels: related.length > 0 ? flatten(related) : undefined,
             locked: utxo.lock_id || undefined,
             lock_expires_at: expiresAt(utxo.lock_expires_at),
           };
         });
 
-        return cbk(null, {utxos: unspent});
+        return _cbk(null, {utxos: unspent});
       }],
     },
     returnResult({reject, resolve, of: 'utxos'}, cbk));

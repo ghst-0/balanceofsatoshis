@@ -39,15 +39,15 @@ const getDetailedBalance = (args, cbk) => {
       },
 
       // Get info about the funds on the node
-      getFunds: ['validate', ({}, cbk) => {
-        return asyncMap(args.lnds, (lnd, cbk) => {
-          return getNodeFunds({lnd, is_confirmed: args.is_confirmed}, cbk);
+      getFunds: ['validate', ({}, _cbk) => {
+        return asyncMap(args.lnds, (lnd, __cbk) => {
+          return getNodeFunds({lnd, is_confirmed: args.is_confirmed}, __cbk);
         },
-        cbk);
+        _cbk);
       }],
 
       // Return a formatted balance summary
-      balance: ['getFunds', ({getFunds}, cbk) => {
+      balance: ['getFunds', ({getFunds}, _cbk) => {
         // Sum balances from all nodes
         const balances = getFunds.reduce((sum, n) => {
           return {
@@ -74,7 +74,7 @@ const getDetailedBalance = (args, cbk) => {
           utxos_count: Number(),
         });
 
-        return cbk(null, {
+        return _cbk(null, {
           closing_balance: format(balances.closing_balance) || undefined,
           conflicted_pending: format(balances.conflicted_pending) || undefined,
           invalid_pending: format(balances.invalid_pending) || undefined,

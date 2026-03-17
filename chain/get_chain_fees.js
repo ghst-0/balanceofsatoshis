@@ -31,46 +31,46 @@ const getChainFees = ({blocks, lnd}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
-      validate: cbk => {
+      validate: _cbk => {
         if (!lnd) {
-          return cbk([400, 'ExpectedLndToGetChainFees']);
+          return _cbk([400, 'ExpectedLndToGetChainFees']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // Get the fees
-      getFees: ['validate', ({}, cbk) => {
+      getFees: ['validate', ({}, _cbk) => {
         const blockCount = blocks || defaultBlockCount;
 
-        return asyncTimesSeries(blockCount - iteration, (i, cbk) => {
+        return asyncTimesSeries(blockCount - iteration, (i, __cbk) => {
           return getChainFeeRate({
             lnd,
             confirmation_target: start + i,
           },
           (err, res) => {
             if (err) {
-              return cbk(err);
+              return __cbk(err);
             }
 
-            return cbk(null, {rate: res.tokens_per_vbyte, target: start + i});
+            return __cbk(null, {rate: res.tokens_per_vbyte, target: start + i});
           });
         },
-        cbk);
+        _cbk);
       }],
 
       // Get chain info
-      getHeight: ['validate', ({}, cbk) => getHeight({lnd}, cbk)],
+      getHeight: ['validate', ({}, _cbk) => getHeight({lnd}, _cbk)],
 
       // Get the minimum relay fee rate
-      getMinFee: ['validate', ({}, cbk) => getMinimumRelayFee({lnd}, cbk)],
+      getMinFee: ['validate', ({}, _cbk) => getMinimumRelayFee({lnd}, _cbk)],
 
       // Collapse chain fees into steps
       chainFees: [
         'getFees',
         'getHeight',
         'getMinFee',
-        ({getFees, getHeight, getMinFee}, cbk) =>
+        ({getFees, getHeight, getMinFee}, _cbk) =>
       {
         let cursor = {};
         const feeByBlockTarget = {};
@@ -86,7 +86,7 @@ const getChainFees = ({blocks, lnd}, cbk) => {
             feeByBlockTarget[target + ''] = ceil(rate * bytesPerKb)
           }
 
-        return cbk(null, {
+        return _cbk(null, {
           current_block_hash: getHeight.current_block_hash,
           fee_by_block_target: feeByBlockTarget,
           min_relay_feerate: ceil(getMinFee.tokens_per_vbyte * bytesPerKb),

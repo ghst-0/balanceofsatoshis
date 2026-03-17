@@ -21,43 +21,43 @@ const getMaximum = ({accuracy, from, to}, test, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
-      validate: cbk => {
+      validate: _cbk => {
         if (from === undefined) {
-          return cbk([400, 'ExpectedLowerValueToGetMaximum']);
+          return _cbk([400, 'ExpectedLowerValueToGetMaximum']);
         }
 
         if (!test) {
-          return cbk([400, 'ExpectedTestFunctionToGetMaximumValue']);
+          return _cbk([400, 'ExpectedTestFunctionToGetMaximumValue']);
         }
 
         if (to === undefined) {
-          return cbk([400, 'ExpectedUpperValueToGetMaximum']);
+          return _cbk([400, 'ExpectedUpperValueToGetMaximum']);
         }
 
         if (from > to) {
-          return cbk([400, 'ExpectedLowValueLowerThanUpperValueToGetMaximum']);
+          return _cbk([400, 'ExpectedLowValueLowerThanUpperValueToGetMaximum']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // Search
-      search: ['validate', ({}, cbk) => {
+      search: ['validate', ({}, _cbk) => {
         let cursor;
         let successes = 0;
         let lowerBound = from;
         let upperBound = to;
 
         return asyncWhilst(
-          cbk => cbk(null, lowerBound < upperBound - (accuracy || 0)),
-          cbk => {
+          __cbk => __cbk(null, lowerBound < upperBound - (accuracy || 0)),
+          __cbk => {
             // Set the cursor to the midpoint of the range
             cursor = (lowerBound + upperBound) >>> 1;
 
             // Find out where the cursor lies in the range
             return test({cursor}, (err, isLow) => {
               if (err) {
-                return cbk(err);
+                return __cbk(err);
               }
 
               // Exit early and increase the lower bound when guess is too low
@@ -65,25 +65,25 @@ const getMaximum = ({accuracy, from, to}, test, cbk) => {
                 lowerBound = cursor + 1;
                 successes = successes + 1;
 
-                return cbk();
+                return __cbk();
               }
 
               upperBound = cursor - 1;
 
-              return cbk();
+              return __cbk();
             });
           },
           err => {
             if (err) {
-              return cbk(err);
+              return _cbk(err);
             }
 
             // Exit early with no result when no guess was too low
             if (!successes) {
-              return cbk(null, {});
+              return _cbk(null, {});
             }
 
-            cbk(null, {maximum: lowerBound})
+            _cbk(null, {maximum: lowerBound})
           }
         );
       }],

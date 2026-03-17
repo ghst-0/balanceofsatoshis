@@ -30,23 +30,23 @@ const getTriggers = ({lnd}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
-      validate: cbk => {
+      validate: _cbk => {
         if (!lnd) {
-          return cbk([400, 'ExpectedAuthenticatedLndToGetTriggers']);
+          return _cbk([400, 'ExpectedAuthenticatedLndToGetTriggers']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // Get the past triggers
-      getTriggers: ['validate', ({}, cbk) => {
+      getTriggers: ['validate', ({}, _cbk) => {
         let token;
         const triggers = [];
 
         // Register past trigger invoices
         return asyncUntil(
-          cbk => cbk(null, token === false),
-          cbk => {
+          __cbk => __cbk(null, token === false),
+          __cbk => {
             return getInvoices({
               lnd,
               token,
@@ -55,7 +55,7 @@ const getTriggers = ({lnd}, cbk) => {
             },
             (err, res) => {
               if (err) {
-                return cbk(err);
+                return __cbk(err);
               }
 
               token = res.next || false;
@@ -74,15 +74,15 @@ const getTriggers = ({lnd}, cbk) => {
                 }
               }
 
-              return cbk();
+              return __cbk();
             });
           },
           err => {
             if (err) {
-              return cbk(err);
+              return _cbk(err);
             }
 
-            return cbk(null, triggers);
+            return _cbk(null, triggers);
           },
         );
       }],

@@ -43,109 +43,108 @@ const getChainFeesChart = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
-      validate: cbk => {
-        if (!isArray(args.lnds) || !args.lnds.length) {
-          return cbk([400, 'ExpectedLndToGetChainFeesChart']);
+      validate: _cbk => {
+        if (!isArray(args.lnds) || args.lnds.length === 0) {
+          return _cbk([400, 'ExpectedLndToGetChainFeesChart']);
         }
 
         if (!args.request) {
-          return cbk([400, 'ExpectedRequestFunctionToGetChainFees']);
+          return _cbk([400, 'ExpectedRequestFunctionToGetChainFees']);
         }
 
         // Exit early when there is no end date and no start date
         if (!args.end_date && !args.start_date) {
-          return cbk();
+          return _cbk();
         }
 
         if (args.days) {
-          return cbk([400, 'ExpectedEitherDaysOrDatesToGetChainFeesChart']);
+          return _cbk([400, 'ExpectedEitherDaysOrDatesToGetChainFeesChart']);
         }
 
         if (!!args.end_date && !args.start_date) {
-          return cbk([400, 'ExpectedStartDateToRangeToEndDateForChainChart']);
+          return _cbk([400, 'ExpectedStartDateToRangeToEndDateForChainChart']);
         }
 
         if (!isDate(args.start_date)) {
-          return cbk([400, 'ExpectedValidDateTypeForChainFeeChartStartDate']);
+          return _cbk([400, 'ExpectedValidDateTypeForChainFeeChartStartDate']);
         }
 
         if (!moment(args.start_date).isValid()) {
-          return cbk([400, 'ExpectedValidEndDateForReceivedChartEndDate']);
+          return _cbk([400, 'ExpectedValidEndDateForReceivedChartEndDate']);
         }
 
         if (parseDate(args.start_date) > now()) {
-          return cbk([400, 'ExpectedPastStartDateToGetChainFeesChart']);
+          return _cbk([400, 'ExpectedPastStartDateToGetChainFeesChart']);
         }
 
         // Exit early when there is no end date
         if (!args.end_date) {
-          return cbk();
+          return _cbk();
         }
 
         if (args.start_date > args.end_date) {
-          return cbk([400, 'ExpectedStartDateBeforeEndDateForChainFeesChart']);
+          return _cbk([400, 'ExpectedStartDateBeforeEndDateForChainFeesChart']);
         }
 
         if (!isDate(args.end_date)) {
-          return cbk([400, 'ExpectedValidDateFormatForChainFeeChartEndDate']);
+          return _cbk([400, 'ExpectedValidDateFormatForChainFeeChartEndDate']);
         }
 
         if (!moment(args.end_date).isValid()) {
-          return cbk([400, 'ExpectedValidEndDateForChainFeeChartEndDate']);
+          return _cbk([400, 'ExpectedValidEndDateForChainFeeChartEndDate']);
         }
 
         if (parseDate(args.end_date) > now()) {
-          return cbk([400, 'ExpectedPastEndDateToGetChainFeesChart']);
+          return _cbk([400, 'ExpectedPastEndDateToGetChainFeesChart']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // End date for chain transactions
-      end: ['validate', ({}, cbk) => {
+      end: ['validate', ({}, _cbk) => {
         if (!args.end_date) {
-          return cbk();
+          return _cbk();
         }
 
-        return cbk(null, moment(args.end_date).endOf('day'));
+        return _cbk(null, moment(args.end_date).endOf('day'));
       }],
 
       // Calculate the start date
-      start: ['validate', ({}, cbk) => {
+      start: ['validate', ({}, _cbk) => {
         if (args.start_date) {
-          return cbk(null, moment(args.start_date));
+          return _cbk(null, moment(args.start_date));
         }
 
-        return cbk(null, moment().subtract(args.days || defaultDays, 'days'));
+        return _cbk(null, moment().subtract(args.days || defaultDays, 'days'));
       }],
 
       // Determine how many days to chart over
-      days: ['validate', ({}, cbk) => {
+      days: ['validate', ({}, _cbk) => {
         // Exit early when not using a date range
         if (!args.start_date) {
-          return cbk(null, args.days || defaultDays);
+          return _cbk(null, args.days || defaultDays);
         }
 
-        return cbk(null, daysBetween(args.end_date, args.start_date));
+        return _cbk(null, daysBetween(args.end_date, args.start_date));
       }],
 
       // Segment measure
-      measure: ['days', ({days}, cbk) => {
+      measure: ['days', ({days}, _cbk) => {
         if (days > maxChartDays) {
-          return cbk(null, 'week');
+          return _cbk(null, 'week');
         } else if (days < minChartDays) {
-          return cbk(null, 'hour');
-        } else {
-          return cbk(null, 'day');
+          return _cbk(null, 'hour');
         }
+        return _cbk(null, 'day');
       }],
 
       // Get chain transactions
-      getTransactions: ['start', ({start}, cbk) => {
-        return asyncMap(args.lnds, (lnd, cbk) => {
+      getTransactions: ['start', ({start}, _cbk) => {
+        return asyncMap(args.lnds, (lnd, __cbk) => {
           return getNetwork({lnd}, (err, res) => {
             if (err) {
-              return cbk(err);
+              return __cbk(err);
             }
 
             return getChainTransactions({
@@ -154,34 +153,34 @@ const getChainFeesChart = (args, cbk) => {
               network: res.network,
               request: args.request,
             },
-            cbk);
+            __cbk);
           });
         },
         (err, res) => {
           if (err) {
-            return cbk(err);
+            return _cbk(err);
           }
 
-          return cbk(null, flatten(res.map(({transactions}) => transactions)));
+          return _cbk(null, flatten(res.map(({transactions}) => transactions)));
         });
       }],
 
       // Total number of segments
-      segments: ['days', 'end', 'measure', ({days, end, measure}, cbk) => {
+      segments: ['days', 'end', 'measure', ({days, end, measure}, _cbk) => {
         switch (measure) {
         case 'hour':
           // Exit early when using full days
           if (!args.start_date) {
-            return cbk(null, hoursPerDay * days);
+            return _cbk(null, hoursPerDay * days);
           }
 
-          return cbk(null, hoursCount(end, args.start_date));
+          return _cbk(null, hoursCount(end, args.start_date));
 
         case 'week':
-          return cbk(null, floor(days / daysPerWeek));
+          return _cbk(null, floor(days / daysPerWeek));
 
         default:
-          return cbk(null, days);
+          return _cbk(null, days);
         }
       }],
 
@@ -190,7 +189,7 @@ const getChainFeesChart = (args, cbk) => {
         'end',
         'getTransactions',
         'start',
-        ({end, getTransactions, start}, cbk) =>
+        ({end, getTransactions, start}, _cbk) =>
       {
         const transactions = getTransactions.filter(tx => {
           // Exit early when no fee was paid
@@ -211,14 +210,14 @@ const getChainFeesChart = (args, cbk) => {
           return true;
         });
 
-        return cbk(null, transactions);
+        return _cbk(null, transactions);
       }],
 
       // Total paid
-      total: ['transactions', ({transactions}, cbk) => {
+      total: ['transactions', ({transactions}, _cbk) => {
         const paid = transactions.reduce((sum, {fee}) => sum + fee, Number());
 
-        return cbk(null, paid);
+        return _cbk(null, paid);
       }],
 
       // Payments activity aggregated
@@ -227,9 +226,9 @@ const getChainFeesChart = (args, cbk) => {
         'measure',
         'segments',
         'transactions',
-        ({end, measure, segments, transactions}, cbk) =>
+        ({end, measure, segments, transactions}, _cbk) =>
       {
-        return cbk(null, feesForSegment({
+        return _cbk(null, feesForSegment({
           measure,
           segments,
           end: end ? end.toISOString() : undefined,
@@ -259,11 +258,11 @@ const getChainFeesChart = (args, cbk) => {
       }],
 
       // Fees paid
-      data: ['description', 'sum', ({description, sum}, cbk) => {
+      data: ['description', 'sum', ({description, sum}, _cbk) => {
         const data = sum.fees;
         const title = 'Chain fees paid';
 
-        return cbk(null, {data, description, title});
+        return _cbk(null, {data, description, title});
       }],
     },
     returnResult({reject, resolve, of: 'data'}, cbk));

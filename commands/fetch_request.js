@@ -1,7 +1,7 @@
 import { stringify } from 'node:querystring';
 import { AbortController } from 'abort-controller';
 
-const encodeQs = qs => !qs ? '' : '?' + stringify(qs);
+const encodeQs = qs => qs ? '?' + stringify(qs) : '';
 const timeoutSignals = new WeakMap();
 
 /** Derive a request function that uses fetch to simulate request behavior
@@ -16,7 +16,7 @@ const timeoutSignals = new WeakMap();
   }
 */
 const fetchRequest = ({fetch}, cbk) => {
-  return (options, cbk) => {
+  return (options, _cbk) => {
     (async () => {
     	const controller = new AbortController();
 
@@ -40,13 +40,13 @@ const fetchRequest = ({fetch}, cbk) => {
         const res = {statusCode: response.status};
 
         if (options.json) {
-          return cbk(null, res, await response.json());
+          return _cbk(null, res, await response.json());
         } else {
-          return cbk(null, res, await response.text());
+          return _cbk(null, res, await response.text());
         }
       } catch (err) {
         // Return request errors back
-        return cbk(err);
+        return _cbk(err);
       } finally {
         // Reset the timeout since the request is over
         if (options.timeout) {

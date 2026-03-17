@@ -32,23 +32,23 @@ const getMacaroon = ({fs, node, os, path}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
-      validate: cbk => {
+      validate: _cbk => {
         if (!fs) {
-          return cbk([400, 'ExpectedFileSystemMethodsToGetMacaroon']);
+          return _cbk([400, 'ExpectedFileSystemMethodsToGetMacaroon']);
         }
 
         if (!os) {
-          return cbk([400, 'ExpectedOperatingSystemMethodsToGetMacaroon']);
+          return _cbk([400, 'ExpectedOperatingSystemMethodsToGetMacaroon']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // Get macaroon
-      getMacaroon: ['validate', ({}, cbk) => {
+      getMacaroon: ['validate', ({}, _cbk) => {
         // Exit early when a saved node was specified
         if (node) {
-          return cbk(null, {});
+          return _cbk(null, {});
         }
 
         const [chains, nets] = defaults;
@@ -59,20 +59,20 @@ const getMacaroon = ({fs, node, os, path}, cbk) => {
         });
 
         // Find the default macaroon
-        return asyncDetectSeries(flatten(all), ({chain, network}, cbk) => {
+        return asyncDetectSeries(flatten(all), ({chain, network}, __cbk) => {
 
           return fs.getFile(macaroonPath, (_, macaroon) => {
             defaultMacaroon = macaroon;
 
-            return cbk(null, !!defaultMacaroon);
+            return __cbk(null, !!defaultMacaroon);
           });
         },
         () => {
           if (!defaultMacaroon) {
-            return cbk([503, 'FailedToGetMacaroonFileFromDefaultLocation']);
+            return _cbk([503, 'FailedToGetMacaroonFileFromDefaultLocation']);
           }
 
-          return cbk(null, {macaroon: defaultMacaroon.toString('base64')});
+          return _cbk(null, {macaroon: defaultMacaroon.toString('base64')});
         });
       }],
     },

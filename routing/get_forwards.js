@@ -37,44 +37,44 @@ const getForwards = ({after, before, lnd, via}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
-      validate: cbk => {
+      validate: _cbk => {
         if (!after) {
-          return cbk([400, 'ExpectedAfterDateToGetForwardsForNode']);
+          return _cbk([400, 'ExpectedAfterDateToGetForwardsForNode']);
         }
 
         if (!lnd) {
-          return cbk([400, 'ExpectedAuthenticatedLndToGetForwardsForNode']);
+          return _cbk([400, 'ExpectedAuthenticatedLndToGetForwardsForNode']);
         }
 
         if (!!via && !isArray(via)) {
-          return cbk([400, 'ExpectedArrayOfPublicKeysForForwardsViaNodes']);
+          return _cbk([400, 'ExpectedArrayOfPublicKeysForForwardsViaNodes']);
         }
 
         if (!!via && via.some(n => !isPublicKey(n))) {
-          return cbk([400, 'ExpectedPublicKeyForViaFilterOfForwardsForNode']);
+          return _cbk([400, 'ExpectedPublicKeyForViaFilterOfForwardsForNode']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // Get closed channels with via peer
-      getClosedChannels: ['validate', ({}, cbk) => {
+      getClosedChannels: ['validate', ({}, _cbk) => {
         // Exit early when there is no via node specified
         if (!via) {
-          return cbk();
+          return _cbk();
         }
 
-        return getClosedChannels({lnd}, cbk);
+        return getClosedChannels({lnd}, _cbk);
       }],
 
       // Get forwards
-      getForwards: ['validate', ({}, cbk) => {
+      getForwards: ['validate', ({}, _cbk) => {
         const forwards = [];
         let token;
 
         return asyncUntil(
-          cbk => cbk(null, token === false),
-          cbk => {
+          __cbk => __cbk(null, token === false),
+          __cbk => {
             return ln_getForwards({
               after,
               lnd,
@@ -84,7 +84,7 @@ const getForwards = ({after, before, lnd, via}, cbk) => {
             },
             (err, res) => {
               if (err) {
-                return cbk(err);
+                return __cbk(err);
               }
 
               let limit = null;
@@ -94,59 +94,59 @@ const getForwards = ({after, before, lnd, via}, cbk) => {
                 forwards.push(n)
               }
 
-              return cbk();
+              return __cbk();
             });
           },
           err => {
             if (err) {
-              return cbk(err);
+              return _cbk(err);
             }
 
-            return cbk(null, forwards);
+            return _cbk(null, forwards);
           }
         );
       }],
 
       // Get private channels
-      getPrivateChannels: ['validate', ({}, cbk) => {
+      getPrivateChannels: ['validate', ({}, _cbk) => {
         // Exit early when there is no via node specified
         if (!via) {
-          return cbk();
+          return _cbk();
         }
 
         return getChannels({lnd, is_private: true}, (err, res) => {
           if (err) {
-            return cbk(err);
+            return _cbk(err);
           }
 
           const channels = res.channels.map(channel => {
             return via.includes(channel.partner_public_key);
           });
 
-          return cbk(null, {channels});
+          return _cbk(null, {channels});
         });
       }],
 
       // Get node details
-      getNode: ['validate', ({}, cbk) => {
+      getNode: ['validate', ({}, _cbk) => {
         // Exit early when there is no via node specified
         if (!via) {
-          return cbk();
+          return _cbk();
         }
 
-        return asyncMap(via, (key, cbk) => {
-          return getNode({lnd, public_key: key}, cbk);
+        return asyncMap(via, (key, _cbk) => {
+          return getNode({lnd, public_key: key}, _cbk);
         },
         (err, res) => {
           if (err && err.slice().shift() === 404) {
-            return cbk(null, {channels: []});
+            return _cbk(null, {channels: []});
           }
 
           if (err) {
-            return cbk(err);
+            return _cbk(err);
           }
 
-          return cbk(null, {channels: flatten(res.map(n => n.channels))});
+          return _cbk(null, {channels: flatten(res.map(n => n.channels))});
         });
       }],
 
@@ -156,7 +156,7 @@ const getForwards = ({after, before, lnd, via}, cbk) => {
         'getForwards',
         'getNode',
         'getPrivateChannels',
-        ({getClosedChannels, getForwards, getNode, getPrivateChannels}, cbk) =>
+        ({getClosedChannels, getForwards, getNode, getPrivateChannels}, _cbk) =>
       {
         const {forwards} = forwardsViaPeer({
           via,
@@ -166,7 +166,7 @@ const getForwards = ({after, before, lnd, via}, cbk) => {
           public_channels: via ? getNode.channels : [],
         });
 
-        return cbk(null, {forwards});
+        return _cbk(null, {forwards});
       }],
     },
     returnResult({reject, resolve, of: 'forwards'}, cbk));

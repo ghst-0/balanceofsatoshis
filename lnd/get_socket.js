@@ -34,36 +34,36 @@ const getSocket = ({fs, node, os, path}, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
-      validate: cbk => {
+      validate: _cbk => {
         if (!fs) {
-          return cbk([400, 'ExpectedFilesystemMethodsToGetSocketInfoForNode']);
+          return _cbk([400, 'ExpectedFilesystemMethodsToGetSocketInfoForNode']);
         }
 
         if (!os) {
-          return cbk([400, 'ExpectedOperatingSystemMethodsToGetNodeSocket']);
+          return _cbk([400, 'ExpectedOperatingSystemMethodsToGetNodeSocket']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // Get configuration file
-      getConfFile: ['validate', ({}, cbk) => {
+      getConfFile: ['validate', ({}, _cbk) => {
         // Exit early when a saved node is specified
         if (node) {
-          return cbk();
+          return _cbk();
         }
 
         return fs.getFile(confFile, (err, conf) => {
           // Don't report errors, the conf file is either there or not
-          return cbk(null, conf);
+          return _cbk(null, conf);
         });
       }],
 
       // Parse configuration file
-      parseConf: ['getConfFile', ({getConfFile}, cbk) => {
+      parseConf: ['getConfFile', ({getConfFile}, _cbk) => {
         // Exit early when there is nothing to parse
         if (!getConfFile) {
-          return cbk();
+          return _cbk();
         }
 
         try {
@@ -73,42 +73,42 @@ const getSocket = ({fs, node, os, path}, cbk) => {
             throw new Error('ExpectedConfigurationInfoFromConfigFile');
           }
 
-          return cbk(null, conf);
+          return _cbk(null, conf);
         } catch {
           // Ignore errors in configuration parsing
-          return cbk();
+          return _cbk();
         }
       }],
 
       // Derive the RPC host
-      deriveHost: ['parseConf', ({parseConf}, cbk) => {
+      deriveHost: ['parseConf', ({parseConf}, _cbk) => {
         // Exit early when there is no conf settings
         if (!parseConf) {
-          return cbk();
+          return _cbk();
         }
 
         const {tlsextradomain} = parseConf[applicationOptions] || {};
 
         if (!tlsextradomain) {
-          return cbk();
+          return _cbk();
         }
 
         if (isOnion(tlsextradomain)) {
-          return cbk();
+          return _cbk();
         }
 
-        return cbk(null, tlsextradomain);
+        return _cbk(null, tlsextradomain);
       }],
 
       // Derive the RPC socket from the configuration settings
       deriveSocket: [
         'deriveHost',
         'parseConf',
-        ({deriveHost, parseConf}, cbk) =>
+        ({deriveHost, parseConf}, _cbk) =>
       {
         // Exit early when there is no conf settings or TLS host
         if (!deriveHost || !parseConf) {
-          return cbk();
+          return _cbk();
         }
 
         const url = `${scheme}${parseConf[applicationOptions].rpclisten}`;
@@ -120,16 +120,16 @@ const getSocket = ({fs, node, os, path}, cbk) => {
             throw new Error('FailedToDerivePortFromApplicationOptions');
           }
 
-          return cbk(null, `${deriveHost}:${port}`);
+          return _cbk(null, `${deriveHost}:${port}`);
         } catch {
           // Ignore errors
-          return cbk();
+          return _cbk();
         }
       }],
 
       // Socket
-      socket: ['deriveSocket', ({deriveSocket}, cbk) => {
-        return cbk(null, {socket: deriveSocket});
+      socket: ['deriveSocket', ({deriveSocket}, _cbk) => {
+        return _cbk(null, {socket: deriveSocket});
       }],
     },
     returnResult({reject, resolve, of: 'socket'}, cbk));

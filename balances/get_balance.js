@@ -27,42 +27,42 @@ const getBalance = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
       // Check arguments
-      validate: cbk => {
+      validate: _cbk => {
         if (!args.lnd) {
-          return cbk([400, 'ExpectedLndToGetBalance']);
+          return _cbk([400, 'ExpectedLndToGetBalance']);
         }
 
-        return cbk();
+        return _cbk();
       },
 
       // Lnd object
-      lnd: ['validate', ({}, cbk) => cbk(null, args.lnd)],
+      lnd: ['validate', ({}, _cbk) => _cbk(null, args.lnd)],
 
       // Get the chain balance
-      getChainBalance: ['lnd', ({lnd}, cbk) => ln_getChainBalance({lnd}, cbk)],
+      getChainBalance: ['lnd', ({lnd}, _cbk) => ln_getChainBalance({lnd}, _cbk)],
 
       // Get the channel balance
-      getChanBalance: ['lnd', ({lnd}, cbk) => getChannelBalance({lnd}, cbk)],
+      getChanBalance: ['lnd', ({lnd}, _cbk) => getChannelBalance({lnd}, _cbk)],
 
       // Get the initiator burden
-      getChannels: ['lnd', ({lnd}, cbk) => ln_getChannels({lnd}, cbk)],
+      getChannels: ['lnd', ({lnd}, _cbk) => ln_getChannels({lnd}, _cbk)],
 
       // Get the pending balance
-      getPending: ['lnd', ({lnd}, cbk) => getPendingChainBalance({lnd}, cbk)],
+      getPending: ['lnd', ({lnd}, _cbk) => getPendingChainBalance({lnd}, _cbk)],
 
       // Calculate the pending chain sum
-      pendingChain: ['getPending', ({getPending}, cbk) => {
+      pendingChain: ['getPending', ({getPending}, _cbk) => {
         // Exit early when we are only looking at offchain or confirmed funds
         if (!!args.is_offchain_only || !!args.is_confirmed) {
-          return cbk(null, none);
+          return _cbk(null, none);
         }
 
         // Exit early when there is no pending chain balance
         if (!getPending.pending_chain_balance) {
-          return cbk(null, none);
+          return _cbk(null, none);
         }
 
-        return cbk(null, getPending.pending_chain_balance);
+        return _cbk(null, getPending.pending_chain_balance);
       }],
 
       // Total balances
@@ -71,7 +71,7 @@ const getBalance = (args, cbk) => {
         'getChanBalance',
         'getChannels',
         'pendingChain',
-        ({getChainBalance, getChanBalance, getChannels, pendingChain}, cbk) =>
+        ({getChainBalance, getChanBalance, getChannels, pendingChain}, _cbk) =>
       {
         const futureCommitFees = getChannels.channels
           .filter(n => n.is_partner_initiated === false)
@@ -95,7 +95,7 @@ const getBalance = (args, cbk) => {
           tokens: balances,
         });
 
-        return cbk(null, {
+        return _cbk(null, {
           balance,
           channel_balance: getChanBalance.channel_balance + futureCommitFees,
         });
