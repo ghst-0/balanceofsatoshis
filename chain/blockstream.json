@@ -1,6 +1,0 @@
-{
-  "endpoints": {
-    "btc": "https://blockstream.info/api/",
-    "btctestnet": "https://blockstream.info/testnet/api/"
-  }
-}

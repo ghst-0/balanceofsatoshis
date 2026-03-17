@@ -1,13 +1,10 @@
 import { homedir, platform, userInfo } from 'node:os';
 import { publicEncrypt } from 'node:crypto';
 import { readFile } from 'node:fs';
-import { spawn } from 'node:child_process';
 import asyncAuto from 'async/auto.js';
 import { authenticatedLndGrpc, grantAccess, restrictMacaroon } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
 
-import { decryptCiphertext } from '../encryption/decrypt_ciphertext.js';
-import { getSavedCredentials } from '../nodes/get_saved_credentials.js';
 import { homePath } from '../storage/home_path.js';
 import { derAsPem } from '../encryption/der_as_pem.js';
 import { credentialRestrictions } from './credential_restrictions.js';
@@ -109,11 +106,8 @@ const lndCredentials = (args, cbk) => {
 
       // Get the node credentials, if applicable
       getNodeCredentials: ['forNode', ({forNode}, cbk) => {
-        if (!forNode) {
-          return cbk();
-        }
-
-        return getSavedCredentials({fs, node: forNode}, cbk);
+        // Disabled
+        return cbk();
       }],
 
       // Get the socket out of the ini file
@@ -137,28 +131,10 @@ const lndCredentials = (args, cbk) => {
 
         const {credentials} = getNodeCredentials;
 
-        if (!credentials.encrypted_macaroon) {
-          return cbk(null, {
-            cert: credentials.cert,
-            macaroon: credentials.macaroon,
-            socket: credentials.socket,
-          });
-        }
-
-        const cipher = credentials.encrypted_macaroon;
-
-        console.info({decrypt_credentials_for: forNode});
-
-        return decryptCiphertext({cipher, spawn}, (err, res) => {
-          if (err) {
-            return cbk(err);
-          }
-
-          return cbk(null, {
-            cert: credentials.cert,
-            macaroon: res.clear,
-            socket: credentials.socket,
-          });
+        return cbk(null, {
+          cert: credentials.cert,
+          macaroon: credentials.macaroon,
+          socket: credentials.socket,
         });
       }],
 

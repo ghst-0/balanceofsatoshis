@@ -1,8 +1,6 @@
 #!/usr/bin/env node
-import { lstat, mkdir, readdir, readFile, rmdir, statSync, unlink, writeFile } from 'node:fs';
-import { spawn } from 'child_process';
+import { mkdir, readFile, statSync, writeFile } from 'node:fs';
 import prog from 'caporal';
-import * as lnService from 'ln-service';
 import * as lnSync from 'ln-sync';
 
 import { getAccountingReport } from './balances/get_accounting_report.js';
@@ -12,15 +10,11 @@ import { getLiquidity } from './balances/get_liquidity.js';
 import { getUtxos } from './chain/get_utxos.js';
 import { getChainFees } from './chain/get_chain_fees.js';
 import { simpleRequest } from './commands/simple_request.js';
-import { clean } from './commands/clean.js';
 import { interrogate } from './commands/interrogate.js';
 import { fetchRequest } from './commands/fetch_request.js';
-import { decryptWithNode } from './encryption/decrypt_with_node.js';
-import { encryptToNode } from './encryption/encrypt_to_node.js';
 import { authenticatedLnd } from './lnd/authenticated_lnd.js';
 import { getLnds } from './lnd/get_lnds.js';
 import { getCertValidityDays } from './lnd/get_cert_validity_days.js';
-import { manageSavedNodes } from './nodes/manage_saved_nodes.js';
 import { returnObject } from './responses/return_object.js';
 import { returnNumber } from './responses/return_number.js';
 import { returnOutput } from './responses/return_output.js';
@@ -42,8 +36,6 @@ import commandConstants from './commands/constants.json' with { type: 'json' };
 const {version} = PACKAGE_JSON;
 const { accountingCategories, peerSortOptions } = commandConstants;
 
-
-const {BOOL} = prog;
 const collect = arr => [].concat(...[arr]).filter(n => !!n);
 const {exit} = process;
 const flatten = arr => [].concat(...arr);
@@ -299,85 +291,6 @@ prog
     });
   })
 
-  // Clean a command of unnecessary references
-  .command('clean-command', 'Clean command to remove outdated references')
-  .visible(false)
-  .argument('<command>', 'Escaped command to cleanup')
-  .option('--node <node_name>', 'Saved node to use for lookups')
-  .action((args, options) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        return clean({
-          lnd: (await lndForNode(options.node)).lnd,
-          command: args.command,
-        },
-        returnOutput({reject, resolve}));
-      } catch (err) {
-        console.error({err}) && reject();
-      }
-    });
-  })
-
-  // Decrypt a message
-  .command('decrypt', 'Decrypt data using the node key')
-  .visible(false)
-  .argument('<encrypted>', 'Encrypted message')
-  .help('Decrypt a message encrypted to the node key or to another node key')
-  .option('--node <node_name>', 'Node to decrypt with')
-  .action((args, options) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        return decryptWithNode({
-          encrypted: args.encrypted,
-          lnd: (await authenticatedLnd({node: options.node})).lnd,
-        },
-        returnObject({reject, resolve}));
-      } catch (err) {
-        console.error({err}) && reject();
-      }
-    });
-  })
-
-  // Delete all payments
-  .command('delete-payments-history', 'Delete all records of past payments')
-  .visible(false)
-  .option('--node <node_name>', 'Node to delete all past payments on')
-  .action((args, options) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        return lnService.deletePayments({
-          lnd: (await authenticatedLnd({node: options.node})).lnd,
-        },
-        returnObject({reject, resolve}));
-      } catch (err) {
-        console.error({err}) && reject();
-      }
-    });
-  })
-
-  // Encrypt a message
-  .command('encrypt', 'Encrypt data using the node key')
-  .visible(false)
-  .help('Encrypt a message to the node key or to another node key')
-  .option('--node <node_name>', 'Node to encrypt with')
-  .option('--message <message>', 'Text message to encrypt')
-  .option('--to <to>', 'Encrypt message to another node')
-  .action((args, options) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        return encryptToNode({
-          lnd: (await authenticatedLnd({node: options.node})).lnd,
-          message: options.message,
-          to: options.to,
-        },
-        returnObject({reject, resolve}));
-      } catch (err) {
-        console.error({err}) && reject();
-      }
-    });
-  })
-
-
   // Get forwards
   .command('forwards', 'Show recent forwarding earnings')
   .help('Peers where routing has taken place from inbound and outbound sides')
@@ -467,36 +380,6 @@ prog
       } catch (err) {
         console.error({err}) && reject();
       }
-    });
-  })
-
-  // Saved nodes
-  .command('nodes', 'List and edit saved nodes')
-  .help('Locking and unlocking requires existing installation of GPG')
-  .argument('[node]', 'Specify a saved node')
-  .option('--add', 'Add a new node')
-  .option('--lock <id>', 'Encrypt node authentication to GPG key', REPEATABLE)
-  .option('--remove', 'Remove saved node')
-  .option('--unlock', 'Remove encryption from auth macaroon')
-  .action((args, options) => {
-    return new Promise(async (resolve, reject) => {
-      return manageSavedNodes({
-        spawn,
-        fs: {
-          writeFile,
-          getDirectoryFiles: readdir,
-          getFile: readFile,
-          getFileStatus: lstat,
-          makeDirectory: mkdir,
-          removeDirectory: rmdir,
-          removeFile: unlink,
-        },
-        is_removing: options.remove || undefined,
-        is_unlocking: options.unlock || undefined,
-        lock_credentials_to: flatten([options.lock].filter(n => !!n)),
-        node: args.node || undefined,
-      },
-      returnObject({reject, resolve}));
     });
   })
 
